@@ -12,6 +12,14 @@ _ = t.gettext
 
 changelogs = [
     ChangelogEntry(
+        "v0.2.17",
+        "Multilingual Support Added",
+        "This version adds multilingual support to the application, " \
+        "allowing users to switch between different languages " \
+        "according to their preferences.",
+        date(2025, 10, 19),
+    ),
+    ChangelogEntry(
         "v0.2.16",
         "Bug fixes",
         "This version fixes a variety of issues.",
