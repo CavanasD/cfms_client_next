@@ -1,14 +1,14 @@
 import flet as ft
-from flet_model import Model, route
+from flet_model import Model, Router, route
 
 from include.constants import LOCALE_PATH
 from include.ui.util.route import get_parent_route
 
 import gettext
 
-t = gettext.translation("client", LOCALE_PATH, fallback=True)
+from include.util.locale import get_translation
+t = get_translation()
 _ = t.gettext
-
 
 
 @route("settings")
@@ -19,8 +19,8 @@ class SettingsModel(Model):
     padding = 20
     spacing = 10
 
-    def __init__(self, page: ft.Page):
-        super().__init__(page)
+    def __init__(self, page: ft.Page, router: Router):
+        super().__init__(page, router)
 
         self.appbar = ft.AppBar(
             title=ft.Text("Settings"),
@@ -31,8 +31,8 @@ class SettingsModel(Model):
         self.listtiles = [
             ft.ListTile(
                 leading=ft.Icon(ft.Icons.LANGUAGE),
-                title=ft.Text("Language"),
-                subtitle=ft.Text("Select your preferred language"),
+                title=ft.Text(_("Language")),
+                subtitle=ft.Text(_("Select your preferred language")),
                 on_click=self.configure_language_listtile_click,
             ),
             ft.ListTile(

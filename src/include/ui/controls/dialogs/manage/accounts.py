@@ -17,7 +17,8 @@ if TYPE_CHECKING:
     from include.ui.controls.views.manage.account import ManageAccountsView
     from include.ui.controls.rightmenu.manage.account import UserRightMenuDialog
 
-t = gettext.translation("client", LOCALE_PATH, fallback=True)
+from include.util.locale import get_translation
+t = get_translation()
 _ = t.gettext
 
 

@@ -1,6 +1,6 @@
 import asyncio
 import flet as ft
-from flet_model import Model, route
+from flet_model import Model, Router, route
 from include.ui.controls.homepage import HomeView, HomeNavigationBar
 from include.ui.controls.views.explorer import FileManagerView
 from include.ui.controls.views.more import MoreView
@@ -23,8 +23,8 @@ class HomeModel(Model):
     #     # bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST
     # )
 
-    def __init__(self, page: ft.Page):
-        super().__init__(page)
+    def __init__(self, page: ft.Page, router: Router):
+        super().__init__(page, router)
         self.homeview = HomeView()
         self.controls = [
             ft.SafeArea(ft.Container()),

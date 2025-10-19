@@ -12,7 +12,8 @@ from include.util.requests import do_request
 if TYPE_CHECKING:
     from ui.controls.views.manage.group import GroupListView
 
-t = gettext.translation("client", LOCALE_PATH, fallback=True)
+from include.util.locale import get_translation
+t = get_translation()
 _ = t.gettext
 
 

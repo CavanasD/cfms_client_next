@@ -5,12 +5,13 @@ import flet as ft
 from include.classes.config import AppConfig
 from include.constants import LOCALE_PATH
 from include.ui.controls.dialogs.manage.accounts import PasswdUserDialog
-from include.ui.util.quotes import get_quote
+from include.ui.util.quotes import get_quote, refresh_quote
 
 if TYPE_CHECKING:
     from include.ui.models.home import HomeModel
 
-t = gettext.translation("client", LOCALE_PATH, fallback=True)
+from include.util.locale import get_translation
+t = get_translation()
 _ = t.gettext
 
 
@@ -32,6 +33,7 @@ class MoreView(ft.Container):
         )
         self.moreview_username_display = ft.Text(color=ft.Colors.WHITE)
 
+        refresh_quote()
         self.content = ft.Column(
             controls=[
                 # Avatar frame

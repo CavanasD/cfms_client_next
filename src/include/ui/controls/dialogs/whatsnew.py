@@ -5,7 +5,8 @@ from include.classes.changelog import ChangelogEntry
 from include.constants import LOCALE_PATH
 from include.ui.controls.dialogs.base import AlertDialog
 
-t = gettext.translation("client", LOCALE_PATH, fallback=True)
+from include.util.locale import get_translation
+t = get_translation()
 _ = t.gettext
 
 

@@ -1,9 +1,10 @@
 import flet as ft
-from flet_model import Model, route
+from flet_model import Model, route, Router
 
 from include.classes.config import AppConfig
 from include.ui.util.notifications import send_success
 from include.ui.util.route import get_parent_route
+from include.util.locale import set_translation
 
 
 @route("language_settings")
@@ -14,8 +15,8 @@ class LanguageSettingsModel(Model):
     padding = 20
     spacing = 10
 
-    def __init__(self, page: ft.Page):
-        super().__init__(page)
+    def __init__(self, page: ft.Page, router: Router):
+        super().__init__(page, router)
 
         self.appbar = ft.AppBar(
             title=ft.Text("Language"),
@@ -37,7 +38,7 @@ class LanguageSettingsModel(Model):
             ],
             expand=True,
             expand_loose=True,
-            disabled=True,  # This feature is currently disabled since it doesnt work
+            # disabled=True,  # This feature is currently disabled since it doesnt work
         )
 
         self.language_hint_text = ft.Text(
@@ -61,12 +62,10 @@ class LanguageSettingsModel(Model):
         if selected_language:
             self.app_config.preferences["settings"]["language"] = selected_language
             self.app_config.dump_preferences()
+            set_translation(selected_language)
+            self._router.clear_cache()
             send_success(self.page, "Language setting saved. Please restart the application for changes to take effect.")
-        else:
-            # If no language selected, use default
-            self.app_config.preferences["settings"]["language"] = "zh_CN"
-            self.app_config.dump_preferences()
-            send_success(self.page, "Settings Saved.")
+
 
     async def load_language_setting(self):
         current_language = self.app_config.preferences["settings"].get("language", "zh_CN")

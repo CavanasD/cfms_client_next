@@ -9,7 +9,8 @@ from include.ui.controls.rightmenu.manage.group import GroupRightMenuDialog
 if TYPE_CHECKING:
     from include.ui.controls.views.manage.group import GroupListView
 
-t = gettext.translation("client", LOCALE_PATH, fallback=True)
+from include.util.locale import get_translation
+t = get_translation()
 _ = t.gettext
 
 

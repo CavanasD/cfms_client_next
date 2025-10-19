@@ -6,7 +6,8 @@ from include.constants import GITHUB_REPO
 
 import gettext
 
-t = gettext.translation("client", LOCALE_PATH, fallback=True)
+from include.util.locale import get_translation
+t = get_translation()
 _ = t.gettext
 
 

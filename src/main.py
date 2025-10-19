@@ -18,17 +18,8 @@ import os
 import locale
 import gettext
 import flet as ft
-from include.ui.controls.dialogs.dev import DevRequestDialog
-from include.ui.models.connect import ConnectToServerModel
-from include.ui.models.login import LoginModel
-from include.ui.models.about import AboutModel
-from include.ui.models.settings.overview import SettingsModel
-from include.ui.models.settings.connection import ConnectionSettingsModel
-from include.ui.models.settings.safety import SafetySettingsModel
-from include.ui.models.settings.language import LanguageSettingsModel
-from include.ui.models.home import HomeModel
-from include.ui.models.manage import ManageModel
 from include.classes.config import AppConfig
+from include.util.locale import set_translation
 
 # import logging
 # logging.basicConfig(level=logging.DEBUG)
@@ -38,21 +29,43 @@ async def main(page: ft.Page):
     # Load language preference and set environment variable
     try:
         app_config = AppConfig()
-        preferred_language = app_config.preferences.get("settings", {}).get("language", "zh_CN")
+        preferred_language = app_config.preferences.get("settings", {}).get(
+            "language", "zh_CN"
+        )
+        
         # Set environment variable for gettext to use
         os.environ["LANGUAGE"] = preferred_language
+        
+        # Set translation singleton 
+        set_translation(preferred_language)
+        
         # Also try to set locale
         try:
             if preferred_language == "zh_CN":
-                locale.setlocale(locale.LC_ALL, 'zh_CN.UTF-8')
+                locale.setlocale(locale.LC_ALL, "zh_CN.UTF-8")
             elif preferred_language == "en":
-                locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+                locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
         except:
             pass  # Ignore locale setting errors
     except:
         # If config fails, use default
         os.environ["LANGUAGE"] = "zh_CN"
-    
+
+    # Import UI Components
+
+    # These imports are placed here to ensure that the locale
+    # is set before any UI components are loaded
+    from include.ui.controls.dialogs.dev import DevRequestDialog
+    from include.ui.models.connect import ConnectToServerModel
+    from include.ui.models.login import LoginModel
+    from include.ui.models.about import AboutModel
+    from include.ui.models.settings.overview import SettingsModel
+    from include.ui.models.settings.connection import ConnectionSettingsModel
+    from include.ui.models.settings.safety import SafetySettingsModel
+    from include.ui.models.settings.language import LanguageSettingsModel
+    from include.ui.models.home import HomeModel
+    from include.ui.models.manage import ManageModel
+
     # Page settings
     page.title = "CFMS Client"
     page.theme_mode = ft.ThemeMode.DARK

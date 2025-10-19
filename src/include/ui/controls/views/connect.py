@@ -8,7 +8,8 @@ from include.ui import constants as const
 from include.constants import DEFAULT_WINDOW_TITLE
 from include.ui.util.notifications import send_error
 
-t = gettext.translation("client", LOCALE_PATH, fallback=True)
+from include.util.locale import get_translation
+t = get_translation()
 _ = t.gettext
 
 

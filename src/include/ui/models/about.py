@@ -2,7 +2,7 @@ import asyncio
 import gettext
 import flet as ft
 
-from flet_model import Model, route
+from flet_model import Model, Router, route
 from include.constants import APP_VERSION, BUILD_VERSION, LOCALE_PATH
 
 from include.ui.controls.dialogs.upgrade import UpgradeDialog
@@ -18,7 +18,8 @@ from include.util.upgrade.updater import (
 from include.ui.util.notifications import send_error
 import requests, os
 
-t = gettext.translation("client", LOCALE_PATH, fallback=True)
+from include.util.locale import get_translation
+t = get_translation()
 _ = t.gettext
 
 SUPPORTED_PLATFORM: dict
@@ -36,8 +37,8 @@ class AboutModel(Model):
     spacing = 10
     scroll = ft.ScrollMode.AUTO
 
-    def __init__(self, page: ft.Page):
-        super().__init__(page)
+    def __init__(self, page: ft.Page, router: Router):
+        super().__init__(page, router)
 
         self.appbar = ft.AppBar(
             title=ft.Text("About"),

@@ -1,5 +1,5 @@
 import flet as ft
-from flet_model import Model, route
+from flet_model import Model, Router, route
 from include.ui.controls.views.login import LoginView
 
 
@@ -12,6 +12,6 @@ class LoginModel(Model):
     padding = 20
     spacing = 10
 
-    def __init__(self, page: ft.Page):
-        super().__init__(page)
+    def __init__(self, page: ft.Page, router: Router):
+        super().__init__(page, router)
         self.controls = [LoginView()]

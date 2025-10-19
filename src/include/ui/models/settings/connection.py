@@ -1,6 +1,6 @@
 from typing import Literal
 import flet as ft
-from flet_model import Model, route
+from flet_model import Model, Router, route
 
 from include.classes.config import AppConfig
 from include.ui.util.notifications import send_success
@@ -15,8 +15,8 @@ class ConnectionSettingsModel(Model):
     padding = 20
     spacing = 10
 
-    def __init__(self, page: ft.Page):
-        super().__init__(page)
+    def __init__(self, page: ft.Page, router: Router):
+        super().__init__(page, router)
 
         self.appbar = ft.AppBar(
             title=ft.Text("Connection"),
