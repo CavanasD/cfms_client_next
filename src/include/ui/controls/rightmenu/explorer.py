@@ -52,7 +52,7 @@ class DocumentRightMenuDialog(RightMenuDialog):
                 # },
                 {
                     "icon": ft.Icons.DRIVE_FILE_RENAME_OUTLINE_OUTLINED,
-                    "title": "Rename",
+                    "title": _("Rename"),
                     "subtitle": _("Rename this file"),
                     "on_click": self.rename_button_click,
                 },

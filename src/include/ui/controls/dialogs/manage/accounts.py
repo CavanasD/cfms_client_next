@@ -54,8 +54,8 @@ class PasswdUserDialog(AlertDialog):
             expand=True,
         )
         self.tip_text = ft.Text(tip, text_align=ft.TextAlign.CENTER, visible=bool(tip))
-        self.submit_button = ft.TextButton("Submit", on_click=self.request_passwd_user)
-        self.cancel_button = ft.TextButton("Cancel", on_click=self.cancel_button_click)
+        self.submit_button = ft.TextButton(_("Submit"), on_click=self.request_passwd_user)
+        self.cancel_button = ft.TextButton(_("Cancel"), on_click=self.cancel_button_click)
 
         self.content = ft.Column(
             controls=[self.old_passwd_field, self.new_passwd_field, self.tip_text],
