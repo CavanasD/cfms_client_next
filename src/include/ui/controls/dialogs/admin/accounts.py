@@ -1,6 +1,8 @@
 from typing import TYPE_CHECKING
+import asyncio
+import gettext
+
 import flet as ft
-import gettext, asyncio
 
 from include.classes.config import AppConfig
 from include.constants import LOCALE_PATH
@@ -14,8 +16,8 @@ from include.controllers.dialogs.passwd import PasswdDialogController
 from include.ui.controls.dialogs.base import AlertDialog
 
 if TYPE_CHECKING:
-    from include.ui.controls.views.manage.account import ManageAccountsView
-    from include.ui.controls.rightmenu.manage.account import UserRightMenuDialog
+    from include.ui.controls.views.admin.account import ManageAccountsView
+    from include.ui.controls.menus.admin.account import UserRightMenuDialog
 
 from include.util.locale import get_translation
 t = get_translation()

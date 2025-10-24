@@ -1,16 +1,18 @@
 from typing import TYPE_CHECKING
-import flet as ft
 import gettext
+
+import flet as ft
+
 from include.classes.client import LockableClientConnection
 from include.constants import LOCALE_PATH
 from include.ui.controls.dialogs.base import AlertDialog
-from include.ui.controls.dialogs.rightmenu.explorer import (
+from include.ui.controls.dialogs.contextmenu.explorer import (
     GetDirectoryInfoDialog,
     GetDocumentInfoDialog,
     RenameDialog,
 )
-from include.ui.controls.rightmenu.base import RightMenuDialog
-from include.ui.controls.rulemanager import RuleManager
+from include.ui.controls.menus.base import RightMenuDialog
+from include.ui.controls.components.rulemanager import RuleManager
 from include.ui.util.notifications import send_error
 from include.ui.util.path import get_directory
 from include.util.requests import do_request

@@ -1,12 +1,13 @@
-import json
 from typing import TYPE_CHECKING, Any
 import gettext
+import json
+
 from include.classes.config import AppConfig
 from include.constants import LOCALE_PATH
 from include.util.requests import do_request
 
 if TYPE_CHECKING:
-    from include.ui.controls.rulemanager import (
+    from include.ui.controls.components.rulemanager import (
         RuleManager,
     )
 

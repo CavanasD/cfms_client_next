@@ -1,13 +1,15 @@
 from datetime import datetime
-import dis
 from os import access
 from typing import TYPE_CHECKING
-import flet as ft
-import gettext
 import asyncio
+import dis
+import gettext
+
+import flet as ft
+
 from include.classes.client import LockableClientConnection
 from include.constants import LOCALE_PATH
-from include.controllers.dialogs.rightmenu import (
+from include.controllers.dialogs.menus import (
     GetDirectoryInfoController,
     RenameDialogController,
 )
@@ -16,7 +18,7 @@ from include.ui.util.notifications import send_error
 from include.util.requests import do_request
 
 if TYPE_CHECKING:
-    from include.ui.controls.rightmenu.explorer import (
+    from include.ui.controls.menus.explorer import (
         DocumentRightMenuDialog,
         DirectoryRightMenuDialog,
     )

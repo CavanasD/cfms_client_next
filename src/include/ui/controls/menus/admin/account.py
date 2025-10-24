@@ -1,22 +1,23 @@
 from typing import TYPE_CHECKING, Optional
-import flet as ft
 import gettext
+
+import flet as ft
 
 from include.classes.config import AppConfig
 from include.constants import LOCALE_PATH
-from include.ui.controls.rightmenu.base import RightMenuDialog
-from include.ui.controls.dialogs.manage.accounts import (
+from include.ui.controls.dialogs.admin.accounts import (
     RenameUserNicknameDialog,
     ViewUserInfoDialog,
     EditUserGroupDialog,
 )
+from include.ui.controls.menus.base import RightMenuDialog
 from include.ui.util.notifications import send_error
+from include.util.locale import get_translation
 from include.util.requests import do_request
 
 if TYPE_CHECKING:
-    from ui.controls.views.manage.account import UserListView
+    from ui.controls.views.admin.account import UserListView
 
-from include.util.locale import get_translation
 t = get_translation()
 _ = t.gettext
 

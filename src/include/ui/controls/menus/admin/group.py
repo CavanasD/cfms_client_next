@@ -1,16 +1,17 @@
 from typing import TYPE_CHECKING, Optional
-import flet as ft
 import gettext
+
+import flet as ft
 
 from include.classes.config import AppConfig
 from include.constants import LOCALE_PATH
 from include.ui.controls.dialogs.base import AlertDialog
-from include.ui.controls.rightmenu.base import RightMenuDialog
+from include.ui.controls.menus.base import RightMenuDialog
 from include.ui.util.notifications import send_error
 from include.util.requests import do_request
 
 if TYPE_CHECKING:
-    from ui.controls.views.manage.group import GroupListView
+    from ui.controls.views.admin.group import GroupListView
 
 from include.util.locale import get_translation
 t = get_translation()

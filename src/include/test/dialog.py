@@ -11,12 +11,14 @@ class AlertDialogTesting(ft.AlertDialog):
         )
         self.title = "AlertDialog Example for Testing"
         self.content = ft.Text("Hello, World!")
-        self.actions = [ft.TextButton("Open New Dialog", on_click=self.open_button_click)]
+        self.actions = [
+            ft.TextButton("Open New Dialog", on_click=self.open_button_click)
+        ]
 
     async def open_button_click(self, event: ft.Event[ft.TextButton]):
         self.open = False
         self.update()
-        self.page.show_dialog(AlertDialogTesting()) # will fail randomly
+        self.page.show_dialog(AlertDialogTesting())  # will fail randomly
 
 
 async def main(page: ft.Page):

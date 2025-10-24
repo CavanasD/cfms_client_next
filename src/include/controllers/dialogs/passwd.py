@@ -1,11 +1,12 @@
 from typing import TYPE_CHECKING
 import gettext
+
 from include.classes.config import AppConfig
 from include.constants import LOCALE_PATH
 from include.util.requests import do_request
 
 if TYPE_CHECKING:
-    from include.ui.controls.dialogs.manage.accounts import PasswdUserDialog
+    from include.ui.controls.dialogs.admin.accounts import PasswdUserDialog
 
 from include.util.locale import get_translation
 t = get_translation()

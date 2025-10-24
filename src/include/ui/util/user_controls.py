@@ -1,13 +1,14 @@
+from datetime import datetime
 from typing import TYPE_CHECKING
 import gettext
-from datetime import datetime
+
 import flet as ft
 
 from include.constants import LOCALE_PATH
-from include.ui.controls.rightmenu.manage.account import UserRightMenuDialog
+from include.ui.controls.menus.admin.account import UserRightMenuDialog
 
 if TYPE_CHECKING:
-    from include.ui.controls.views.manage.account import UserListView
+    from include.ui.controls.views.admin.account import UserListView
 
 from include.util.locale import get_translation
 t = get_translation()

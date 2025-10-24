@@ -1,10 +1,10 @@
-import flet as ft
 from flet_model import Model, Router, route
+import flet as ft
 
 from include.classes.config import AppConfig
-from include.ui.controls.views.manage.account import ManageAccountsView
-from include.ui.controls.views.manage.audit import AuditLogView
-from include.ui.controls.views.manage.group import ManageGroupsView
+from include.ui.controls.views.admin.account import ManageAccountsView
+from include.ui.controls.views.admin.audit import AuditLogView
+from include.ui.controls.views.admin.group import ManageGroupsView
 from include.ui.util.route import get_parent_route
 
 

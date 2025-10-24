@@ -1,17 +1,20 @@
-import json, gettext
 from typing import TYPE_CHECKING
+import gettext
+import json
+
+import flet as ft
+
 from include.constants import LOCALE_PATH
 from include.controllers.dialogs.rulemanager import RuleManagerController
 from include.ui.controls.dialogs.base import AlertDialog
-import flet as ft
+from include.util.locale import get_translation
 
 if TYPE_CHECKING:
-    from include.ui.controls.rightmenu.explorer import (
+    from include.ui.controls.menus.explorer import (
         DocumentRightMenuDialog,
         DirectoryRightMenuDialog,
     )
 
-from include.util.locale import get_translation
 t = get_translation()
 _ = t.gettext
 
@@ -40,9 +43,11 @@ class RuleManager(AlertDialog):
             expand_loose=True,
         )
         self.content_info = ft.Markdown(
-            "For rule format documentation, please refer to [CFMS Server Documentation]"
-            "(https://cfms-server-doc.readthedocs.io/zh-cn/latest/"
-            "groups_and_rights.html#match-rules)。",
+            _(
+                "For rule format documentation, please refer to [CFMS Server Documentation]"
+                "(https://cfms-server-doc.readthedocs.io/zh-cn/latest/"
+                "groups_and_rights.html#match-rules)."
+            ),
             selectable=False,
             on_tap_link=self.on_link_tapped,
         )
@@ -50,7 +55,7 @@ class RuleManager(AlertDialog):
             _("Submit"), on_click=self.submit_button_click
         )
 
-        self.title = "Rule Manager"
+        self.title = _("Rule Manager")
         self.content = ft.Container(
             content=ft.Tabs(
                 ft.Column(
@@ -58,10 +63,10 @@ class RuleManager(AlertDialog):
                         ft.TabBar(
                             [
                                 ft.Tab(
-                                    "Visualization",
+                                    _("Visualization"),
                                 ),
                                 ft.Tab(
-                                    "Source Code",
+                                    _("Source Code"),
                                 ),
                             ]
                         ),

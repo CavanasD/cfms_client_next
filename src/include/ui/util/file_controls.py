@@ -1,10 +1,11 @@
-from typing import TYPE_CHECKING
 from datetime import datetime
+from typing import TYPE_CHECKING
 import gettext
+
 import flet as ft
 
 from include.constants import LOCALE_PATH
-from include.ui.controls.rightmenu.explorer import (
+from include.ui.controls.menus.explorer import (
     DocumentRightMenuDialog,
     DirectoryRightMenuDialog,
 )
