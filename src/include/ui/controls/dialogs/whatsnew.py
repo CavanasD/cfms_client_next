@@ -7,16 +7,25 @@ from include.classes.changelog import ChangelogEntry
 from include.constants import LOCALE_PATH
 from include.ui.controls.dialogs.base import AlertDialog
 from include.util.locale import get_translation
+
 t = get_translation()
 _ = t.gettext
 
 
 changelogs = [
     ChangelogEntry(
+        "v0.2.20",
+        "Visual Rule Editor Improvements",
+        "This version improves the visual rule editor by ensuring that "
+        "changes made in the visual editor are accurately reflected in "
+        "the source code editor and vice versa.",
+        date(2025, 10, 28),
+    ),
+    ChangelogEntry(
         "v0.2.17",
         "Multilingual Support Added",
-        "This version adds multilingual support to the application, " \
-        "allowing users to switch between different languages " \
+        "This version adds multilingual support to the application, "
+        "allowing users to switch between different languages "
         "according to their preferences.",
         date(2025, 10, 19),
     ),

@@ -1,17 +1,14 @@
 from typing import TYPE_CHECKING, Any
-import gettext
 import json
 
 from include.classes.config import AppConfig
-from include.constants import LOCALE_PATH
 from include.util.requests import do_request
 
 if TYPE_CHECKING:
-    from include.ui.controls.components.rulemanager import (
-        RuleManager,
-    )
+    from include.ui.controls.components.rulemanager import RuleManager, VisualRuleEditor
 
 from include.util.locale import get_translation
+
 t = get_translation()
 _ = t.gettext
 
@@ -21,7 +18,7 @@ class RuleManagerController:
         self.view = view
         self.app_config = AppConfig()
 
-    async def update_rule(self):
+    async def fetch_rule(self):
         match self.view.object_type:
             case "document":
                 action = "get_document_access_rules"
@@ -47,14 +44,17 @@ class RuleManagerController:
                 f"Failed to fetch current rules: {info_resp['message']}"
             )
         else:
-            fetched_access_rules = info_resp["data"]
+            self.view.cached_access_rules = info_resp["data"]
             self.view.content_textfield.value = json.dumps(
-                fetched_access_rules, indent=4
+                self.view.cached_access_rules, indent=4
             )
             self.view.unlock_edit()
 
         self.view.content_textfield.visible = True
         self.view.update()
+
+        self.view.visual_editor.set_rule_data(self.view.cached_access_rules)
+        await self.view.visual_editor.current_edit_section.load_rules()
 
     async def action_submit_rule(self, data: dict[str, Any]):
         match self.view.object_type:
@@ -77,6 +77,16 @@ class RuleManagerController:
         )
 
         if submit_resp["code"] != 200:
-            self.view.send_error(_("Modification failed: {message}").format(message=submit_resp['message']))
+            self.view.send_error(
+                _("Modification failed: {message}").format(
+                    message=submit_resp["message"]
+                )
+            )
 
         self.view.close()
+
+
+class VisualRuleEditorController:
+    def __init__(self, view: "VisualRuleEditor"):
+        self.view = view
+        self.app_config = AppConfig()
