@@ -1,10 +1,11 @@
+from copy import deepcopy
 from typing import TYPE_CHECKING, Any, Optional
 import flet as ft
+import bidict
 
 if TYPE_CHECKING:
     from include.ui.controls.components.rulemanager import VisualRuleEditor
 
-from include.ui.controls.dialogs.admin import groups
 from include.util.locale import get_translation
 
 t = get_translation()
@@ -14,22 +15,85 @@ _ = t.gettext
 class EditSectionEntriesControlBar(ft.Row):
     def __init__(
         self,
-        parent_edit_section: "VisualRuleEditorEditSection",
+        parent_area: "SubRuleGroupEditEntriesArea",
         ref: ft.Ref | None = None,
     ):
         super().__init__(ref=ref)
         self.page: ft.Page
-        self.parent_edit_section = parent_edit_section
+        self.parent_area = parent_area
+
+        self.progress_ring = ft.ProgressRing(visible=False)
+        self.name_textfield = ft.TextField(
+            expand=True,
+            expand_loose=True,
+            hint_text=_("Add..."),
+            on_submit=self.on_textfield_submit,
+        )
+        self.submit_button = ft.IconButton(
+            icon=ft.Icons.ADD,
+            on_click=self.on_add_button_click,
+        )
 
         self.controls = [
-            ft.IconButton(
-                icon=ft.Icons.ADD,
-                on_click=self.on_add_subgroup_clicked,
-            ),
-            ft.TextField(expand=True, expand_loose=True, hint_text=_("e.g. ")),
+            self.name_textfield,
+            self.submit_button,
+            self.progress_ring,
         ]
 
-    async def on_add_subgroup_clicked(self, event: ft.Event[ft.IconButton]): ...
+    def disable_interactions(self):
+        self.name_textfield.disabled = True
+        self.submit_button.visible = False
+        self.progress_ring.visible = True
+        self.update()
+
+    def enable_interactions(self):
+        self.name_textfield.disabled = False
+        self.submit_button.visible = True
+        self.progress_ring.visible = False
+        self.update()
+
+    async def on_textfield_submit(self, event: ft.Event[ft.TextField]):
+        self.page.run_task(self.action_submit)
+
+    async def on_add_button_click(self, event: ft.Event[ft.IconButton]):
+        self.page.run_task(self.action_submit)
+
+    async def action_submit(self):
+        current_textfield_value = self.name_textfield.value.strip()
+        if not current_textfield_value:
+            return  # Ignore empty input
+
+        self.disable_interactions()
+        self.parent_area.require.append(current_textfield_value)
+        self.parent_area.require_listview.controls.append(
+            EntryListTile(self.parent_area, current_textfield_value)
+        )
+        self.parent_area.require_listview.update()
+        self.name_textfield.value = ""
+        self.enable_interactions()
+
+
+class EntryListTile(ft.ListTile):
+    def __init__(
+        self,
+        parent_entries_area: "SubRuleGroupEditEntriesArea",
+        entry_name: str,
+        ref: ft.Ref | None = None,
+    ):
+        super().__init__(ref=ref)
+        self.page: ft.Page
+        self.parent_entries_area = parent_entries_area
+        self.entry_name = entry_name
+
+        self.title = ft.Text(self.entry_name)
+        self.trailing = ft.IconButton(
+            icon=ft.Icons.REMOVE,
+            on_click=self.on_remove_clicked,
+        )
+
+    async def on_remove_clicked(self, event: ft.Event[ft.IconButton]):
+        self.parent_entries_area.require.remove(self.entry_name)
+        self.parent_entries_area.require_listview.controls.remove(self)
 
 
 class SubRuleGroupEditEntriesArea(ft.ExpansionTile):
@@ -47,28 +111,47 @@ class SubRuleGroupEditEntriesArea(ft.ExpansionTile):
         self.match_mode = match_mode
         self.require = require
 
+        self.option_names_bidict = bidict.bidict(
+            {
+                "all": _("All"),
+                "any": _("Any"),
+            }
+        )
+
+        self.mode_dropdown = ft.Dropdown(
+            options=[
+                ft.DropdownOption(
+                    "all",
+                    self.option_names_bidict["all"],
+                    leading_icon=ft.Icons.SELECT_ALL,
+                ),
+                ft.DropdownOption(
+                    "any",
+                    self.option_names_bidict["any"],
+                    leading_icon=ft.Icons.FILE_COPY,
+                ),
+            ],
+            label=_("Match Mode"),
+            value=self.match_mode,
+            on_change=self.on_match_mode_changed,
+            align=ft.Alignment.TOP_LEFT,
+            dense=True,
+            expand=True,
+            expand_loose=True,
+        )
+
+        self.require_listview = ft.ListView(
+            expand=True,
+            expand_loose=True,
+            spacing=5,
+            padding=ft.Padding.only(top=5),
+            controls=[EntryListTile(self, name) for name in self.require],
+        )
+
         controls = [
-            ft.Dropdown(
-                options=[
-                    ft.DropdownOption(
-                        "all", _("All"), leading_icon=ft.Icons.SELECT_ALL
-                    ),
-                    ft.DropdownOption("any", _("Any"), leading_icon=ft.Icons.FILE_COPY),
-                ],
-                label=_("Match Mode"),
-                value=self.match_mode,
-                on_change=self.on_match_mode_changed,
-                align=ft.Alignment.TOP_LEFT,
-                dense=True,
-                expand=True,
-            ),
-            ft.ListView(
-                expand=True,
-                expand_loose=True,
-                spacing=5,
-                padding=ft.Padding.only(top=5),
-                controls=[ft.ListTile(title=ft.Text(item)) for item in self.require],
-            ),
+            self.mode_dropdown,
+            EditSectionEntriesControlBar(self),
+            self.require_listview,
             # EditSectionEntriesControlBar(self),
         ]
 
@@ -89,7 +172,9 @@ class SubRuleGroupEditEntriesArea(ft.ExpansionTile):
         )
 
     async def on_match_mode_changed(self, event: ft.Event[ft.Dropdown]):
-        self.match_mode = event.control.value
+        # This is a temporary workaround for ft.Dropdown not updating value immediately.
+        # It seemed that only by using event.data can we always get the updated value.
+        self.match_mode = self.option_names_bidict.inverse[event.data]
         # print(f"Match mode changed to {self.match_mode}")
 
     @property
@@ -115,8 +200,8 @@ class SubRuleGroupEditArea(ft.ExpansionTile):
         self.parent_collection_area = parent_collection_area
         self.index = index
         self.match_mode = match_mode
-        self.match_groups = match_groups
-        self.match_rights = match_rights
+        self.match_groups = deepcopy(match_groups)
+        self.match_rights = deepcopy(match_rights)
 
         match self.match_mode:
             case "all":
@@ -127,19 +212,6 @@ class SubRuleGroupEditArea(ft.ExpansionTile):
                 raise ValueError(f"Invalid subgroup match mode '{self.match_mode}'")
 
         controls = []
-        if self.match_groups:  # handle groups
-            groups_block_match_mode = self.match_groups.get("match", None)
-            groups_block_require = self.match_groups.get("require", [])
-            assert groups_block_match_mode is not None
-
-            groups_block_expansion_tile = SubRuleGroupEditEntriesArea(
-                self,
-                "groups",
-                groups_block_match_mode,
-                groups_block_require,
-            )
-
-            controls.append(groups_block_expansion_tile)
 
         if self.match_rights:  # handle rights
             rights_block_match_mode = self.match_rights.get("match", None)
@@ -153,6 +225,20 @@ class SubRuleGroupEditArea(ft.ExpansionTile):
                 rights_block_require,
             )
             controls.append(rights_block_expansion_tile)
+
+        if self.match_groups:  # handle groups
+            groups_block_match_mode = self.match_groups.get("match", None)
+            groups_block_require = self.match_groups.get("require", [])
+            assert groups_block_match_mode is not None
+
+            groups_block_expansion_tile = SubRuleGroupEditEntriesArea(
+                self,
+                "groups",
+                groups_block_match_mode,
+                groups_block_require,
+            )
+
+            controls.append(groups_block_expansion_tile)
 
         super().__init__(
             _("Subgroup #{index}").format(
@@ -265,7 +351,7 @@ class VisualRuleEditorEditSection(ft.Column):
                 self,
             )
 
-        rules: list[dict] = self.parent_editor.cached_rule_data.get(
+        rules: list[dict] = self.parent_editor.edited_rule_data.get(
             self.access_type, []
         )
 
@@ -297,7 +383,7 @@ class VisualRuleEditorEditSection(ft.Column):
 
     def will_unmount(self):
         super().will_unmount()
-        self.parent_editor.cached_rule_data[self.access_type] = self.dict_data
+        self.parent_editor.edited_rule_data[self.access_type] = self.dict_data
 
     @property
     def dict_data(self) -> list[dict[str, Any]]:

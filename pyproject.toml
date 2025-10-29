@@ -19,7 +19,8 @@ dependencies = [
   "requests",
   "aiofiles",
   "PyYAML",
-  "python-socks"
+  "python-socks",
+  "bidict>=0.23.1",
 ]
 
 [tool.flet]

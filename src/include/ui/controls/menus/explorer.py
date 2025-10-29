@@ -163,6 +163,12 @@ class DirectoryRightMenuDialog(AlertDialog):
                             on_click=self.rename_button_click,
                         ),
                         ft.ListTile(
+                            leading=ft.Icon(ft.Icons.LOCK_PERSON_OUTLINED),
+                            title=ft.Text(_("Grant Access")),
+                            subtitle=ft.Text(_("Grant access to other users")),
+                            # on_click=self.move_directory_click,
+                        ),
+                        ft.ListTile(
                             leading=ft.Icon(ft.Icons.SETTINGS_OUTLINED),
                             title=ft.Text(_("Set Permissions")),
                             subtitle=ft.Text(_("Change access rules for this directory")),

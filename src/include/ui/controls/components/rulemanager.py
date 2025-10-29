@@ -1,11 +1,9 @@
 from copy import deepcopy
 from typing import TYPE_CHECKING, Any
-import gettext
 import json
 
 import flet as ft
 
-from include.constants import LOCALE_PATH
 from include.controllers.dialogs.rulemanager import (
     RuleManagerController,
     VisualRuleEditorController,
@@ -124,6 +122,7 @@ class RuleManager(AlertDialog):
     async def on_editor_change(self, event: ft.Event[ft.Tabs]):
         if event.control.selected_index == 0:
             # Switch to visual editor
+            self.content_textfield.error = None
             try:
                 rules_data = (
                     json.loads(self.content_textfield.value)
@@ -143,7 +142,8 @@ class RuleManager(AlertDialog):
 
         elif event.control.selected_index == 1:
             # Switch to source code editor
-            if self.cached_access_rules != self.visual_editor.dict_data:
+            if self.visual_editor.modified:
+                # print("modified")
                 self.cached_access_rules = deepcopy(self.visual_editor.dict_data)
                 self.content_textfield.value = json.dumps(
                     self.cached_access_rules, indent=4
@@ -198,7 +198,9 @@ class VisualRuleEditor(ft.Column):
         super().__init__(expand=True, expand_loose=True)
         self.manager = manager
         self.controller = VisualRuleEditorController(self)
+
         self.cached_rule_data: dict[str, Any] = {}
+        self.edited_rule_data: dict[str, Any] = {}
 
         self.current_edit_section: VisualRuleEditorEditSection = (
             VisualRuleEditorEditSection(self, "read")
@@ -222,11 +224,16 @@ class VisualRuleEditor(ft.Column):
         ]
 
     def set_rule_data(self, data: dict[str, Any]):
-        self.cached_rule_data = deepcopy(data)
+        self.cached_rule_data = deepcopy(data) # must be two different objects
+        self.edited_rule_data = deepcopy(data)
 
     @property
     def dict_data(self) -> dict[str, Any]:
-        self.cached_rule_data[self.current_edit_section.access_type] = (
+        self.edited_rule_data[self.current_edit_section.access_type] = (
             self.current_edit_section.dict_data
-        ) # Ensure the current edit section's data is up to date
-        return self.cached_rule_data
+        )  # Ensure the current edit section's data is up to date
+        return self.edited_rule_data
+    
+    @property
+    def modified(self) -> bool:
+        return self.dict_data != self.cached_rule_data
