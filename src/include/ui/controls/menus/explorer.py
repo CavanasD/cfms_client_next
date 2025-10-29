@@ -1,11 +1,9 @@
 from typing import TYPE_CHECKING
-import gettext
 
 import flet as ft
 
 from include.classes.client import LockableClientConnection
-from include.constants import LOCALE_PATH
-from include.ui.controls.dialogs.base import AlertDialog
+from include.classes.config import AppConfig
 from include.ui.controls.dialogs.contextmenu.explorer import (
     GetDirectoryInfoDialog,
     GetDocumentInfoDialog,
@@ -13,6 +11,7 @@ from include.ui.controls.dialogs.contextmenu.explorer import (
 )
 from include.ui.controls.menus.base import RightMenuDialog
 from include.ui.controls.components.rulemanager import RuleManager
+from include.ui.controls.placeholder import to_be_implemented
 from include.ui.util.notifications import send_error
 from include.ui.util.path import get_directory
 from include.util.requests import do_request
@@ -21,6 +20,7 @@ if TYPE_CHECKING:
     from include.ui.controls.views.explorer import FileListView
 
 from include.util.locale import get_translation
+
 t = get_translation()
 _ = t.gettext
 
@@ -65,6 +65,7 @@ class DocumentRightMenuDialog(RightMenuDialog):
                     "subtitle": _("Change access rules for this file"),
                     "on_click": self.set_access_rules_button_click,
                     "ref": self.access_settings_ref,
+                    "require": {"set_access_rules"},
                 },
                 {
                     "icon": ft.Icons.INFO_OUTLINED,
@@ -78,9 +79,7 @@ class DocumentRightMenuDialog(RightMenuDialog):
         )
 
     def build(self):
-        assert type(self.page) == ft.Page
-        self.user_permissions = self.page.session.store.get("user_permissions")
-        assert type(self.user_permissions) == list
+        self.user_permissions = self.app_config.user_permissions
         assert self.access_settings_ref.current
         self.access_settings_ref.current.visible = (
             "set_access_rules" in self.user_permissions
@@ -90,20 +89,23 @@ class DocumentRightMenuDialog(RightMenuDialog):
         self.menu_listview.disabled = True
 
     async def delete_button_click(self, event: ft.Event[ft.ListTile]):
-        assert type(self.page) == ft.Page
-        conn = self.page.session.store.get("conn")
-        assert type(conn) == LockableClientConnection
+        conn = self.app_config.get_not_none_attribute("conn")
         yield self.disable_interactions()
 
         response = await do_request(
             conn,
             action="delete_document",
             data={"document_id": self.document_id},
-            username=self.page.session.store.get("username"),
-            token=self.page.session.store.get("token"),
+            username=self.app_config.username,
+            token=self.app_config.token,
         )
         if (code := response["code"]) != 200:
-            send_error(event.page, _("Deletion failed: ({code}) {message}").format(code=code, message=response['message']))
+            send_error(
+                event.page,
+                _("Deletion failed: ({code}) {message}").format(
+                    code=code, message=response["message"]
+                ),
+            )
         else:
             await get_directory(
                 self.parent_listview.parent_manager.current_directory_id,
@@ -125,7 +127,7 @@ class DocumentRightMenuDialog(RightMenuDialog):
         self.page.show_dialog(GetDocumentInfoDialog(self))  # bug: not always showing
 
 
-class DirectoryRightMenuDialog(AlertDialog):
+class DirectoryRightMenuDialog(RightMenuDialog):
     def __init__(
         self,
         directory_id: str,
@@ -133,64 +135,53 @@ class DirectoryRightMenuDialog(AlertDialog):
         ref: ft.Ref | None = None,
         visible=True,
     ):
-        super().__init__(ref=ref, visible=visible)
-
-        self.modal = False
-        self.scrollable = True
-        self.title = ft.Text(_("Manage Directories"))
-
         self.directory_id = directory_id
         self.user_permissions = []
         self.parent_listview = parent_listview
         self.access_settings_ref = ft.Ref[ft.ListTile]()
 
-        self.menu_listview = ft.ListView(
-            controls=[
-                ft.Column(
-                    [
-                        ft.ListTile(
-                            leading=ft.Icon(ft.Icons.DELETE),
-                            title=ft.Text(_("Delete")),
-                            subtitle=ft.Text(_("Delete this directory")),
-                            on_click=self.delete_button_click,
-                        ),
-                        ft.ListTile(
-                            leading=ft.Icon(
-                                ft.Icons.DRIVE_FILE_RENAME_OUTLINE_OUTLINED
-                            ),
-                            title=ft.Text(_("Rename")),
-                            subtitle=ft.Text(_("Rename this directory")),
-                            on_click=self.rename_button_click,
-                        ),
-                        ft.ListTile(
-                            leading=ft.Icon(ft.Icons.LOCK_PERSON_OUTLINED),
-                            title=ft.Text(_("Grant Access")),
-                            subtitle=ft.Text(_("Grant access to other users")),
-                            # on_click=self.move_directory_click,
-                        ),
-                        ft.ListTile(
-                            leading=ft.Icon(ft.Icons.SETTINGS_OUTLINED),
-                            title=ft.Text(_("Set Permissions")),
-                            subtitle=ft.Text(_("Change access rules for this directory")),
-                            on_click=self.set_access_rules_button_click,
-                            ref=self.access_settings_ref,  # pyright: ignore[reportArgumentType]
-                        ),
-                        ft.ListTile(
-                            leading=ft.Icon(ft.Icons.INFO_OUTLINED),
-                            title=ft.Text(_("Properties")),
-                            subtitle=ft.Text(_("View directory details")),
-                            on_click=self.open_directory_info_click,
-                        ),
-                    ],
-                )
-            ]
+        super().__init__(
+            title=ft.Text(_("Manage Directories")),
+            menu_items=[
+                {
+                    "icon": ft.Icons.DELETE,
+                    "title": _("Delete"),
+                    "subtitle": _("Delete this directory"),
+                    "on_click": self.delete_button_click,
+                },
+                {
+                    "icon": ft.Icons.DRIVE_FILE_RENAME_OUTLINE_OUTLINED,
+                    "title": _("Rename"),
+                    "subtitle": _("Rename this directory"),
+                    "on_click": self.rename_button_click,
+                },
+                {
+                    "icon": ft.Icons.LOCK_PERSON_OUTLINED,
+                    "title": _("Grant Access"),
+                    "subtitle": _("Grant access to other users"),
+                    "on_click": to_be_implemented,  # TODO: Implement grant access dialog
+                },
+                {
+                    "icon": ft.Icons.SETTINGS_OUTLINED,
+                    "title": _("Set Permissions"),
+                    "subtitle": _("Change access rules for this directory"),
+                    "on_click": self.set_access_rules_button_click,
+                    "ref": self.access_settings_ref,
+                    "require": {"set_access_rules"},
+                },
+                {
+                    "icon": ft.Icons.INFO_OUTLINED,
+                    "title": _("Properties"),
+                    "subtitle": _("View directory details"),
+                    "on_click": self.open_directory_info_click,
+                },
+            ],
+            ref=ref,
+            visible=visible,
         )
-        self.content = ft.Container(self.menu_listview, width=480)
 
     def build(self):
-        assert type(self.page) == ft.Page
-        self.user_permissions = self.page.session.store.get("user_permissions")
-        assert type(self.user_permissions) == list
+        self.user_permissions = self.app_config.user_permissions
         assert self.access_settings_ref.current
         self.access_settings_ref.current.visible = (
             "set_access_rules" in self.user_permissions
@@ -200,20 +191,23 @@ class DirectoryRightMenuDialog(AlertDialog):
         self.menu_listview.disabled = True
 
     async def delete_button_click(self, event: ft.Event[ft.ListTile]):
-        assert type(self.page) == ft.Page
-        conn = self.page.session.store.get("conn")
-        assert type(conn) == LockableClientConnection
+        conn = self.app_config.get_not_none_attribute("conn")
         yield self.disable_interactions()
 
         response = await do_request(
             conn,
             action="delete_directory",
             data={"folder_id": self.directory_id},
-            username=self.page.session.store.get("username"),
-            token=self.page.session.store.get("token"),
+            username=self.app_config.username,
+            token=self.app_config.token,
         )
         if (code := response["code"]) != 200:
-            send_error(event.page, _("Deletion failed: ({code}) {message}").format(code=code, message=response['message']))
+            send_error(
+                event.page,
+                _("Deletion failed: ({code}) {message}").format(
+                    code=code, message=response["message"]
+                ),
+            )
         else:
             await get_directory(
                 self.parent_listview.parent_manager.current_directory_id,

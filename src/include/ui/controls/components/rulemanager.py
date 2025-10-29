@@ -8,7 +8,7 @@ from include.controllers.dialogs.rulemanager import (
     RuleManagerController,
     VisualRuleEditorController,
 )
-from include.ui.controls.components.visualmgr.visualeditor import (
+from include.ui.controls.components.visualmgr.editor import (
     VisualRuleEditorEditSection,
     VisualRuleEditorNavigationRail,
 )
@@ -142,13 +142,7 @@ class RuleManager(AlertDialog):
 
         elif event.control.selected_index == 1:
             # Switch to source code editor
-            if self.visual_editor.modified:
-                # print("modified")
-                self.cached_access_rules = deepcopy(self.visual_editor.dict_data)
-                self.content_textfield.value = json.dumps(
-                    self.cached_access_rules, indent=4
-                )
-                self.update()
+            self.sync_editor_data()
 
     def did_mount(self):
         super().did_mount()
@@ -169,9 +163,18 @@ class RuleManager(AlertDialog):
         self.submit_button.visible = True
         self.update()
 
+    def sync_editor_data(self):
+        if self.visual_editor.modified:
+            self.cached_access_rules = deepcopy(self.visual_editor.dict_data)
+            self.content_textfield.value = json.dumps(
+                self.cached_access_rules, indent=4
+            )
+            self.update()
+
     async def submit_button_click(self, event: ft.Event[ft.TextButton]):
         assert self.page
         self.lock_edit()
+        self.sync_editor_data()
 
         try:
             data = {

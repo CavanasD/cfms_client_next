@@ -16,9 +16,18 @@ changelogs = [
     ChangelogEntry(
         "v0.2.20",
         "Visual Rule Editor Improvements",
-        "This version improves the visual rule editor by ensuring that "
-        "changes made in the visual editor are accurately reflected in "
-        "the source code editor and vice versa.",
+        """
+This version improves the visual rule editor by ensuring that 
+changes made in the visual editor are accurately reflected in 
+the source code editor and vice versa.
+
+Fixes:
+- Synchronization between visual and source code editors
+- Editor not updating when directly submitting changes from 
+  visual rule editor
+- Index error when adding new sub-rule groups
+- Assertion errors when checking the type of `controls`
+    """,
         date(2025, 10, 28),
     ),
     ChangelogEntry(

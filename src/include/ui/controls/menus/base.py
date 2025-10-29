@@ -2,6 +2,7 @@ from typing import Any
 
 import flet as ft
 
+from include.classes.config import AppConfig
 from include.ui.controls.dialogs.base import AlertDialog
 
 __all__ = ["RightMenuDialog"]
@@ -32,17 +33,31 @@ class RightMenuDialog(AlertDialog):
         super().__init__(
             title=title, modal=modal, scrollable=True, ref=ref, visible=visible
         )
+        self.app_config = AppConfig()
         # Create menu listview directly with ListTiles
-        self.menu_listview = ft.ListView(
-            controls=[
+        controls = []
+        for item in menu_items:
+            item_require = set(item.get("require", {}))
+            if (item_require & set(self.app_config.user_permissions)) != item_require:
+                continue
+
+            item_icon = item["icon"]
+            item_title = item["title"]
+            item_subtitle = item["subtitle"]
+            item_on_click = item["on_click"]
+            item_ref = item.get("ref")  # Optional ref
+
+            controls.append(
                 ft.ListTile(
-                    leading=ft.Icon(item["icon"]),
-                    title=ft.Text(item["title"]),
-                    subtitle=ft.Text(item["subtitle"]),
-                    on_click=item["on_click"],
-                    ref=item.get("ref"),  # Optional ref
+                    leading=item_icon,
+                    title=item_title,
+                    subtitle=item_subtitle,
+                    on_click=item_on_click,
+                    ref=item_ref,
                 )
-                for item in menu_items
-            ]
+            )
+
+        self.menu_listview = ft.ListView(
+            controls=controls,
         )
         self.content = ft.Container(self.menu_listview, width=480)

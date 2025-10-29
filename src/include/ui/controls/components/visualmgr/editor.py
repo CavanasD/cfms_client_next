@@ -6,71 +6,15 @@ import bidict
 if TYPE_CHECKING:
     from include.ui.controls.components.rulemanager import VisualRuleEditor
 
+from include.ui.controls.components.visualmgr.columns import CollectionAreasColumn
 from include.util.locale import get_translation
+from include.ui.controls.components.visualmgr.bars import (
+    EntryListTileControlBar,
+    SubRuleGroupControlBar,
+)
 
 t = get_translation()
 _ = t.gettext
-
-
-class EditSectionEntriesControlBar(ft.Row):
-    def __init__(
-        self,
-        parent_area: "SubRuleGroupEditEntriesArea",
-        ref: ft.Ref | None = None,
-    ):
-        super().__init__(ref=ref)
-        self.page: ft.Page
-        self.parent_area = parent_area
-
-        self.progress_ring = ft.ProgressRing(visible=False)
-        self.name_textfield = ft.TextField(
-            expand=True,
-            expand_loose=True,
-            hint_text=_("Add..."),
-            on_submit=self.on_textfield_submit,
-        )
-        self.submit_button = ft.IconButton(
-            icon=ft.Icons.ADD,
-            on_click=self.on_add_button_click,
-        )
-
-        self.controls = [
-            self.name_textfield,
-            self.submit_button,
-            self.progress_ring,
-        ]
-
-    def disable_interactions(self):
-        self.name_textfield.disabled = True
-        self.submit_button.visible = False
-        self.progress_ring.visible = True
-        self.update()
-
-    def enable_interactions(self):
-        self.name_textfield.disabled = False
-        self.submit_button.visible = True
-        self.progress_ring.visible = False
-        self.update()
-
-    async def on_textfield_submit(self, event: ft.Event[ft.TextField]):
-        self.page.run_task(self.action_submit)
-
-    async def on_add_button_click(self, event: ft.Event[ft.IconButton]):
-        self.page.run_task(self.action_submit)
-
-    async def action_submit(self):
-        current_textfield_value = self.name_textfield.value.strip()
-        if not current_textfield_value:
-            return  # Ignore empty input
-
-        self.disable_interactions()
-        self.parent_area.require.append(current_textfield_value)
-        self.parent_area.require_listview.controls.append(
-            EntryListTile(self.parent_area, current_textfield_value)
-        )
-        self.parent_area.require_listview.update()
-        self.name_textfield.value = ""
-        self.enable_interactions()
 
 
 class EntryListTile(ft.ListTile):
@@ -150,7 +94,7 @@ class SubRuleGroupEditEntriesArea(ft.ExpansionTile):
 
         controls = [
             self.mode_dropdown,
-            EditSectionEntriesControlBar(self),
+            EntryListTileControlBar(self),
             self.require_listview,
             # EditSectionEntriesControlBar(self),
         ]
@@ -255,7 +199,7 @@ class SubRuleGroupEditArea(ft.ExpansionTile):
 
     @property
     def dict_data(self) -> dict[str, Any]:
-        assert self.controls
+        assert type(self.controls) == list
         data: dict[str, Any] = {"match": self.match_mode}
 
         for control in self.controls:
@@ -286,12 +230,12 @@ class SubRuleGroupCollectionArea(ft.ExpansionTile):
         )
         self.page: ft.Page
         self.parent_edit_section = parent_edit_section
-        self.controls = []
+        self.controls = [SubRuleGroupControlBar(self)]
 
         self.index = index
         self.match_mode = match_mode
 
-        for subgroup in match_groups:
+        for index, subgroup in enumerate(match_groups):
             subgroup_match_mode: Optional[str] = subgroup.get("match", None)
             subgroup_rights_block: dict = subgroup.get("rights", {})
             subgroup_groups_block: dict = subgroup.get("groups", {})
@@ -299,7 +243,7 @@ class SubRuleGroupCollectionArea(ft.ExpansionTile):
 
             subgroup_expansion_tile = SubRuleGroupEditArea(
                 self,
-                match_groups.index(subgroup) + 1,
+                index + 1,
                 subgroup_match_mode,
                 subgroup_groups_block,
                 subgroup_rights_block,
@@ -309,7 +253,7 @@ class SubRuleGroupCollectionArea(ft.ExpansionTile):
 
     @property
     def dict_data(self) -> list[dict[str, Any]]:
-        assert self.controls
+        assert type(self.controls) == list
         data: list[dict[str, Any]] = []
 
         for control in self.controls:
@@ -328,17 +272,23 @@ class VisualRuleEditorEditSection(ft.Column):
     ):
         super().__init__(ref=ref, expand=True, expand_loose=True)
         self.page: ft.Page
-        # self.alignment = ft.MainAxisAlignment.
+        self.parent_editor = parent_editor
         self.horizontal_alignment = ft.CrossAxisAlignment.CENTER
         self.scroll = ft.ScrollMode.AUTO
         self.access_type = access_type  # "read", "write", "move", "manage"
 
-        self.parent_editor = parent_editor
-        self.controls = []
+        self.empty_rule_text = ft.Text(
+            _("No rules defined for this access type."),
+            text_align=ft.TextAlign.CENTER,
+            align=ft.Alignment.CENTER,
+            visible=False,
+        )
+        self.collection_areas_column = CollectionAreasColumn(self)
+        self.controls = [self.empty_rule_text, self.collection_areas_column]
 
     async def load_rules(self):
         # clear existing controls
-        self.controls.clear()
+        self.collection_areas_column.controls.clear()
 
         async def parse_sub_rules(
             match_mode: str, match_groups: list[dict], index
@@ -355,26 +305,19 @@ class VisualRuleEditorEditSection(ft.Column):
             self.access_type, []
         )
 
-        for rule in rules:
+        for index, rule in enumerate(rules):
             match_mode = rule.get("match", None)
             match_groups = rule.get("match_groups", [])
             assert match_mode is not None
 
             # get ExpansionTile for this rule
             new_rule_tile = await parse_sub_rules(
-                match_mode, match_groups, rules.index(rule)
+                match_mode, match_groups, index
             )
-            self.controls.append(new_rule_tile)
+            self.collection_areas_column.controls.append(new_rule_tile)
+        self.collection_areas_column.update()
 
-        if not self.controls:
-            self.controls.append(
-                ft.Text(
-                    _("No rules defined for this access type."),
-                    text_align=ft.TextAlign.CENTER,
-                    align=ft.Alignment.CENTER,
-                )
-            )
-
+        self.empty_rule_text.visible = not len(self.collection_areas_column.controls)
         self.update()
 
     def did_mount(self):
@@ -387,10 +330,9 @@ class VisualRuleEditorEditSection(ft.Column):
 
     @property
     def dict_data(self) -> list[dict[str, Any]]:
-        assert self.controls
         data: list[dict[str, Any]] = []
 
-        for control in self.controls:
+        for control in self.collection_areas_column.controls:
             if isinstance(control, SubRuleGroupCollectionArea):
                 data.append(
                     {
