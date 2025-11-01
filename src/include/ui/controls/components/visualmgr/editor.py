@@ -1,7 +1,6 @@
 from copy import deepcopy
 from typing import TYPE_CHECKING, Any, Optional
 import flet as ft
-import bidict
 
 if TYPE_CHECKING:
     from include.ui.controls.components.rulemanager import VisualRuleEditor
@@ -55,29 +54,22 @@ class SubRuleGroupEditEntriesArea(ft.ExpansionTile):
         self.match_mode = match_mode
         self.require = require
 
-        self.option_names_bidict = bidict.bidict(
-            {
-                "all": _("All"),
-                "any": _("Any"),
-            }
-        )
-
         self.mode_dropdown = ft.Dropdown(
             options=[
                 ft.DropdownOption(
                     "all",
-                    self.option_names_bidict["all"],
+                    _("All"),
                     leading_icon=ft.Icons.SELECT_ALL,
                 ),
                 ft.DropdownOption(
                     "any",
-                    self.option_names_bidict["any"],
+                    _("Any"),
                     leading_icon=ft.Icons.FILE_COPY,
                 ),
             ],
             label=_("Match Mode"),
             value=self.match_mode,
-            on_change=self.on_match_mode_changed,
+            on_select=self.on_match_mode_changed,
             align=ft.Alignment.TOP_LEFT,
             dense=True,
             expand=True,
@@ -112,13 +104,11 @@ class SubRuleGroupEditEntriesArea(ft.ExpansionTile):
             controls=controls,
             ref=ref,
             controls_padding=ft.Padding(top=15),
-            initially_expanded=True,
+            expanded=True,
         )
 
     async def on_match_mode_changed(self, event: ft.Event[ft.Dropdown]):
-        # This is a temporary workaround for ft.Dropdown not updating value immediately.
-        # It seemed that only by using event.data can we always get the updated value.
-        self.match_mode = self.option_names_bidict.inverse[event.data]
+        self.match_mode = event.data
         # print(f"Match mode changed to {self.match_mode}")
 
     @property
@@ -190,7 +180,7 @@ class SubRuleGroupEditArea(ft.ExpansionTile):
             ),
             subtitle=_("Mode: {mode}").format(mode=display_match_mode),
             controls=controls,
-            initially_expanded=True,
+            expanded=True,
             ref=ref,
         )
 
@@ -222,7 +212,7 @@ class SubRuleGroupCollectionArea(ft.ExpansionTile):
                 index=index + 1,
             ),
             subtitle=_("Mode: {mode}").format(mode=match_mode),
-            initially_expanded=not index,
+            expanded=not index,
             expand=True,
             expand_loose=True,
             align=ft.Alignment.TOP_CENTER,

@@ -1,6 +1,6 @@
 [project]
 name = "cfms-client-next"
-version = "0.2.20"
+version = "0.2.21"
 description = "The next generation of CFMS client based on Flet framework"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -8,11 +8,11 @@ authors = [
     { name = "Creeper19472", email = "creeper19472@crpteam.club" }
 ]
 dependencies = [
-  "flet>=0.70.0.dev6412",
-  "flet_permission_handler>=0.70.0.dev6412",
+  "flet>=0.70.0.dev6533",
+  "flet_permission_handler>=0.70.0.dev6533",
   "flet-open-file @ git+https://github.com/creeper19472/flet-open-file",
   "flet_model @ git+https://github.com/creeper19472/Flet-Model",
-  "flet-datatable2>=0.70.0.dev6412",
+  "flet-datatable2>=0.70.0.dev6533",
   "websockets",
   "pycryptodome",
   "cffi",
@@ -44,7 +44,7 @@ url = "gh:creeper19472/flet-build-template"
 
 [dependency-groups]
 dev = [
-    "flet[all]>=0.70.0.dev6412",
+    "flet[all]>=0.70.0.dev6533",
 ]
 
 [tool.uv]
@@ -54,7 +54,7 @@ prerelease = "allow"
 package-mode = false
 
 [tool.poetry.group.dev.dependencies]
-flet = {extras = ["all"], version = "0.70.0.dev6412"}
+flet = {extras = ["all"], version = "0.70.0.dev6533"}
 
 [tool.flet.android.permission] # --android-permissions
 "android.permission.READ_EXTERNAL_STORAGE" = true

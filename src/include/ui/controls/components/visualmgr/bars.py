@@ -6,7 +6,6 @@ if TYPE_CHECKING:
     from include.ui.controls.components.visualmgr.editor import (
         SubRuleGroupCollectionArea,
         SubRuleGroupEditEntriesArea,
-        EntryListTile,
     )
 
 t = get_translation()
@@ -119,6 +118,7 @@ class EntryListTileControlBar(ft.Row):
         self.page.run_task(self.action_submit)
 
     async def action_submit(self):
+        from include.ui.controls.components.visualmgr.editor import EntryListTile
         current_textfield_value = self.name_textfield.value.strip()
         if not current_textfield_value:
             return  # Ignore empty input
