@@ -12,6 +12,7 @@ from include.ui.controls.menus.explorer import (
 from include.ui.util.path import get_directory, get_document
 
 from include.util.locale import get_translation
+
 t = get_translation()
 _ = t.gettext
 
@@ -66,7 +67,11 @@ def update_file_controls(
             DirectoryRightMenuDialog(event.control.content.data[0], view)
         )
 
-    if parent_id != None:
+    if (
+        parent_id != None
+        and view.parent_manager.current_directory_id
+        != view.parent_manager.root_directory_id
+    ):
         # print("parent_id: ", parent_id)
         view.controls = [
             ft.ListTile(

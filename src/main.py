@@ -41,14 +41,6 @@ async def main(page: ft.Page):
         # Set translation singleton 
         set_translation(preferred_language)
         
-        # # Also try to set locale
-        # try:
-        #     if preferred_language == "zh_CN":
-        #         locale.setlocale(locale.LC_ALL, "zh_CN.UTF-8")
-        #     elif preferred_language == "en":
-        #         locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
-        # except:
-        #     pass  # Ignore locale setting errors
     except:
         # If config fails, use default
         os.environ["LANGUAGE"] = "zh_CN"

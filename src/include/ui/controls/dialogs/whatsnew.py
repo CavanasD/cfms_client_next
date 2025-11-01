@@ -14,6 +14,16 @@ _ = t.gettext
 
 changelogs = [
     ChangelogEntry(
+        "v0.2.21",
+        "Bug fixes",
+        "This version corrects an issue where File Explorer "
+        "still displayed the \"Parent Directory\" button "
+        "when setting a new root directory via the \"Jump "
+        "To\" function, causing inconsistencies with "
+        "`FilePathIndicator` control.",
+        date(2025, 11, 1),
+    ),
+    ChangelogEntry(
         "v0.2.20",
         "Visual Rule Editor Improvements",
         """

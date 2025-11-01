@@ -51,12 +51,16 @@ class OpenDirectoryDialogController:
         self.app_config = AppConfig()
 
     async def action_open_directory(self, directory_id: str):
+
+        directory_id = "" if directory_id == "/" else directory_id
+
         try:
             await get_directory(
                 directory_id,
                 self.view.parent_manager.file_listview,
                 fallback=self.view.parent_manager.current_directory_id,
                 _raise_on_error=True,
+                _set_new_root=True,
             )
         except RequestFailureError as exc:
             if exc.response:
@@ -67,6 +71,6 @@ class OpenDirectoryDialogController:
             self.view.enable_interactions()
             return
 
-        self.view.parent_manager.indicator.clear()
+        self.view.parent_manager.indicator.reset()
         self.view.parent_manager.indicator.go(directory_id)
         self.view.close()

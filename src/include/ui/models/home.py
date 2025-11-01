@@ -18,13 +18,6 @@ class HomeModel(Model):
     padding = 20
     spacing = 10
 
-    # # UI Components
-    # appbar = ft.AppBar(
-    #     title=ft.Text("Home"),
-    #     center_title=True,
-    #     # bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST
-    # )
-
     def __init__(self, page: ft.Page, router: Router):
         super().__init__(page, router)
         self.homeview = HomeView()

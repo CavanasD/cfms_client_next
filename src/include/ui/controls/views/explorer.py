@@ -19,6 +19,7 @@ if TYPE_CHECKING:
     from include.ui.models.home import HomeModel
 
 from include.util.locale import get_translation
+
 t = get_translation()
 _ = t.gettext
 
@@ -26,16 +27,20 @@ _ = t.gettext
 class FilePathIndicator(ft.Column):
     def __init__(
         self,
-        path: Optional[str] = None,
+        display_root: Optional[str] = None,
         ref: ft.Ref | None = None,
     ):
         super().__init__(
             ref=ref,
         )
-        self.text = ft.Text()
+        self.text = ft.Text("/")
         self.controls = [self.text]
-        self.text.value = path if path else "./"
+
         self.paths: list[str] = []
+
+        if display_root and display_root != "/":
+            self.paths.extend(display_root.split("/"))
+            self.update_path()
 
     def update_path(self):
         self.text.value = "/" + "/".join(self.paths)
@@ -50,8 +55,8 @@ class FilePathIndicator(ft.Column):
             self.paths.pop()
         self.update_path()
 
-    def clear(self):
-        self.paths = []
+    def reset(self, new_root: Optional[str] = None):
+        self.paths = new_root.split("/") if new_root else []
         self.update_path()
 
 
@@ -82,6 +87,7 @@ class FileManagerView(ft.Container):
         self.expand = True
 
         # View variable definitions
+        self.root_directory_id: str | None = None
         self.previous_directory_id: str | None = None
         self.current_directory_id: str | None = None
         self.conn: LockableClientConnection
@@ -153,7 +159,7 @@ class FileManagerView(ft.Container):
         root_path = await self.parent_model.file_picker.get_directory_path()
         if not root_path:
             return
-        
+
         self.page.run_task(self.controller.action_directory_upload, root_path)
 
     async def on_create_directory_button_click(self, event: ft.Event[ft.IconButton]):

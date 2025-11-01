@@ -1,5 +1,4 @@
 from typing import TYPE_CHECKING, Optional
-import gettext
 import os
 
 import flet as ft
@@ -9,7 +8,6 @@ from include.classes.exceptions.transmission import (
     FileHashMismatchError,
     FileSizeMismatchError,
 )
-from include.constants import LOCALE_PATH
 from include.ui.util.notifications import send_error
 from include.util.requests import do_request
 from include.util.connect import get_connection
@@ -28,10 +26,10 @@ async def get_directory(
     view: "FileListView",
     fallback: Optional[str] = None,
     _raise_on_error=False,
+    _set_new_root=False,
 ):
     from include.ui.util.file_controls import update_file_controls
 
-    view.parent_manager.current_directory_id = id
     view.parent_manager.progress_ring.visible = True
     view.parent_manager.progress_ring.update()
     view.visible = False
@@ -47,7 +45,7 @@ async def get_directory(
     )
 
     if (code := response["code"]) != 200:
-        update_file_controls(view, [], [], view.parent_manager.previous_directory_id)
+        update_file_controls(view, [], [], view.parent_manager.current_directory_id)
         if _raise_on_error:
             view.parent_manager.progress_ring.visible = False
             view.parent_manager.progress_ring.update()
@@ -63,6 +61,11 @@ async def get_directory(
             ),
         )
     else:
+        if _set_new_root:
+            view.parent_manager.root_directory_id = id
+
+        view.parent_manager.current_directory_id = id
+
         update_file_controls(
             view,
             response["data"]["folders"],
