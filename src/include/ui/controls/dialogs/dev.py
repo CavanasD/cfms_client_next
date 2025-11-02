@@ -65,7 +65,6 @@ class DevRequestDialog(ft.AlertDialog):
             data_to_send = {}
 
         resp = await do_request(
-            self.app_config.get_not_none_attribute("conn"),
             request_name,
             data_to_send,
             username=self.app_config.username,

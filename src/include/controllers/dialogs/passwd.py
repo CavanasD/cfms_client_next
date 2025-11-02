@@ -20,7 +20,6 @@ class PasswdDialogController:
 
     async def action_passwd_user(self):
         response = await do_request(
-            self.app_config.get_not_none_attribute("conn"),
             "set_passwd",
             data={
                 "username": self.app_config.username,

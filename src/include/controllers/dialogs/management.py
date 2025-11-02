@@ -30,7 +30,6 @@ class AddUserAccountDialogController:
         self,
     ):
         response = await do_request(
-            self.app_config.get_not_none_attribute("conn"),
             action="create_user",
             data={
                 "username": self.view.username_field.value,
@@ -59,7 +58,6 @@ class RenameUserNicknameDialogController:
         self,
     ):
         response = await do_request(
-            self.app_config.get_not_none_attribute("conn"),
             action="rename_user",
             data={
                 "username": self.view.parent_dialog.username,
@@ -87,7 +85,6 @@ class EditUserGroupDialogController:
     async def submit_user_group_change(self, to_submit_list):
 
         response = await do_request(
-            self.app_config.get_not_none_attribute("conn"),
             action="change_user_groups",
             data={
                 "username": self.view.parent_dialog.username,
@@ -112,7 +109,6 @@ class EditUserGroupDialogController:
 
         # Fetch user group information
         group_list_response = await do_request(
-            self.app_config.get_not_none_attribute("conn"),
             action="list_groups",
             data={},
             username=self.app_config.username,
@@ -129,7 +125,6 @@ class EditUserGroupDialogController:
         ]
 
         user_data_response = await do_request(
-            self.app_config.get_not_none_attribute("conn"),
             action="get_user_info",
             data={
                 "username": self.view.parent_dialog.username,
@@ -169,7 +164,6 @@ class ViewUserInfoDialogController:
         self.view.update()
 
         response = await do_request(
-            self.app_config.get_not_none_attribute("conn"),
             action="get_user_info",
             data={
                 "username": self.view.parent_dialog.username,

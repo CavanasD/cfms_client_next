@@ -33,7 +33,6 @@ class RuleManagerController:
         self.view.lock_edit()
 
         info_resp = await do_request(
-            self.app_config.get_not_none_attribute("conn"),
             action,
             data,
             username=self.app_config.username,
@@ -69,7 +68,6 @@ class RuleManagerController:
                 raise ValueError(f"Invaild object type '{self.view.object_type}'")
 
         submit_resp = await do_request(
-            self.app_config.get_not_none_attribute("conn"),
             action,
             data,
             username=self.app_config.username,

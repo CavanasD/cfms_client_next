@@ -1,0 +1,59 @@
+import flet as ft
+
+
+class AboutPageTestInfoBlock(ft.Container):
+    """
+    A row to show the stage and other info during
+    the software test.
+    """
+
+    def __init__(
+        self,
+        visible: bool = True,
+        ref: ft.Ref | None = None,
+    ):
+        super().__init__(expand=True, expand_loose=True, visible=visible, ref=ref)
+        self.heading_letter = ft.Text("α", size=90, weight=ft.FontWeight.BOLD)
+        self.trailing_info = ft.Column(
+            controls=[
+                ft.Text("Alpha Test", size=24, weight=ft.FontWeight.BOLD),
+                ft.Text("This software is currently in alpha testing phase."),
+                ft.Text(
+                    "Software at this stage may receive intensive updates, "
+                    "but many problems may also appear and disappear in a "
+                    "short period of time.",
+                    max_lines=3,
+                ),
+                ft.Text(
+                    "Any issues encountered should be reported in time, "
+                    "but may take a long time to get resolved."
+                ),
+            ],
+            spacing=5,
+            expand=True,
+            expand_loose=True,
+            alignment=ft.MainAxisAlignment.CENTER,
+        )
+        self._row = ft.Row(
+            controls=[self.heading_letter, self.trailing_info],
+            vertical_alignment=ft.CrossAxisAlignment.CENTER,
+            margin=ft.Margin(20, 0, 20, 0),
+            spacing=15,
+            expand=True,
+            expand_loose=True,
+        )
+
+        self.content = self._row
+
+
+if __name__ == "__main__":
+
+    def main(page: ft.Page):
+        page.title = "About Page Test Info Block"
+        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+        page.vertical_alignment = ft.MainAxisAlignment.CENTER
+
+        about_info_block = AboutPageTestInfoBlock()
+        page.add(about_info_block)
+
+    ft.run(main)

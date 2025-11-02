@@ -14,12 +14,29 @@ _ = t.gettext
 
 changelogs = [
     ChangelogEntry(
+        "v0.2.22",
+        "Refactor Code Structure & Bug fixes",
+        """
+This version refactors the code structure of the 
+file explorer, meanwhile adding a new section in 
+the About page to display test build information. 
+
+What's more, this version improves the logic of 
+making requests, adding retry attempts when 
+network errors occur.
+
+Some issues are found and pending to be fixed in 
+future updates. 
+        """,
+        date(2025, 11, 2),
+    ),
+    ChangelogEntry(
         "v0.2.21",
         "Bug fixes",
         "This version corrects an issue where File Explorer "
-        "still displayed the \"Parent Directory\" button "
-        "when setting a new root directory via the \"Jump "
-        "To\" function, causing inconsistencies with "
+        'still displayed the "Parent Directory" button '
+        'when setting a new root directory via the "Jump '
+        'To" function, causing inconsistencies with '
         "`FilePathIndicator` control.",
         date(2025, 11, 1),
     ),

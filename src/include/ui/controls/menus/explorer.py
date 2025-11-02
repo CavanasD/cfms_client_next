@@ -2,8 +2,6 @@ from typing import TYPE_CHECKING
 
 import flet as ft
 
-from include.classes.client import LockableClientConnection
-from include.classes.config import AppConfig
 from include.ui.controls.dialogs.contextmenu.explorer import (
     GetDirectoryInfoDialog,
     GetDocumentInfoDialog,
@@ -23,6 +21,9 @@ from include.util.locale import get_translation
 
 t = get_translation()
 _ = t.gettext
+
+
+# TODO: Replace current solution with ft.ContentMenu when flet supports it
 
 
 class DocumentRightMenuDialog(RightMenuDialog):
@@ -93,7 +94,6 @@ class DocumentRightMenuDialog(RightMenuDialog):
         yield self.disable_interactions()
 
         response = await do_request(
-            conn,
             action="delete_document",
             data={"document_id": self.document_id},
             username=self.app_config.username,
@@ -195,7 +195,6 @@ class DirectoryRightMenuDialog(RightMenuDialog):
         yield self.disable_interactions()
 
         response = await do_request(
-            conn,
             action="delete_directory",
             data={"folder_id": self.directory_id},
             username=self.app_config.username,

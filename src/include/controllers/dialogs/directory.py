@@ -29,7 +29,6 @@ class CreateDirectoryDialogController:
     async def action_create_directory(self, directory_name: str):
         try:
             await create_directory(
-                self.app_config.get_not_none_attribute("conn"),
                 self.view.parent_manager.current_directory_id,
                 directory_name,
                 self.app_config.username,

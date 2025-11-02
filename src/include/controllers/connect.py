@@ -1,13 +1,12 @@
 from typing import TYPE_CHECKING
-import gettext
 import os
 
 import flet_permission_handler as fph
 
 from include.classes.config import AppConfig
-from include.constants import LOCALE_PATH, PROTOCOL_VERSION
+from include.constants import PROTOCOL_VERSION
 from include.util.connect import get_connection
-from include.util.requests import do_request
+from include.util.requests import _request
 
 if TYPE_CHECKING:
     from include.ui.controls.views.connect import ConnectForm
@@ -54,7 +53,7 @@ class ConnectFormController:
             )
             return
 
-        server_info_response = await do_request(conn, "server_info")
+        server_info_response = await _request(conn, "server_info")
         if (
             server_protocol_version := server_info_response["data"]["protocol_version"]
         ) > PROTOCOL_VERSION:

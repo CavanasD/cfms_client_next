@@ -37,7 +37,6 @@ async def get_directory(
 
     assert type(view.page) == ft.Page
     response = await do_request(
-        view.parent_manager.conn,
         action="list_directory",
         data={"folder_id": id},
         username=view.page.session.store.get("username"),
@@ -82,7 +81,6 @@ async def get_directory(
 async def get_document(id: str | None, filename: str, view: "FileListView"):
     assert type(view.page) == ft.Page
     response = await do_request(
-        view.parent_manager.conn,
         action="get_document",
         data={"document_id": id},
         username=view.page.session.store.get("username"),

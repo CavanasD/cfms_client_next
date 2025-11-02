@@ -1,13 +1,11 @@
 from typing import Optional
 from typing import TYPE_CHECKING
-import gettext
 
 import flet as ft
 
 from include.classes.client import LockableClientConnection
 from include.classes.config import AppConfig
-from include.constants import LOCALE_PATH
-from include.controllers.explorer import FileExplorerController
+from include.controllers.explorer.itself import FileExplorerController
 from include.ui.controls.dialogs.explorer import (
     CreateDirectoryDialog,
     OpenDirectoryDialog,

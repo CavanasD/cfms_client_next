@@ -1,15 +1,12 @@
-from datetime import datetime
 from typing import TYPE_CHECKING
-import gettext
 
 import flet as ft
 
-from include.constants import LOCALE_PATH
-from include.ui.controls.menus.explorer import (
-    DocumentRightMenuDialog,
-    DirectoryRightMenuDialog,
+from include.ui.controls.components.explorer.tile import (
+    FileGestureListTile,
+    DirectoryGestureListTile,
 )
-from include.ui.util.path import get_directory, get_document
+from include.ui.util.path import get_directory
 
 from include.util.locale import get_translation
 
@@ -37,36 +34,6 @@ def update_file_controls(
         )
         await get_directory(view.parent_manager.current_directory_id, view=view)
 
-    async def folder_listtile_click(event: ft.Event[ft.ListTile]):
-        view.parent_manager.indicator.go(event.control.data[1])
-        view.parent_manager.current_directory_id = event.control.data[0]
-        await get_directory(event.control.data[0], view=view)
-
-    async def document_listtile_click(event: ft.Event[ft.ListTile]):
-        await get_document(
-            event.control.data[0], filename=event.control.data[1], view=view
-        )
-
-    async def document_right_click(
-        event: (
-            ft.TapEvent[ft.GestureDetector] | ft.LongPressStartEvent[ft.GestureDetector]
-        ),
-    ):
-        assert event.control.content
-        event.page.show_dialog(
-            DocumentRightMenuDialog(event.control.content.data[0], view)
-        )
-
-    async def folder_right_click(
-        event: (
-            ft.TapEvent[ft.GestureDetector] | ft.LongPressStartEvent[ft.GestureDetector]
-        ),
-    ):
-        assert event.control.content
-        event.page.show_dialog(
-            DirectoryRightMenuDialog(event.control.content.data[0], view)
-        )
-
     if (
         parent_id != None
         and view.parent_manager.current_directory_id
@@ -84,53 +51,23 @@ def update_file_controls(
 
     view.controls.extend(
         [
-            ft.GestureDetector(
-                ft.ListTile(
-                    leading=ft.Icon(ft.Icons.FOLDER),
-                    title=ft.Text(folder["name"]),
-                    subtitle=ft.Text(
-                        _("Created time: {created_time}").format(
-                            created_time=datetime.fromtimestamp(
-                                folder["created_time"]
-                            ).strftime("%Y-%m-%d %H:%M:%S")
-                        )
-                    ),
-                    data=(folder["id"], folder["name"]),
-                    on_click=folder_listtile_click,
-                ),
-                on_secondary_tap=folder_right_click,
-                on_long_press_start=folder_right_click,
-                # on_hover=on_folder_hover
-                # on_hover=lambda e: update_mouse_position(e),
+            DirectoryGestureListTile(
+                parent_listview=view,
+                directory_id=folder["id"],
+                dir_name=folder["name"],
+                created_at=folder["created_time"],
             )
             for folder in folders
         ]
     )
     view.controls.extend(
         [
-            ft.GestureDetector(
-                ft.ListTile(
-                    leading=ft.Icon(ft.Icons.FILE_COPY),
-                    title=ft.Text(document["title"]),
-                    subtitle=ft.Text(
-                        _("Last modified: {last_modified}\n").format(
-                            last_modified=datetime.fromtimestamp(
-                                document["last_modified"]
-                            ).strftime("%Y-%m-%d %H:%M:%S")
-                        )
-                        + (
-                            f"{document["size"] / 1024 / 1024:.3f} MB"
-                            if document["size"] > 0
-                            else "0 Byte"
-                        )
-                    ),
-                    is_three_line=True,
-                    data=(document["id"], document["title"]),
-                    on_click=document_listtile_click,
-                ),
-                on_secondary_tap=document_right_click,
-                on_long_press_start=document_right_click,
-                # on_hover=lambda e: update_mouse_position(e),
+            FileGestureListTile(
+                parent_listview=view,
+                file_id=document["id"],
+                filename=document["title"],
+                size=document["size"],
+                last_modified=document["last_modified"],
             )
             for document in documents
         ]

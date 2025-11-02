@@ -29,7 +29,6 @@ class LoginFormController:
         password = self.view.password_field.value
 
         response = await do_request(
-            self.app_config.get_not_none_attribute("conn"),
             "login",
             {
                 "username": username,

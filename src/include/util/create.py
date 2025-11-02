@@ -8,7 +8,6 @@ from include.util.requests import do_request
 
 
 async def create_directory(
-    conn: LockableClientConnection,
     parent_id: str | None,
     name: str,
     username: str | Any,
@@ -16,7 +15,6 @@ async def create_directory(
     exists_ok: bool = False,
 ) -> str:
     mkdir_resp = await do_request(
-        conn,
         "create_directory",
         data={
             "parent_id": parent_id,

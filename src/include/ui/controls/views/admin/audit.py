@@ -203,7 +203,6 @@ class AuditLogView(ft.Container):
 
         try:
             response = await do_request(
-                self.app_config.get_not_none_attribute("conn"),
                 action="view_audit_logs",
                 data={"offset": self.audit_view_offset, "count": self.audit_view_count},
                 username=self.app_config.username,

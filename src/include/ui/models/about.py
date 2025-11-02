@@ -7,6 +7,7 @@ import flet as ft
 import requests
 
 from include.constants import APP_VERSION, BUILD_VERSION, LOCALE_PATH
+from include.ui.controls.components.about import AboutPageTestInfoBlock
 from include.ui.controls.dialogs.upgrade import UpgradeDialog
 from include.ui.controls.dialogs.whatsnew import ChangelogHistoryDialog
 from include.ui.util.notifications import send_error
@@ -90,7 +91,8 @@ class AboutModel(Model):
         self.suc_progress_ring = ft.ProgressRing(visible=False)
         self.suc_progress_text = ft.Text(_("Checking for updates"), visible=False)
         self.suc_environ_unavailable_text = ft.Text(
-            _("Cannot update: Cannot check for updates when running from source code."), visible=False
+            _("Cannot update: Cannot check for updates when running from source code."),
+            visible=False,
         )
         self.suc_unavailable_text = ft.Text(visible=False)
 
@@ -134,7 +136,7 @@ class AboutModel(Model):
             visible=True,
         )
 
-        self.controls = [self.about_container, self.software_updater_container]
+        self.controls = [AboutPageTestInfoBlock(), self.about_container, self.software_updater_container]
 
     async def on_link_tapped(self, event: ft.Event[ft.Markdown]):
         assert type(self.page) == ft.Page
@@ -182,11 +184,16 @@ class AboutModel(Model):
                 loop = asyncio.get_running_loop()
                 latest = await loop.run_in_executor(None, get_latest_release)
             except requests.exceptions.ConnectionError as e:
-                send_error(self.page, _("Connection failed: {strerror}").format(strerror=e.strerror))
+                send_error(
+                    self.page,
+                    _("Connection failed: {strerror}").format(strerror=e.strerror),
+                )
                 return
 
             if not latest:
-                self.suc_unavailable_text.value = _("Failed to retrieve version information")
+                self.suc_unavailable_text.value = _(
+                    "Failed to retrieve version information"
+                )
                 self.suc_unavailable_text.visible = True
                 return
 
@@ -234,7 +241,9 @@ class AboutModel(Model):
                     )
                     self.suc_unavailable_text.visible = True
             else:
-                self.suc_unavailable_text.value = _("No update found: Unsupported architecture")
+                self.suc_unavailable_text.value = _(
+                    "No update found: Unsupported architecture"
+                )
                 self.suc_unavailable_text.visible = True
 
         if os.environ.get("FLET_APP_CONSOLE"):
@@ -263,7 +272,7 @@ class AboutModel(Model):
         self.update()
 
     async def back_button_click(self, event: ft.Event[ft.IconButton]):
-         await self.page.push_route(get_parent_route(self.page.route))
+        await self.page.push_route(get_parent_route(self.page.route))
 
     def did_mount(self) -> None:
         async def run():

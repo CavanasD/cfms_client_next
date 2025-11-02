@@ -70,7 +70,6 @@ class UserRightMenuDialog(RightMenuDialog):
 
     async def delete_user(self, event: ft.Event[ft.ListTile]):
         response = await do_request(
-            self.app_config.get_not_none_attribute("conn"),
             action="delete_user",
             data={"username": self.username},
             username=self.app_config.username,

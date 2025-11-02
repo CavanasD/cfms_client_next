@@ -103,7 +103,6 @@ class ManageGroupsView(ft.Container):
         self.update()
 
         response = await do_request(
-            self.app_config.get_not_none_attribute("conn"),
             action="list_groups",
             data={},
             username=self.app_config.username,

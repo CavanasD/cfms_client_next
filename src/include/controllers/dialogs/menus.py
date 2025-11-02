@@ -28,7 +28,6 @@ class RenameDialogController:
     async def action_rename_object(self, new_title: str):
         if type(self.view.parent_dialog).__name__ == "DocumentRightMenuDialog":
             response = await do_request(
-                self.app_config.get_not_none_attribute("conn"),
                 "rename_document",
                 {
                     "document_id": self.view.parent_dialog.document_id,  # pyright: ignore[reportAttributeAccessIssue]
@@ -40,7 +39,6 @@ class RenameDialogController:
             )
         elif type(self.view.parent_dialog).__name__ == "DirectoryRightMenuDialog":
             response = await do_request(
-                self.app_config.get_not_none_attribute("conn"),
                 "rename_directory",
                 {
                     "folder_id": self.view.parent_dialog.directory_id,  # pyright: ignore[reportAttributeAccessIssue]
@@ -75,7 +73,6 @@ class GetDirectoryInfoController:
 
     async def fetch_directory_info(self):
         response = await do_request(
-            self.app_config.get_not_none_attribute("conn"),
             action="get_directory_info",
             data={
                 "directory_id": self.view.parent_dialog.directory_id,

@@ -64,7 +64,6 @@ class FileExplorerController:
                 progress_column.update()
 
             response = await do_request(
-                self.app_config.get_not_none_attribute("conn"),
                 action="create_document",
                 data={
                     "title": each_file.name,
@@ -172,11 +171,10 @@ class FileExplorerController:
             upload_dialog.progress_bar.value = None
             upload_dialog.progress_column.update()
 
-            conn = self.app_config.get_not_none_attribute("conn")
+            # conn = self.app_config.get_not_none_attribute("conn")
 
             # Create directory on server
             dir_id = await create_directory(
-                conn,
                 parent_id,
                 os.path.basename(parent_path),
                 self.app_config.username,
@@ -214,7 +212,6 @@ class FileExplorerController:
                 upload_dialog.progress_column.update()
 
                 create_document_response = await do_request(
-                    conn,
                     action="create_document",
                     data={
                         "title": filename,

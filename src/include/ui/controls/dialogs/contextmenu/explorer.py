@@ -181,7 +181,6 @@ class GetDocumentInfoDialog(AlertDialog):
         assert type(conn) == LockableClientConnection
 
         response = await do_request(
-            conn,
             action="get_document_info",
             data={
                 "document_id": self.parent_dialog.document_id,

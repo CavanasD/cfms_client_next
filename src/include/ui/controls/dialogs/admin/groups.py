@@ -81,7 +81,6 @@ class AddUserGroupDialog(AlertDialog):
         yield self.disable_interactions()
 
         response = await do_request(
-            self.app_config.get_not_none_attribute("conn"),
             action="create_group",
             data={
                 "group_name": self.group_name_field.value,

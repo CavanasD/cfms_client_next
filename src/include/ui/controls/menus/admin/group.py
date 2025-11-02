@@ -59,7 +59,6 @@ class GroupRightMenuDialog(RightMenuDialog):
 
     async def remove_button_click(self, event: ft.Event[ft.ListTile]):
         response = await do_request(
-            self.app_config.get_not_none_attribute("conn"),
             action="delete_group",
             data={"group_name": self.group_name},
             username=self.app_config.username,
@@ -149,7 +148,6 @@ class RenameGroupDialog(AlertDialog):
             return
 
         response = await do_request(
-            self.app_config.get_not_none_attribute("conn"),
             action="rename_group",
             data={
                 "group_name": self.parent_dialog.group_name,
@@ -274,7 +272,6 @@ class EditGroupPermissionDialog(AlertDialog):
                 to_submit_list.append(checkbox.data)
 
         response = await do_request(
-            self.app_config.get_not_none_attribute("conn"),
             action="change_group_permissions",
             data={
                 "group_name": self.parent_dialog.group_name,
@@ -311,7 +308,6 @@ class EditGroupPermissionDialog(AlertDialog):
 
         # Fetch user group information
         group_info_response = await do_request(
-            self.app_config.get_not_none_attribute("conn"),
             action="get_group_info",
             data={"group_name": self.parent_dialog.group_name},
             username=self.app_config.username,
