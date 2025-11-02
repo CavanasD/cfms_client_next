@@ -204,7 +204,7 @@ class AboutModel(Model):
                     text_align=ft.TextAlign.LEFT,
                 ),
                 ft.Text(
-                    _("Latest version: {latest.version}").format(latest=latest.version),
+                    _("Latest version: {latest_version}").format(latest_version=latest.version),
                     size=16,
                     text_align=ft.TextAlign.LEFT,
                 ),
