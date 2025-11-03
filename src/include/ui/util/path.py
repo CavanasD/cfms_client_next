@@ -3,11 +3,13 @@ import os
 
 import flet as ft
 
+from include.classes.config import AppConfig
 from include.classes.exceptions.request import RequestFailureError
 from include.classes.exceptions.transmission import (
     FileHashMismatchError,
     FileSizeMismatchError,
 )
+from include.classes.ui.enum import SortMode, SortOrder
 from include.ui.util.notifications import send_error
 from include.util.requests import do_request
 from include.util.connect import get_connection
@@ -20,27 +22,27 @@ from include.util.locale import get_translation
 t = get_translation()
 _ = t.gettext
 
+_app_config = AppConfig()
+
 
 async def get_directory(
     id: str | None,
     view: "FileListView",
     fallback: Optional[str] = None,
+    sort_mode: SortMode = SortMode.BY_NAME,
+    sort_order: SortOrder = SortOrder.ASCENDING,
     _raise_on_error=False,
     _set_new_root=False,
 ):
     from include.ui.util.file_controls import update_file_controls
 
-    view.parent_manager.progress_ring.visible = True
-    view.parent_manager.progress_ring.update()
-    view.visible = False
-    view.update()
+    view.parent_manager.hide_content()
 
-    assert type(view.page) == ft.Page
     response = await do_request(
         action="list_directory",
         data={"folder_id": id},
-        username=view.page.session.store.get("username"),
-        token=view.page.session.store.get("token"),
+        username=_app_config.username,
+        token=_app_config.token,
     )
 
     if (code := response["code"]) != 200:
@@ -65,17 +67,20 @@ async def get_directory(
 
         view.parent_manager.current_directory_id = id
 
-        update_file_controls(
-            view,
-            response["data"]["folders"],
-            response["data"]["documents"],
-            response["data"]["parent_id"],
-        )
+        view.current_directories_data = response["data"]["folders"]
+        view.current_files_data = response["data"]["documents"]
+        view.current_parent_id = response["data"]["parent_id"]
 
-    view.parent_manager.progress_ring.visible = False
-    view.parent_manager.progress_ring.update()
-    view.visible = True
-    view.update()
+        await view.parent_manager.sort_bar.controller.apply_sorting()
+
+        # update_file_controls(
+        #     view,
+        #     response["data"]["folders"],
+        #     response["data"]["documents"],
+        #     response["data"]["parent_id"],
+        # )
+
+    view.parent_manager.show_content()
 
 
 async def get_document(id: str | None, filename: str, view: "FileListView"):
@@ -83,8 +88,8 @@ async def get_document(id: str | None, filename: str, view: "FileListView"):
     response = await do_request(
         action="get_document",
         data={"document_id": id},
-        username=view.page.session.store.get("username"),
-        token=view.page.session.store.get("token"),
+        username=_app_config.username,
+        token=_app_config.token,
     )
 
     task_data = response["data"]["task_data"]

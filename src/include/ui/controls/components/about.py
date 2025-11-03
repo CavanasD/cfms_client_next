@@ -22,7 +22,6 @@ class AboutPageTestInfoBlock(ft.Container):
                     "Software at this stage may receive intensive updates, "
                     "but many problems may also appear and disappear in a "
                     "short period of time.",
-                    max_lines=3,
                 ),
                 ft.Text(
                     "Any issues encountered should be reported in time, "

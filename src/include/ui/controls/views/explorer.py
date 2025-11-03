@@ -1,21 +1,20 @@
 from typing import Optional
 from typing import TYPE_CHECKING
+from copy import deepcopy
 
 import flet as ft
 
 from include.classes.client import LockableClientConnection
 from include.classes.config import AppConfig
 from include.controllers.explorer.itself import FileExplorerController
-from include.ui.controls.dialogs.explorer import (
-    CreateDirectoryDialog,
-    OpenDirectoryDialog,
-)
+from include.ui.controls.components.explorer.bar import ExplorerTopBar, FileSortBar
 from include.ui.util.notifications import send_error
-from include.ui.util.file_controls import get_directory
+from include.ui.util.file_controls import update_file_controls
 
 if TYPE_CHECKING:
     from include.ui.models.home import HomeModel
 
+from include.classes.ui.enum import SortMode, SortOrder
 from include.util.locale import get_translation
 
 t = get_translation()
@@ -63,12 +62,59 @@ class FileListView(ft.ListView):
         self,
         parent_manager: "FileManagerView",
         ref: ft.Ref | None = None,
-        visible=False,
+        visible=True,
     ):
-        super().__init__(ref=ref, visible=visible)
+        super().__init__(ref=ref, visible=visible, expand=True)
         self.parent: ft.Column
         self.parent_manager = parent_manager
-        self.expand = True
+
+        # The variables should be updated when loading new directory
+        self.current_parent_id: str | None = None
+        self.current_files_data: list[dict] = []
+        self.current_directories_data: list[dict] = []
+
+    def sort_files(
+        self,
+        sort_mode: SortMode = SortMode.BY_NAME,
+        sort_order: SortOrder = SortOrder.ASCENDING,
+    ):
+        """
+        Sort the files and directories in the list view.
+
+        This function actually copies the data and sorts them, then
+        calls `update_file_controls()` to show the new order.
+        """
+
+        _working_files_data = deepcopy(self.current_files_data)
+        _working_directories_data = deepcopy(self.current_directories_data)
+
+        match sort_mode:
+            case SortMode.BY_NAME:
+                dir_key_func = lambda x: x["name"].lower()
+                file_key_func = lambda x: x["title"].lower()
+            case SortMode.BY_LAST_MODIFIED:
+                dir_key_func = file_key_func = lambda x: x.get("last_modified", 0)
+            case SortMode.BY_CREATED_AT:
+                dir_key_func = file_key_func = lambda x: x.get("created_time", 0)
+            case SortMode.BY_SIZE:
+                dir_key_func = file_key_func = lambda x: x.get("size", 0)
+            case SortMode.BY_TYPE:
+                dir_key_func = lambda x: 0
+                file_key_func = lambda x: x["title"].split(".")[-1].lower()
+            case _:
+                dir_key_func = lambda x: x["name"].lower()
+                file_key_func = lambda x: x["title"].lower()
+
+        reverse = sort_order == SortOrder.DESCENDING
+        _working_files_data.sort(key=file_key_func, reverse=reverse)
+        _working_directories_data.sort(key=dir_key_func, reverse=reverse)
+
+        update_file_controls(
+            self,
+            _working_directories_data,
+            _working_files_data,
+            self.current_parent_id,
+        )
 
 
 class FileManagerView(ft.Container):
@@ -92,50 +138,20 @@ class FileManagerView(ft.Container):
 
         # Components
         self.indicator = FilePathIndicator("/")
-        self.file_listview = FileListView(self)
+        self.top_bar = ExplorerTopBar(self)
+        self.sort_bar = FileSortBar(self, visible=False)
+        self.file_listview = FileListView(self, visible=False)
         self.progress_ring = ft.ProgressRing(visible=False)
 
         self.content = ft.Column(
             controls=[
                 ft.Text(_("File Management"), size=24, weight=ft.FontWeight.BOLD),
                 self.indicator,
-                ft.Row(
-                    controls=[
-                        ft.Row(
-                            controls=[
-                                ft.IconButton(
-                                    ft.Icons.ADD, on_click=self.on_upload_button_click
-                                ),
-                                ft.IconButton(
-                                    ft.Icons.DRIVE_FOLDER_UPLOAD_OUTLINED,
-                                    on_click=self.on_upload_directory_button_click,
-                                ),
-                                ft.IconButton(
-                                    ft.Icons.CREATE_NEW_FOLDER_OUTLINED,
-                                    on_click=self.on_create_directory_button_click,
-                                ),
-                                ft.IconButton(
-                                    ft.Icons.REFRESH,
-                                    on_click=self.on_refresh_button_click,
-                                ),
-                            ],
-                            alignment=ft.MainAxisAlignment.START,
-                            spacing=10,
-                        ),
-                        ft.Row(
-                            controls=[
-                                ft.IconButton(
-                                    ft.Icons.FOLDER_OPEN_OUTLINED,
-                                    on_click=self.on_open_folder_button_click,
-                                )
-                            ]
-                        ),
-                    ],
-                    alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-                ),
+                self.top_bar,
                 ft.Divider(),
                 self.progress_ring,
                 # File list, initially hidden until loading is complete
+                self.sort_bar,
                 self.file_listview,
             ],
         )
@@ -146,29 +162,14 @@ class FileManagerView(ft.Container):
     def send_error(self, msg: str):
         send_error(self.page, msg)
 
-    async def on_upload_button_click(self, event: ft.Event[ft.IconButton]):
-        files = await self.parent_model.file_picker.pick_files(allow_multiple=True)
-        if not files:
-            return
+    def hide_content(self):
+        self.file_listview.visible = False
+        self.sort_bar.visible = False
+        self.progress_ring.visible = True
+        self.update()
 
-        self.page.run_task(self.controller.action_upload, files)
-
-    async def on_upload_directory_button_click(self, event: ft.Event[ft.IconButton]):
-        root_path = await self.parent_model.file_picker.get_directory_path()
-        if not root_path:
-            return
-
-        self.page.run_task(self.controller.action_directory_upload, root_path)
-
-    async def on_create_directory_button_click(self, event: ft.Event[ft.IconButton]):
-        create_directory_dialog = CreateDirectoryDialog(self)
-        self.page.show_dialog(create_directory_dialog)
-
-    async def on_refresh_button_click(self, event: ft.Event[ft.IconButton]):
-        await get_directory(
-            id=self.current_directory_id,
-            view=self.file_listview,
-        )
-
-    async def on_open_folder_button_click(self, event: ft.Event[ft.IconButton]):
-        self.page.show_dialog(OpenDirectoryDialog(self))
+    def show_content(self):
+        self.file_listview.visible = True
+        self.sort_bar.visible = True
+        self.progress_ring.visible = False
+        self.update()

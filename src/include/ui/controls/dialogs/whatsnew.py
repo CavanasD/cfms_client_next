@@ -14,6 +14,14 @@ _ = t.gettext
 
 changelogs = [
     ChangelogEntry(
+        "v0.2.24",
+        "Explorer Improvements & Bug fixes",
+        "This version adds the sorting function for the "
+        "explorer, supporting various sorting modes. An "
+        "issue in the about page is also fixed.",
+        date(2025, 11, 3),
+    ),
+    ChangelogEntry(
         "v0.2.22",
         "Refactor Code Structure & Bug fixes",
         """
