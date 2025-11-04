@@ -1,10 +1,8 @@
 from datetime import date
-import gettext
 
 import flet as ft
 
 from include.classes.changelog import ChangelogEntry
-from include.constants import LOCALE_PATH
 from include.ui.controls.dialogs.base import AlertDialog
 from include.util.locale import get_translation
 
@@ -13,6 +11,16 @@ _ = t.gettext
 
 
 changelogs = [
+    ChangelogEntry(
+        "v0.2.25",
+        "Bug fixes",
+        "This version adds a debugging interface accessible from the about page, "
+        "allowing users to view detailed debug information. In addition, this "
+        "version makes minor modifications to the exception handling logic for "
+        "connection interruptions in an attempt to resolve the issue of "
+        "reconnection failing to work.",
+        date(2025, 11, 4),
+    ),
     ChangelogEntry(
         "v0.2.24",
         "Explorer Improvements & Bug fixes",

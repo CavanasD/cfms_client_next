@@ -47,6 +47,14 @@ class AboutModel(Model):
                 icon=ft.Icons.ARROW_BACK,
                 on_click=self.back_button_click,
             ),
+            actions=[
+                ft.IconButton(
+                    icon=ft.Icons.BUG_REPORT_OUTLINED,
+                    tooltip=_("Debugging..."),
+                    on_click=self.debugging_button_click,
+                )
+            ],
+            actions_padding=10,
         )
 
         self.about_container = ft.Container(
@@ -136,7 +144,11 @@ class AboutModel(Model):
             visible=True,
         )
 
-        self.controls = [AboutPageTestInfoBlock(), self.about_container, self.software_updater_container]
+        self.controls = [
+            AboutPageTestInfoBlock(),
+            self.about_container,
+            self.software_updater_container,
+        ]
 
     async def on_link_tapped(self, event: ft.Event[ft.Markdown]):
         assert type(self.page) == ft.Page
@@ -204,7 +216,9 @@ class AboutModel(Model):
                     text_align=ft.TextAlign.LEFT,
                 ),
                 ft.Text(
-                    _("Latest version: {latest_version}").format(latest_version=latest.version),
+                    _("Latest version: {latest_version}").format(
+                        latest_version=latest.version
+                    ),
                     size=16,
                     text_align=ft.TextAlign.LEFT,
                 ),
@@ -273,6 +287,9 @@ class AboutModel(Model):
 
     async def back_button_click(self, event: ft.Event[ft.IconButton]):
         await self.page.push_route(get_parent_route(self.page.route))
+
+    async def debugging_button_click(self, event: ft.Event[ft.IconButton]):
+        await self.page.push_route(self.page.route + "/debugging")
 
     def did_mount(self) -> None:
         async def run():

@@ -29,8 +29,6 @@ async def get_directory(
     id: str | None,
     view: "FileListView",
     fallback: Optional[str] = None,
-    sort_mode: SortMode = SortMode.BY_NAME,
-    sort_order: SortOrder = SortOrder.ASCENDING,
     _raise_on_error=False,
     _set_new_root=False,
 ):

@@ -1,9 +1,6 @@
 from typing import TYPE_CHECKING
-import gettext
 
-from include.classes.client import LockableClientConnection
 from include.classes.config import AppConfig
-from include.constants import LOCALE_PATH
 from include.ui.controls.dialogs.admin.accounts import PasswdUserDialog
 from include.util.requests import do_request
 
@@ -25,7 +22,7 @@ class LoginFormController:
         self.view.enable_interactions()
 
     async def _action_login(self):
-        username = self.view.username_field.value
+        username = self.view.username_field.value.strip()
         password = self.view.password_field.value
 
         response = await do_request(

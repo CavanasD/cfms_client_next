@@ -14,8 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import gettext
-import locale
 import os
 
 import flet as ft
@@ -28,6 +26,7 @@ from include.util.locale import set_translation
 
 
 async def main(page: ft.Page):
+
     # Load language preference and set environment variable
     try:
         app_config = AppConfig()
@@ -59,6 +58,7 @@ async def main(page: ft.Page):
     from include.ui.models.settings.language import LanguageSettingsModel
     from include.ui.models.home import HomeModel
     from include.ui.models.manage import ManageModel
+    from include.ui.models.debugging import DebuggingViewModel
 
     # Page settings
     page.title = "CFMS Client"

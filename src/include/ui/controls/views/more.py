@@ -47,6 +47,8 @@ class MoreView(ft.Container):
                                 ft.Text(get_quote()),
                             ],
                             spacing=0,
+                            expand=True,
+                            expand_loose=True,
                         ),
                     ]
                 ),

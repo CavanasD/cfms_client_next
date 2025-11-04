@@ -1,0 +1,55 @@
+import platform
+import flet as ft
+from flet_model import Model, Router, route
+from include.ui.util.route import get_parent_route
+from include.constants import (
+    ROOT_PATH,
+    LOCALE_PATH,
+    RUNTIME_PATH,
+    FLET_APP_STORAGE_TEMP,
+    FLET_APP_STORAGE_DATA,
+)
+
+
+@route("debugging")
+class DebuggingViewModel(Model):
+
+    # Layout configuration
+    vertical_alignment = ft.MainAxisAlignment.START
+    horizontal_alignment = ft.CrossAxisAlignment.BASELINE
+    padding = 20
+    spacing = 10
+
+    def __init__(self, page: ft.Page, router: Router):
+        super().__init__(page, router)
+        self.appbar = ft.AppBar(
+            title=ft.Text("Debugging"),
+            leading=ft.IconButton(
+                icon=ft.Icons.ARROW_BACK,
+                on_click=self.back_button_click,
+            ),
+        )
+
+        self.controls = [
+            ft.Text(f"General Information", size=16, weight=ft.FontWeight.BOLD),
+            ft.Text(
+                f"Platform: {platform.system()} {platform.release()} ({platform.version()})"
+            ),
+            ft.Text(f"Machine: {platform.machine()}"),
+            ft.Text(f"Processor: {platform.processor()}"),
+            ft.Text(f"Python Version: {platform.python_version()}"),
+            ft.Text(f"Architecture: {platform.architecture()[0]}"),
+            ft.Text(
+                f"Flet Build Platform: {getattr(self.page.platform, "value", "(Not provided)")}",
+            ),
+            ft.Divider(),
+            ft.Text(f"Environment Variables", size=16, weight=ft.FontWeight.BOLD),
+            ft.Text(f"ROOT_PATH: {ROOT_PATH}"),
+            ft.Text(f"LOCALE_PATH: {LOCALE_PATH}"),
+            ft.Text(f"RUNTIME_PATH: {RUNTIME_PATH if RUNTIME_PATH else '(Not Set)'}"),
+            ft.Text(f"FLET_APP_STORAGE_TEMP: {FLET_APP_STORAGE_TEMP}"),
+            ft.Text(f"FLET_APP_STORAGE_DATA: {FLET_APP_STORAGE_DATA}"),
+        ]
+
+    async def back_button_click(self, event: ft.Event[ft.IconButton]):
+        await self.page.push_route(get_parent_route(self.page.route))

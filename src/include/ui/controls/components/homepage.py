@@ -10,6 +10,7 @@ if TYPE_CHECKING:
     from include.ui.models.home import HomeModel
 
 from include.util.locale import get_translation
+
 t = get_translation()
 _ = t.gettext
 
@@ -19,7 +20,9 @@ class HomeNavigationBar(ft.NavigationBar):
         self.parent_view = parent_view
         self.app_config = AppConfig()
 
-        self.last_selected_index = 2  # Setting default to initially selected page works better
+        self.last_selected_index = (
+            2  # Setting default to initially selected page works better
+        )
         self.views = views
 
         nav_destinations = [
@@ -40,12 +43,13 @@ class HomeNavigationBar(ft.NavigationBar):
         )
 
     async def on_change_item(self, e: ft.Event[ft.NavigationBar]):
-        def show_view(index): 
+        def show_view(index):
             for view in self.views:
                 if self.views.index(view) == index:
                     view.visible = True
                 else:
                     view.visible = False
+
         yield show_view(e.control.selected_index)
 
         if e.control.selected_index == 0:
@@ -77,14 +81,22 @@ class HomeNavigationBar(ft.NavigationBar):
 
 class WelcomeInfoCard(ft.Card):
     def __init__(self, ref: ft.Ref | None = None, visible=True):
-        super().__init__(ref=ref, visible=visible)
+        super().__init__(ref=ref, visible=visible, expand=True, expand_loose=True)
         self.content = ft.Container(
             content=ft.Column(
                 [
                     ft.ListTile(
                         leading=ft.Icon(ft.Icons.ACCESS_TIME_FILLED),
-                        title=ft.Text(_("Welcome to Confidential Document Management System (CFMS)")),
-                        subtitle=ft.Text(_("The sunset glow and the lone wild duck fly together, autumn water shares the same color with the vast sky.")),
+                        title=ft.Text(
+                            _(
+                                "Welcome to Confidential Document Management System (CFMS)"
+                            )
+                        ),
+                        subtitle=ft.Text(
+                            _(
+                                "The sunset glow and the lone wild duck fly together, autumn water shares the same color with the vast sky."
+                            )
+                        ),
                     ),
                 ]
             ),
@@ -112,7 +124,13 @@ class HomeTabs(ft.Tabs):
             controls=[
                 ft.Container(
                     ft.Column(
-                        controls=[ft.Text(_("You have not favorited any documents or folders yet."))],
+                        controls=[
+                            ft.Text(
+                                _(
+                                    "You have not favorited any documents or folders yet."
+                                )
+                            )
+                        ],
                         # alignment=ft.alignment.center,
                     ),
                     margin=15,

@@ -7,9 +7,13 @@ from include.ui.controls.dialogs.explorer import (
 )
 from include.ui.util.file_controls import get_directory
 from include.controllers.explorer.bar import FileSortBarController
+from include.util.locale import get_translation
 
 if TYPE_CHECKING:
     from include.ui.controls.views.explorer import FileManagerView
+
+t = get_translation()
+_ = t.gettext
 
 
 class ExplorerTopBar(ft.Row):
@@ -110,14 +114,14 @@ class FileSortBar(ft.Row):
         self.parent_view = parent_view
         self.controller = FileSortBarController(self)
 
-        self.sort_label = ft.Text("Sort by:", size=14)
+        self.sort_label = ft.Text(_("Sort by:"), size=14)
         self.sort_dropdown = ft.Dropdown(
             options=[
-                ft.DropdownOption("name", "Name"),
-                ft.DropdownOption("created_at", "Created at"),
-                ft.DropdownOption("modified", "Last Modified"),
-                ft.DropdownOption("size", "Size"),
-                ft.DropdownOption("type", "Type"),
+                ft.DropdownOption("name", _("Name")),
+                ft.DropdownOption("created_at", _("Created at")),
+                ft.DropdownOption("modified", _("Last Modified")),
+                ft.DropdownOption("size", _("Size")),
+                ft.DropdownOption("type", _("Type")),
             ],
             value="name",
             on_select=self.sort_dropdown_on_select,
@@ -126,7 +130,7 @@ class FileSortBar(ft.Row):
         )
         self.order_button = ft.IconButton(
             icon=ft.Icons.ARROW_UPWARD,
-            tooltip="Toggle Sort Order",
+            tooltip=_("Toggle Sort Order"),
             on_click=self.order_button_on_click,
         )
 

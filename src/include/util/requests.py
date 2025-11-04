@@ -2,6 +2,8 @@ import json
 import time
 from typing import Any
 
+from websockets import ConnectionClosed
+
 
 from include.classes.client import LockableClientConnection
 from include.util.connect import get_connection
@@ -22,7 +24,7 @@ async def do_request(
     _conn = _app_config.get_not_none_attribute("conn")
 
     assert max_retries >= 1, "max_retries must be at least 1"
-    
+
     response: dict[str, Any] = {}
     for attempt in range(max_retries):
         try:
@@ -34,7 +36,7 @@ async def do_request(
                 username=username,
                 token=token,
             )
-        except (ConnectionAbortedError, ConnectionResetError):
+        except (ConnectionClosed, ConnectionAbortedError, ConnectionResetError):
             if attempt >= max_retries - 1:
                 raise
             _conn = await get_connection(_app_config.server_address)
@@ -54,7 +56,7 @@ async def _request(
     username=None,
     token=None,
 ) -> dict:
-    
+
     request = {
         "action": action,
         "data": data,
