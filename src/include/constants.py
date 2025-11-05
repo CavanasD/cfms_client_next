@@ -12,7 +12,8 @@ __all__ = [
 ]
 
 
-ROOT_PATH = Path(os.environ.get("FLET_ASSETS_DIR", "")).resolve().parent
+CONSTANT_FILE_ABSPATH = os.path.abspath(__file__)
+ROOT_PATH = Path(CONSTANT_FILE_ABSPATH).resolve().parent.parent
 LOCALE_PATH = f"{ROOT_PATH}/include/ui/locale"
 RUNTIME_PATH = os.environ.get("PYTHONHOME", "")
 FLET_APP_STORAGE_TEMP = os.environ.get("FLET_APP_STORAGE_TEMP", ".")
@@ -21,8 +22,8 @@ FLET_APP_STORAGE_DATA = os.environ.get("FLET_APP_STORAGE_DATA", ".")
 DEFAULT_WINDOW_TITLE = "CFMS Client"
 
 CHANNEL = "alpha"
-BUILD_VERSION = "v0.2.25"
-MODIFIED = "20251103"
+BUILD_VERSION = "v0.2.26"
+MODIFIED = "20251105"
 APP_VERSION = f"{BUILD_VERSION[1:]}.{MODIFIED}_{CHANNEL} NEXT"
 
 PROTOCOL_VERSION = 3

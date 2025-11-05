@@ -1,3 +1,10 @@
+__all__ = [
+    "FileTransmissionException",
+    "FileSizeMismatchError",
+    "FileHashMismatchError",
+]
+
+
 class FileTransmissionException(Exception): ...
 
 

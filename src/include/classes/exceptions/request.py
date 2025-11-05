@@ -1,5 +1,10 @@
 from typing import Optional
 
+__all__ = [
+    "RequestFailureError",
+    "CreateDirectoryFailureError",
+]
+
 
 class RequestFailureError(Exception):
     def __init__(self, msg: str = "", response: Optional[dict] = None, *args) -> None:

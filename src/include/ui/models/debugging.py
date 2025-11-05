@@ -4,6 +4,7 @@ from flet_model import Model, Router, route
 from include.ui.util.route import get_parent_route
 from include.constants import (
     ROOT_PATH,
+    CONSTANT_FILE_ABSPATH,
     LOCALE_PATH,
     RUNTIME_PATH,
     FLET_APP_STORAGE_TEMP,
@@ -44,6 +45,7 @@ class DebuggingViewModel(Model):
             ),
             ft.Divider(),
             ft.Text(f"Environment Variables", size=16, weight=ft.FontWeight.BOLD),
+            ft.Text(f"CONSTANT_FILE_ABSPATH: {CONSTANT_FILE_ABSPATH}"),
             ft.Text(f"ROOT_PATH: {ROOT_PATH}"),
             ft.Text(f"LOCALE_PATH: {LOCALE_PATH}"),
             ft.Text(f"RUNTIME_PATH: {RUNTIME_PATH if RUNTIME_PATH else '(Not Set)'}"),

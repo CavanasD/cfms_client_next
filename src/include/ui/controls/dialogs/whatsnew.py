@@ -12,6 +12,13 @@ _ = t.gettext
 
 changelogs = [
     ChangelogEntry(
+        "v0.2.26",
+        "Bug fixes",
+        "This version modifies the root path detection logic, trying to fix i18n "
+        "issues.",
+        date(2025, 11, 5),
+    ),
+    ChangelogEntry(
         "v0.2.25",
         "Bug fixes",
         "This version adds a debugging interface accessible from the about page, "

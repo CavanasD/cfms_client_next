@@ -7,8 +7,6 @@ import os
 
 import aiofiles.os
 from Crypto.Cipher import AES
-import flet as ft
-import websockets
 
 from include.classes.client import LockableClientConnection
 from include.classes.exceptions.transmission import (
@@ -16,7 +14,6 @@ from include.classes.exceptions.transmission import (
     FileSizeMismatchError,
 )
 from include.constants import FLET_APP_STORAGE_TEMP
-from include.util.connect import get_connection
 import shutil
 
 
