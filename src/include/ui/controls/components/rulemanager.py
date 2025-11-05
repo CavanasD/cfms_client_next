@@ -51,8 +51,7 @@ class RuleManager(AlertDialog):
         self.content_info = ft.Markdown(
             _(
                 "For rule format documentation, please refer to [CFMS Server Documentation]"
-                "(https://cfms-server-doc.readthedocs.io/zh-cn/latest/"
-                "groups_and_rights.html#match-rules)."
+                "(https://cfms-server-doc.readthedocs.io/zh-cn/latest/access_control.html)."
             ),
             selectable=False,
             on_tap_link=self.on_link_tapped,
@@ -227,7 +226,7 @@ class VisualRuleEditor(ft.Column):
         ]
 
     def set_rule_data(self, data: dict[str, Any]):
-        self.cached_rule_data = deepcopy(data) # must be two different objects
+        self.cached_rule_data = deepcopy(data)  # must be two different objects
         self.edited_rule_data = deepcopy(data)
 
     @property
@@ -236,7 +235,7 @@ class VisualRuleEditor(ft.Column):
             self.current_edit_section.dict_data
         )  # Ensure the current edit section's data is up to date
         return self.edited_rule_data
-    
+
     @property
     def modified(self) -> bool:
         return self.dict_data != self.cached_rule_data

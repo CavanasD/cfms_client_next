@@ -6,6 +6,10 @@ from include.ui.controls.views.admin.account import ManageAccountsView
 from include.ui.controls.views.admin.audit import AuditLogView
 from include.ui.controls.views.admin.group import ManageGroupsView
 from include.ui.util.route import get_parent_route
+from include.util.locale import get_translation
+
+t = get_translation()
+_ = t.gettext
 
 
 class ManagementNavigationBar(ft.NavigationBar):
@@ -17,16 +21,16 @@ class ManagementNavigationBar(ft.NavigationBar):
 
         nav_destinations = [
             ft.NavigationBarDestination(
-                icon=ft.Icons.SUPERVISOR_ACCOUNT_OUTLINED, label="Accounts"
+                icon=ft.Icons.SUPERVISOR_ACCOUNT_OUTLINED, label=_("Accounts")
             ),
             ft.NavigationBarDestination(
                 icon=ft.Icons.ADMIN_PANEL_SETTINGS_OUTLINED,
-                label="Groups",
+                label=_("Groups"),
             ),
             # ft.NavigationBarDestination(
             #     icon=ft.Icons.SETTINGS_APPLICATIONS, label="Settings"
             # ),
-            ft.NavigationBarDestination(icon=ft.Icons.ARTICLE, label="Logs"),
+            ft.NavigationBarDestination(icon=ft.Icons.ARTICLE, label=_("Logs")),
         ]
 
         super().__init__(
@@ -59,7 +63,7 @@ class ManageModel(Model):
         self.app_config = AppConfig()
 
         self.appbar = ft.AppBar(
-            title=ft.Text("Management"),
+            title=ft.Text(_("Management")),
             leading=ft.IconButton(icon=ft.Icons.ARROW_BACK, on_click=self._go_back),
         )
 

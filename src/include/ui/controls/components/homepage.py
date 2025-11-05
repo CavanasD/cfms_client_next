@@ -26,12 +26,12 @@ class HomeNavigationBar(ft.NavigationBar):
         self.views = views
 
         nav_destinations = [
-            ft.NavigationBarDestination(icon=ft.Icons.FOLDER, label="Files"),
-            ft.NavigationBarDestination(icon=ft.Icons.ARROW_CIRCLE_DOWN, label="Tasks"),
-            ft.NavigationBarDestination(icon=ft.Icons.HOME, label="Home"),
-            ft.NavigationBarDestination(icon=ft.Icons.MORE_HORIZ, label="More"),
+            ft.NavigationBarDestination(icon=ft.Icons.FOLDER, label=_("Files")),
+            ft.NavigationBarDestination(icon=ft.Icons.ARROW_CIRCLE_DOWN, label=_("Tasks")),
+            ft.NavigationBarDestination(icon=ft.Icons.HOME, label=_("Home")),
+            ft.NavigationBarDestination(icon=ft.Icons.MORE_HORIZ, label=_("More")),
             ft.NavigationBarDestination(
-                icon=ft.Icons.CLOUD_CIRCLE, label="Manage", visible=False
+                icon=ft.Icons.CLOUD_CIRCLE, label=_("Manage"), visible=False
             ),
         ]
 

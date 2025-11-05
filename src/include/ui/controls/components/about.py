@@ -1,4 +1,8 @@
 import flet as ft
+from include.util.locale import get_translation
+
+t = get_translation()
+_ = t.gettext
 
 
 class AboutPageTestInfoBlock(ft.Container):
@@ -16,16 +20,20 @@ class AboutPageTestInfoBlock(ft.Container):
         self.heading_letter = ft.Text("α", size=90, weight=ft.FontWeight.BOLD)
         self.trailing_info = ft.Column(
             controls=[
-                ft.Text("Alpha Test", size=24, weight=ft.FontWeight.BOLD),
-                ft.Text("This software is currently in alpha testing phase."),
+                ft.Text(_("Alpha Test"), size=24, weight=ft.FontWeight.BOLD),
+                ft.Text(_("This software is currently in alpha testing phase.")),
                 ft.Text(
-                    "Software at this stage may receive intensive updates, "
-                    "but many problems may also appear and disappear in a "
-                    "short period of time.",
+                    _(
+                        "Software at this stage may receive intensive updates, "
+                        "but many problems may also appear and disappear in a "
+                        "short period of time."
+                    ),
                 ),
                 ft.Text(
-                    "Any issues encountered should be reported in time, "
-                    "but may take a long time to get resolved."
+                    _(
+                        "Any issues encountered should be reported in time, "
+                        "but may take a long time to get resolved."
+                    )
                 ),
             ],
             spacing=5,
