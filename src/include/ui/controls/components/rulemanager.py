@@ -28,7 +28,6 @@ _ = t.gettext
 class RuleManager(AlertDialog):
     def __init__(
         self,
-        parent_dialog: "DocumentRightMenuDialog|DirectoryRightMenuDialog",
         object_id: str,
         object_type: str,
         ref: ft.Ref | None = None,
@@ -37,7 +36,6 @@ class RuleManager(AlertDialog):
         super().__init__(ref=ref, visible=visible)
         self.page: ft.Page
         self.controller = RuleManagerController(self)
-        self.parent_dialog = parent_dialog
 
         self.progress_ring = ft.ProgressRing(visible=False)
         self.content_textfield = ft.TextField(

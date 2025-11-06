@@ -26,22 +26,22 @@ class RenameDialogController:
         self.app_config = AppConfig()
 
     async def action_rename_object(self, new_title: str):
-        if type(self.view.parent_dialog).__name__ == "DocumentRightMenuDialog":
+        if self.view.object_type == "document":
             response = await do_request(
                 "rename_document",
                 {
-                    "document_id": self.view.parent_dialog.document_id,  # pyright: ignore[reportAttributeAccessIssue]
+                    "document_id": self.view.object_id,
                     "new_title": new_title,
                 },
                 "",
                 self.app_config.username,
                 self.app_config.token,
             )
-        elif type(self.view.parent_dialog).__name__ == "DirectoryRightMenuDialog":
+        elif self.view.object_type == "DirectoryRightMenuDialog":
             response = await do_request(
                 "rename_directory",
                 {
-                    "folder_id": self.view.parent_dialog.directory_id,  # pyright: ignore[reportAttributeAccessIssue]
+                    "folder_id": self.view.object_id,
                     "new_name": new_title,
                 },
                 "",
@@ -59,8 +59,8 @@ class RenameDialogController:
             )
         else:
             await get_directory(
-                self.view.parent_dialog.parent_listview.parent_manager.current_directory_id,
-                self.view.parent_dialog.parent_listview,
+                self.view.file_listview.parent_manager.current_directory_id,
+                self.view.file_listview,
             )
 
         self.view.close()
@@ -75,7 +75,7 @@ class GetDirectoryInfoController:
         response = await do_request(
             action="get_directory_info",
             data={
-                "directory_id": self.view.parent_dialog.directory_id,
+                "directory_id": self.view.directory_id,
             },
             username=self.app_config.username,
             token=self.app_config.token,

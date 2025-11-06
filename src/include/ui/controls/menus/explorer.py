@@ -116,15 +116,15 @@ class DocumentRightMenuDialog(RightMenuDialog):
 
     async def rename_button_click(self, event: ft.Event[ft.ListTile]):
         self.close()
-        self.page.show_dialog(RenameDialog(self, "document"))
+        self.page.show_dialog(RenameDialog("document", self.document_id, self.parent_listview))
 
     async def set_access_rules_button_click(self, event: ft.Event[ft.ListTile]):
         self.close()
-        self.page.show_dialog(RuleManager(self, self.document_id, "document"))
+        self.page.show_dialog(RuleManager(self.document_id, "document"))
 
     async def open_document_info_click(self, event: ft.Event[ft.ListTile]):
         self.close()
-        self.page.show_dialog(GetDocumentInfoDialog(self))  # bug: not always showing
+        self.page.show_dialog(GetDocumentInfoDialog(self.document_id))  # bug: not always showing
 
 
 class DirectoryRightMenuDialog(RightMenuDialog):
@@ -217,12 +217,12 @@ class DirectoryRightMenuDialog(RightMenuDialog):
 
     async def rename_button_click(self, event: ft.Event[ft.ListTile]):
         self.close()
-        self.page.show_dialog(RenameDialog(self, "directory"))
+        self.page.show_dialog(RenameDialog("directory", self.directory_id, self.parent_listview))
 
     async def set_access_rules_button_click(self, event: ft.Event[ft.ListTile]):
         self.close()
-        self.page.show_dialog(RuleManager(self, self.directory_id, "directory"))
+        self.page.show_dialog(RuleManager(self.directory_id, "directory"))
 
     async def open_directory_info_click(self, event: ft.Event[ft.ListTile]):
         self.close()
-        self.page.show_dialog(GetDirectoryInfoDialog(self))
+        self.page.show_dialog(GetDirectoryInfoDialog(self.directory_id))

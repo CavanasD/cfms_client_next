@@ -6,6 +6,7 @@ from include.ui.controls.components.explorer.tile import (
     FileGestureListTile,
     DirectoryGestureListTile,
 )
+from include.ui.controls.contextmenus.explorer import DirectoryContextMenu, FileContextMenu
 from include.ui.util.path import get_directory
 
 from include.util.locale import get_translation
@@ -51,7 +52,7 @@ def update_file_controls(
 
     view.controls.extend(
         [
-            DirectoryGestureListTile(
+            DirectoryContextMenu(
                 parent_listview=view,
                 directory_id=folder["id"],
                 dir_name=folder["name"],
@@ -62,7 +63,7 @@ def update_file_controls(
     )
     view.controls.extend(
         [
-            FileGestureListTile(
+            FileContextMenu(
                 parent_listview=view,
                 file_id=document["id"],
                 filename=document["title"],

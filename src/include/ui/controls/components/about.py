@@ -51,16 +51,3 @@ class AboutPageTestInfoBlock(ft.Container):
         )
 
         self.content = self._row
-
-
-if __name__ == "__main__":
-
-    def main(page: ft.Page):
-        page.title = "About Page Test Info Block"
-        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-        page.vertical_alignment = ft.MainAxisAlignment.CENTER
-
-        about_info_block = AboutPageTestInfoBlock()
-        page.add(about_info_block)
-
-    ft.run(main)

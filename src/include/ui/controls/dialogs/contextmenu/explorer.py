@@ -22,6 +22,8 @@ if TYPE_CHECKING:
         DocumentRightMenuDialog,
         DirectoryRightMenuDialog,
     )
+    from include.ui.controls.contextmenus.explorer import FileContextMenu
+    from include.ui.controls.views.explorer import FileListView
 
 from include.util.locale import get_translation
 t = get_translation()
@@ -31,8 +33,9 @@ _ = t.gettext
 class RenameDialog(AlertDialog):
     def __init__(
         self,
-        parent_dialog: "DocumentRightMenuDialog|DirectoryRightMenuDialog",
         object_type: str,
+        object_id: str,
+        file_listview: "FileListView",
         ref: ft.Ref | None = None,
         visible=True,
     ):
@@ -40,6 +43,9 @@ class RenameDialog(AlertDialog):
         self.page: ft.Page
         self.controller = RenameDialogController(self)
         self.object_type = object_type
+        self.object_id = object_id
+        self.file_listview = file_listview
+
         match self.object_type:
             case "document":
                 self.object_display_name = _("Document")
@@ -52,8 +58,6 @@ class RenameDialog(AlertDialog):
         self.title = ft.Text(
             _("Rename {display_name}").format(display_name=self.object_display_name)
         )
-
-        self.parent_dialog = parent_dialog
 
         self.progress_ring = ft.ProgressRing(visible=False)
         self.name_textfield = ft.TextField(
@@ -120,11 +124,12 @@ class RenameDialog(AlertDialog):
 class GetDocumentInfoDialog(AlertDialog):
     def __init__(
         self,
-        parent_dialog: "DocumentRightMenuDialog",
+        document_id: str,
         ref: ft.Ref | None = None,
         visible=True,
     ):
         super().__init__(ref=ref, visible=visible)
+        self.document_id = document_id
 
         self.modal = False
         self.title = ft.Row(
@@ -136,8 +141,6 @@ class GetDocumentInfoDialog(AlertDialog):
                 ),
             ]
         )
-
-        self.parent_dialog = parent_dialog
 
         self.progress_ring = ft.ProgressRing(visible=False)
         self.cancel_button = ft.TextButton(
@@ -183,7 +186,7 @@ class GetDocumentInfoDialog(AlertDialog):
         response = await do_request(
             action="get_document_info",
             data={
-                "document_id": self.parent_dialog.document_id,
+                "document_id": self.document_id,
             },
             username=self.page.session.store.get("username"),
             token=self.page.session.store.get("token"),
@@ -258,7 +261,7 @@ class GetDocumentInfoDialog(AlertDialog):
 class GetDirectoryInfoDialog(AlertDialog):
     def __init__(
         self,
-        parent_dialog: "DirectoryRightMenuDialog",
+        directory_id: str,
         ref: ft.Ref | None = None,
         visible=True,
     ):
@@ -277,7 +280,7 @@ class GetDirectoryInfoDialog(AlertDialog):
             ]
         )
 
-        self.parent_dialog = parent_dialog
+        self.directory_id = directory_id
 
         self.progress_ring = ft.ProgressRing(visible=False)
         self.cancel_button = ft.TextButton(

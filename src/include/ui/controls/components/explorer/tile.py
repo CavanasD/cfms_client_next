@@ -3,11 +3,14 @@ from typing import TYPE_CHECKING
 
 import flet as ft
 
+from include.classes.config import AppConfig
 from include.controllers.explorer.tile import (
     DirectoryGestureListTileController,
+    FileContextMenuController,
     FileGestureListTileController,
 )
 
+from include.ui.controls.menus.base import ContentMenu2
 from include.util.locale import get_translation
 
 if TYPE_CHECKING:
