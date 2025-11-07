@@ -3,13 +3,16 @@ import time
 from typing import Any
 
 from websockets import ConnectionClosed
-
-
-from include.classes.client import LockableClientConnection
+from websockets.asyncio.client import ClientConnection
 from include.util.connect import get_connection
-from main import AppConfig
+from include.classes.config import AppConfig
+import asyncio
+import weakref
 
 # from include.function.lockdown import go_lockdown
+
+# store locks per-connection without attaching them to the connection object
+_conn_locks = weakref.WeakKeyDictionary()
 
 
 async def do_request(
@@ -48,8 +51,16 @@ async def do_request(
     return response
 
 
+def _get_conn_lock(conn: ClientConnection) -> asyncio.Lock:
+    lock = _conn_locks.get(conn)
+    if lock is None:
+        lock = asyncio.Lock()
+        _conn_locks[conn] = lock
+    return lock
+
+
 async def _request(
-    conn: LockableClientConnection,
+    conn: ClientConnection,
     action: str,
     data: dict = {},
     message: str = "",
@@ -67,7 +78,8 @@ async def _request(
 
     request_json = json.dumps(request, ensure_ascii=False)
 
-    async with conn.lock:
+    lock = _get_conn_lock(conn)
+    async with lock:
         await conn.send(request_json)
         response = await conn.recv()
 

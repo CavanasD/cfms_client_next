@@ -8,7 +8,7 @@ import os
 import aiofiles.os
 from Crypto.Cipher import AES
 
-from include.classes.client import LockableClientConnection
+from websockets.asyncio.client import ClientConnection
 from include.classes.exceptions.transmission import (
     FileHashMismatchError,
     FileSizeMismatchError,
@@ -26,7 +26,7 @@ async def calculate_sha256(file_path):
 
 
 async def upload_file_to_server(
-    client: LockableClientConnection, task_id: str, file_path: str
+    client: ClientConnection, task_id: str, file_path: str
 ):
 
     await client.send(
@@ -82,7 +82,7 @@ async def upload_file_to_server(
 
 
 async def receive_file_from_server(
-    client: LockableClientConnection,
+    client: ClientConnection,
     task_id: str,
     file_path: str,  # filename: str | None = None
 ):
@@ -99,7 +99,7 @@ async def receive_file_from_server(
         7. Removes the output file if verification fails.
 
     Args:
-        client (LockableClientConnection): The websocket client connection.
+        client (ClientConnection): The websocket client connection.
         task_id (str): The identifier for the file transfer task.
         file_path (str): The path to save the received file.
 

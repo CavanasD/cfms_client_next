@@ -57,7 +57,7 @@ class ConnectFormController:
         if (
             server_protocol_version := server_info_response["data"]["protocol_version"]
         ) > PROTOCOL_VERSION:
-            await conn._wrapped_connection.close()
+            await conn.close()
             self.view.enable_interactions()
             self.view.send_error(
                 _("You are connecting to a server using a higher version protocol")

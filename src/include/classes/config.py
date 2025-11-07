@@ -5,7 +5,7 @@ import threading
 from flet_permission_handler import PermissionHandler
 import yaml
 
-from include.classes.client import LockableClientConnection
+from websockets.asyncio.client import ClientConnection
 from include.constants import FLET_APP_STORAGE_DATA
 
 PREFERENCES_PATH = f'{FLET_APP_STORAGE_DATA}/preferences.yaml'
@@ -35,7 +35,7 @@ class AppConfig(object):
         nickname: Optional[str] = None,
         user_permissions: list[str] = [],
         user_groups: list[str] = [],
-        conn: Optional[LockableClientConnection] = None,
+        conn: Optional[ClientConnection] = None,
         ph_service: Optional[PermissionHandler] = None
     ):
         if getattr(self, "_initialized", False):

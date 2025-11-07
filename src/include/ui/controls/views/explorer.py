@@ -4,7 +4,7 @@ from copy import deepcopy
 
 import flet as ft
 
-from include.classes.client import LockableClientConnection
+from websockets.asyncio.client import ClientConnection
 from include.classes.config import AppConfig
 from include.controllers.explorer.itself import FileExplorerController
 from include.ui.controls.components.explorer.bar import ExplorerTopBar, FileSortBar
@@ -134,7 +134,7 @@ class FileManagerView(ft.Container):
         self.root_directory_id: str | None = None
         self.previous_directory_id: str | None = None
         self.current_directory_id: str | None = None
-        self.conn: LockableClientConnection
+        self.conn: ClientConnection
 
         # Components
         self.indicator = FilePathIndicator("/")

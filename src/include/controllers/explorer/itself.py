@@ -129,8 +129,7 @@ class FileExplorerController:
 
                 finally:
                     if conn:
-                        await conn._wrapped_connection.close()  # bug: timeout when calling conn.close()
-                        # await asyncio.wait_for(conn.close(), timeout=2) # issue: timeout
+                        await conn.close()
 
             await handle_file_upload(task_id)
 
@@ -254,7 +253,7 @@ class FileExplorerController:
                             upload_dialog.progress_column.update()
                             if stop_event.is_set():
                                 break
-                        await transfer_conn._wrapped_connection.close()
+                        await transfer_conn.close()
                         break
                     except (
                         Exception
