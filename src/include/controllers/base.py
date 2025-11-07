@@ -8,6 +8,9 @@ __all__ = ["BaseController"]
 
 
 class BaseController(Generic[T]):
+    control: T
+    app_config: AppConfig
+
     def __init__(self, control: T, *args, **kwargs) -> None:
         self.control = control
         self.app_config = AppConfig()

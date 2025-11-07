@@ -12,6 +12,13 @@ _ = t.gettext
 
 changelogs = [
     ChangelogEntry(
+        "v0.2.29",
+        "Bug fixes",
+        "This version fixes an issue that prevented re-connection logic from "
+        "working.",
+        date(2025, 11, 7),
+    ),
+    ChangelogEntry(
         "v0.2.27",
         "Introduction of New Context Menu & Bug fixes",
         "This version introduces a new context menu for items in the explorer, "
