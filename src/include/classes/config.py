@@ -8,7 +8,7 @@ import yaml
 from websockets.asyncio.client import ClientConnection
 from include.constants import FLET_APP_STORAGE_DATA
 
-PREFERENCES_PATH = f'{FLET_APP_STORAGE_DATA}/preferences.yaml'
+PREFERENCES_PATH = f"{FLET_APP_STORAGE_DATA}/preferences.yaml"
 
 __all__ = ["AppConfig"]
 
@@ -27,34 +27,26 @@ class AppConfig(object):
 
     def __init__(
         self,
-        server_address: Optional[str] = None,
-        server_info: dict[str, Any] = {},
-        username: Optional[str] = None,
-        token: Optional[str] = None,
-        token_exp: Optional[float] = None,
-        nickname: Optional[str] = None,
-        user_permissions: list[str] = [],
-        user_groups: list[str] = [],
-        conn: Optional[ClientConnection] = None,
-        ph_service: Optional[PermissionHandler] = None
     ):
         if getattr(self, "_initialized", False):
             return
-        self.conn = conn
-        self.ph_service = ph_service
-        self.server_address = server_address
-        self.server_info = server_info if server_info is not None else {}
-        self.username = username
-        self.token = token
-        self.token_exp = token_exp
-        self.nickname = nickname
-        self.user_permissions = user_permissions
-        self.user_groups = user_groups
+
+        self.server_address: Optional[str] = None
+        self.server_info: dict[str, Any] = {}
+        self.disable_ssl_enforcement: bool = False
+        self.username: Optional[str] = None
+        self.token: Optional[str] = None
+        self.token_exp: Optional[float] = None
+        self.nickname: Optional[str] = None
+        self.user_permissions: list[str] = []
+        self.user_groups: list[str] = []
+        self.conn: Optional[ClientConnection] = None
+        self.ph_service: Optional[PermissionHandler] = None
 
         if not os.path.exists(PREFERENCES_PATH):
             self.init_preferences()
 
-        with open(PREFERENCES_PATH, 'r', encoding='utf-8') as file:
+        with open(PREFERENCES_PATH, "r", encoding="utf-8") as file:
             self.preferences = yaml.safe_load(file)
 
         self._initialized = True
@@ -63,7 +55,7 @@ class AppConfig(object):
         _attr = getattr(self, name)
         assert _attr is not None
         return _attr
-    
+
     def init_preferences(self):
         doc = {
             "settings": {

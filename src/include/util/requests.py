@@ -42,7 +42,11 @@ async def do_request(
         except (ConnectionClosed, ConnectionAbortedError, ConnectionResetError):
             if attempt >= max_retries - 1:
                 raise
-            _conn = await get_connection(_app_config.server_address)
+            _conn = await get_connection(
+                server_address=_app_config.server_address,
+                disable_ssl_enforcement=_app_config.disable_ssl_enforcement,
+                proxy=_app_config.preferences["settings"]["proxy_settings"],
+            )
             _app_config.conn = _conn
             continue
 

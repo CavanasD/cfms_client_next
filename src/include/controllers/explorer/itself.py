@@ -106,7 +106,11 @@ class FileExplorerController:
                 try:
                     assert each_file.path
                     # get new connection
-                    conn = await get_connection(self.app_config.server_address)
+                    conn = await get_connection(
+                        server_address=self.app_config.server_address,
+                        disable_ssl_enforcement=self.app_config.disable_ssl_enforcement,
+                        proxy=self.app_config.preferences["settings"]["proxy_settings"],
+                    )
 
                     async for current_size, file_size in upload_file_to_server(
                         conn, task_id, each_file.path
@@ -240,7 +244,11 @@ class FileExplorerController:
                     transfer_conn = None
                     try:
                         transfer_conn = await get_connection(
-                            self.app_config.server_address,
+                            server_address=self.app_config.server_address,
+                            disable_ssl_enforcement=self.app_config.disable_ssl_enforcement,
+                            proxy=self.app_config.preferences["settings"][
+                                "proxy_settings"
+                            ],
                             max_size=1024**2 * 4,
                         )
                         async for current_size, file_size in upload_file_to_server(

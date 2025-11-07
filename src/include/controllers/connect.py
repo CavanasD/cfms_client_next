@@ -72,6 +72,9 @@ class ConnectFormController:
         self.app_config.server_address = server_address
         self.app_config.server_info = server_info_response["data"]
         self.app_config.conn = conn
+        self.app_config.disable_ssl_enforcement = (
+            self.view.disable_ssl_enforcement_switch.value
+        )
 
         self.view.page.title = f"CFMS Client - {server_address}"
         self.view.update()
