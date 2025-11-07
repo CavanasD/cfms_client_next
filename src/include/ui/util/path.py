@@ -102,7 +102,7 @@ async def get_document(id: str | None, filename: str, view: "FileListView"):
         file_path = f"./{filename if filename else task_id[0:17]}"
 
     transfer_conn = await get_connection(
-        view.page.session.store.get("server_uri"), max_size=1024**2 * 4
+        view.parent_manager.app_config.server_address, max_size=1024**2 * 4
     )
 
     # build progress bar

@@ -69,13 +69,6 @@ class ConnectFormController:
             await self.view.push_route("/connect/about")
             return
 
-        # save connection ref
-        self.view.page.session.store.set("conn", conn)
-
-        # set session data
-        self.view.page.session.store.set("server_info", server_info_response["data"])
-        self.view.page.session.store.set("server_uri", server_address)
-
         self.app_config.server_address = server_address
         self.app_config.server_info = server_info_response["data"]
         self.app_config.conn = conn

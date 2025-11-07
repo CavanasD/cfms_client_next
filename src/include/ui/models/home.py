@@ -33,8 +33,6 @@ class HomeModel(Model):
         )
         self.file_picker: ft.FilePicker
 
-        self.page.session.store.set("navigation_bar", self.navigation_bar)
-
     def post_init(self) -> None:
         self.file_picker = ft.FilePicker()
         self.page._services.append(self.file_picker)

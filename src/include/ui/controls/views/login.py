@@ -2,6 +2,7 @@ import gettext
 
 import flet as ft
 
+from include.classes.config import AppConfig
 from include.constants import LOCALE_PATH
 from include.controllers.login import LoginFormController
 from include.ui.util.notifications import send_error
@@ -31,6 +32,7 @@ class LoginForm(ft.Container):
         self.page: ft.Page
         self.parent: LoginView
         self.controller = LoginFormController(self)
+        self.app_config = AppConfig()
 
         # Form style definitions
         self.width = const.FORM_WIDTH
@@ -92,13 +94,10 @@ class LoginForm(ft.Container):
         )
 
     def did_mount(self) -> None:
-        assert type(self.page) == ft.Page
-        self.server_info = self.page.session.store.get("server_info")
-        assert type(self.server_info) == dict
+        self.server_info = self.app_config.server_info
         self.parent.welcome_text.value = (
             f"{self.server_info.get('server_name', 'CFMS Server')}"
         )
-        # self.page.update()
 
     def disable_interactions(self):
         self.login_button.visible = False

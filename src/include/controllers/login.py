@@ -34,18 +34,6 @@ class LoginFormController:
         )
 
         if (code := response["code"]) == 200:
-            # backports for session store: use app_config instead
-            self.view.page.session.store.set("username", username)
-            self.view.page.session.store.set(
-                "nickname", response["data"].get("nickname")
-            )
-            self.view.page.session.store.set("token", response["data"]["token"])
-            self.view.page.session.store.set("exp", response["data"].get("exp"))
-            self.view.page.session.store.set(
-                "user_permissions", response["data"]["permissions"]
-            )
-            self.view.page.session.store.set("user_groups", response["data"]["groups"])
-
             self.app_config.username = username
             self.app_config.nickname = response["data"].get("nickname")
             self.app_config.token = response["data"]["token"]
@@ -58,7 +46,7 @@ class LoginFormController:
             await self.view.page.push_route("/home")
 
         elif code == 403:
-            self.view.page.session.store.set("username", username)
+            self.app_config.username = username
             self.view.page.show_dialog(PasswdUserDialog(_("Password must be changed before login.")))
             return
 
