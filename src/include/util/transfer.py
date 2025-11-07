@@ -56,14 +56,18 @@ async def upload_file_to_server(
     }
     await client.send(json.dumps(task_info, ensure_ascii=False))
 
-    received_response = await client.recv()
-    if received_response not in ["ready", "stop"]:
+    received_response = str(await client.recv())
+    if received_response.startswith("ready"): 
+        ready = True    
+    elif received_response == "stop":
+        ready = False
+    else:
         raise RuntimeError
 
-    if received_response == "ready":
+    if ready:
 
         try:
-            chunk_size = 8192
+            chunk_size = int(received_response.split()[1])
             async with aiofiles.open(file_path, "rb") as f:
                 while True:
                     chunk = await f.read(chunk_size)

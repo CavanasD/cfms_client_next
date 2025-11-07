@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 from include.controllers.base import BaseController
+from include.ui.controls.dialogs.wait import wait
 from include.ui.controls.menus.explorer import (
     DirectoryRightMenuDialog,
     DocumentRightMenuDialog,
@@ -31,7 +32,8 @@ _ = t.gettext
 
 class FileContextMenuController(BaseController):
     def __init__(self, control: "FileContextMenu") -> None:
-        self.control = control
+        super().__init__(control)
+        self.control: FileContextMenu
 
     async def action_open_file(self):
         await get_document(
@@ -74,7 +76,8 @@ class FileContextMenuController(BaseController):
 
 class DirectoryContextMenuController(BaseController):
     def __init__(self, control: "DirectoryContextMenu") -> None:
-        self.control = control
+        super().__init__(control)
+        self.control: DirectoryContextMenu
 
     async def action_open_directory(self):
         self.control.parent_listview.parent_manager.indicator.go(self.control.dir_name)
@@ -82,6 +85,7 @@ class DirectoryContextMenuController(BaseController):
             self.control.directory_id, view=self.control.parent_listview
         )
 
+    @wait("delete_directory")
     async def action_delete_directory(self):
         response = await do_request(
             action="delete_directory",
@@ -118,9 +122,10 @@ class DirectoryContextMenuController(BaseController):
         self.control.page.show_dialog(GetDirectoryInfoDialog(self.control.directory_id))
 
 
-class FileGestureListTileController:
+class FileGestureListTileController(BaseController):
     def __init__(self, control: "FileGestureListTile") -> None:
-        self.control = control
+        super().__init__(control)
+        self.control: FileGestureListTile
 
     async def action_open_file(self):
         await get_document(

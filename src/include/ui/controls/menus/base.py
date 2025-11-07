@@ -1,4 +1,4 @@
-from typing import Any, Type
+from typing import Any
 
 import flet as ft
 
@@ -131,8 +131,10 @@ class ContentMenu2(ft.ContextMenu):
             )
 
         self.gesture_detector = ft.GestureDetector(
+            expand=True,
+            expand_loose=True,
             on_long_press_start=self.trigger_open_menu,
-            on_secondary_tap_down=self.trigger_open_menu,  # pending github:flet-dev/flet/#5784
+            on_secondary_tap_down=self.trigger_open_menu,  # see flet-dev/flet issue #5786
             content=content,
         )
         super().__init__(content=self.gesture_detector, items=controls, ref=ref)

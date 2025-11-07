@@ -101,6 +101,9 @@ async def main(page: ft.Page):
         )
     )
 
+    if page.web:
+        await page.browser_context_menu.disable()
+
     def on_keyboard(e: ft.KeyboardEvent):
         if e.key == "W" and e.ctrl:
             page.show_semantics_debugger = not page.show_semantics_debugger
