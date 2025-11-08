@@ -4,17 +4,24 @@ import hashlib
 import json
 import mmap
 import os
+from typing import Optional
 
 import aiofiles.os
 from Crypto.Cipher import AES
 
+from flet import FilePickerFile
 from websockets.asyncio.client import ClientConnection
+from include.classes.config import AppConfig
+from include.classes.exceptions.request import InvaildResponseError
 from include.classes.exceptions.transmission import (
     FileHashMismatchError,
     FileSizeMismatchError,
 )
 from include.constants import FLET_APP_STORAGE_TEMP
 import shutil
+
+from include.util.connect import get_connection
+from include.util.requests import do_request_2
 
 
 async def calculate_sha256(file_path):
@@ -25,9 +32,7 @@ async def calculate_sha256(file_path):
         return hashlib.sha256(mmapped_file).hexdigest()
 
 
-async def upload_file_to_server(
-    client: ClientConnection, task_id: str, file_path: str
-):
+async def upload_file_to_server(client: ClientConnection, task_id: str, file_path: str):
 
     await client.send(
         json.dumps(
@@ -57,8 +62,8 @@ async def upload_file_to_server(
     await client.send(json.dumps(task_info, ensure_ascii=False))
 
     received_response = str(await client.recv())
-    if received_response.startswith("ready"): 
-        ready = True    
+    if received_response.startswith("ready"):
+        ready = True
     elif received_response == "stop":
         ready = False
     else:
@@ -77,6 +82,10 @@ async def upload_file_to_server(
 
                     if not chunk or len(chunk) < chunk_size:
                         break
+
+            # need to wait for server confirmation
+            server_response = json.loads(await client.recv())
+
         except:
             raise
 
@@ -234,3 +243,75 @@ async def receive_file_from_server(
     except:
         await aiofiles.os.remove(file_path)
         raise
+
+
+async def batch_upload_file_to_server(
+    app_config: AppConfig,
+    directory_id: Optional[str],
+    files: list[FilePickerFile],
+    max_size: int = 1024**2 * 4,
+    max_retries: int = 3,
+):
+    transfer_conn = None
+    try:
+        for index, file in enumerate(files):  # process tasks sequentially
+            filename, file_path = file.name, file.path
+            assert file_path is not None
+
+            for retry in range(max_retries):
+                try:
+                    # check whether transfer_conn exists
+                    if not transfer_conn:
+                        transfer_conn = await get_connection(
+                            server_address=app_config.server_address,
+                            disable_ssl_enforcement=app_config.disable_ssl_enforcement,
+                            proxy=app_config.preferences["settings"]["proxy_settings"],
+                            max_size=max_size,
+                        )
+
+                    # create a new task on the server
+                    response = await do_request_2(
+                        action="create_document",
+                        data={
+                            "title": filename,
+                            "folder_id": directory_id,
+                            "access_rules": {},
+                        },
+                        username=app_config.username,
+                        token=app_config.token,
+                    )
+
+                    if response.code != 200:
+                        raise InvaildResponseError(
+                            response,
+                            f"Failed to create document '{filename}': {response.message}",
+                        )
+                    
+                    task_id = response.data["task_data"]["task_id"]
+
+                    async for current_size, total_size in upload_file_to_server(
+                        transfer_conn, task_id, file_path
+                    ):
+                        yield index, filename, current_size, total_size, None
+
+                    break  # break the retry loop if successful
+
+                except InvaildResponseError as exc:
+                    yield index, filename, -1, -1, exc
+                    break
+
+                except Exception as exc:
+                    if transfer_conn:
+                        await transfer_conn.close()
+                        transfer_conn = None
+
+                    if retry == max_retries - 1:
+                        raise
+
+                    continue
+
+    finally:
+        if transfer_conn:
+            await transfer_conn.close()
+            transfer_conn = None
+            raise

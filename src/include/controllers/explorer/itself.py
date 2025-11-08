@@ -4,8 +4,10 @@ import os
 
 from flet import FilePickerFile
 import flet as ft
+from websockets import ConnectionClosed
 
 from include.classes.config import AppConfig
+from include.classes.exceptions.request import InvaildResponseError
 from include.ui.controls.dialogs.explorer import (
     BatchUploadFileAlertDialog,
     UploadDirectoryAlertDialog,
@@ -15,7 +17,7 @@ from include.util.connect import get_connection
 from include.util.create import create_directory
 from include.util.path import build_directory_tree
 from include.util.requests import do_request
-from include.util.transfer import upload_file_to_server
+from include.util.transfer import batch_upload_file_to_server, upload_file_to_server
 
 if TYPE_CHECKING:
     from include.ui.controls.views.explorer import FileManagerView
@@ -50,40 +52,36 @@ class FileExplorerController:
             self.view.page.overlay.append(progress_column)
             self.view.page.update()
 
-        for each_file in files:
-            if stop_event.is_set():
+        # 使用手动迭代器，这样可以在取下一个元素时捕获异常并 continue
+        ait = batch_upload_file_to_server(
+            self.app_config,
+            self.view.current_directory_id,
+            files,
+        )
+
+        # set default vars
+        index = 0
+        filename = ""
+        current_size = 0
+        file_size = 0
+
+        while True:
+            try:
+                index, filename, current_size, file_size, exc = (
+                    await ait.__anext__()
+                )
+
+            except StopAsyncIteration:
                 break
 
-            if len(files) > 1:
-                current_number = files.index(each_file) + 1
-
-                progress_bar.value = current_number / len(files)
-                progress_info.value = _("Uploading file [{current}/{total}]").format(
-                    current=current_number, total=len(files)
-                )
-                progress_column.update()
-
-            response = await do_request(
-                action="create_document",
-                data={
-                    "title": each_file.name,
-                    "folder_id": self.view.current_directory_id,
-                    "access_rules": {},
-                },
-                username=self.app_config.username,
-                token=self.app_config.token,
-            )
-
-            if (code := response["code"]) != 200:
-                if code == 403:
+            if isinstance(exc, InvaildResponseError):
+                if (code := exc.response.code) == 403:
                     self.view.send_error(
                         _("Upload failed: No permission to upload files")
                     )
-
-                    return
                 else:
                     errmsg = _("Upload failed: ({code}) {message}").format(
-                        code=response["code"], message=response["message"]
+                        code=code, message=exc.response.message
                     )
                     if progress_column not in self.view.page.overlay:
                         _new_error_text = ft.Text(
@@ -96,46 +94,28 @@ class FileExplorerController:
                         self.view.send_error(
                             errmsg,
                         )
-                    continue
+                continue
 
-            task_id = response["data"]["task_data"]["task_id"]
+            elif isinstance(exc, Exception):
+                _new_error_text = ft.Text(
+                    _(
+                        'Problem occurred when uploading "{each_file_name}": {exc}'
+                    ).format(each_file_name=filename, exc=exc),
+                    text_align=ft.TextAlign.CENTER,
+                )
+                progress_column.controls.append(_new_error_text)
+                return
 
-            async def handle_file_upload(task_id):  # need abstract
-                conn = None
+            # 正常更新进度条
+            progress_bar.value = current_size / file_size
+            progress_info.value = (
+                f"[{index+1}/{len(files)}] {current_size / 1024 / 1024:.2f} MB/{file_size / 1024 / 1024:.2f} MB"
+            )
+            progress_column.update()
 
-                try:
-                    assert each_file.path
-                    # get new connection
-                    conn = await get_connection(
-                        server_address=self.app_config.server_address,
-                        disable_ssl_enforcement=self.app_config.disable_ssl_enforcement,
-                        proxy=self.app_config.preferences["settings"]["proxy_settings"],
-                    )
-
-                    async for current_size, file_size in upload_file_to_server(
-                        conn, task_id, each_file.path
-                    ):
-                        progress_bar.value = current_size / file_size
-                        progress_info.value = f"{current_size / 1024 / 1024:.2f} MB/{file_size / 1024 / 1024:.2f} MB"
-                        progress_column.update()
-                        if stop_event.is_set():
-                            break
-
-                except Exception as exc:
-                    _new_error_text = ft.Text(
-                        _(
-                            'Problem occurred when uploading "{each_file_name}": {exc}'
-                        ).format(each_file_name=each_file.name, exc=exc),
-                        text_align=ft.TextAlign.CENTER,
-                    )
-                    progress_column.controls.append(_new_error_text)
-                    return
-
-                finally:
-                    if conn:
-                        await conn.close()
-
-            await handle_file_upload(task_id)
+            if stop_event.is_set():
+                await ait.aclose()
+                break
 
         if len(files) > 1:
             if len(progress_column.controls) <= 2:
@@ -164,8 +144,28 @@ class FileExplorerController:
         # Temporarily use FTP mode to create directory tree.
         async def create_dirs_from_tree(parent_path, tree, parent_id=None):
 
+            # helper to ensure persistent transfer connection is closed and removed
+            async def _close_transfer_conn():
+                transfer_conn = getattr(create_dirs_from_tree, "_transfer_conn", None)
+                if transfer_conn:
+                    try:
+                        await transfer_conn.close()
+                    except (
+                        ConnectionClosed,
+                        ConnectionResetError,
+                        ConnectionAbortedError,
+                    ):
+                        pass
+                    except Exception:
+                        pass
+                    try:
+                        delattr(create_dirs_from_tree, "_transfer_conn")
+                    except Exception:
+                        pass
+
             # Return if termination signal is detected
             if stop_event.is_set():
+                await _close_transfer_conn()
                 return
 
             upload_dialog.progress_text.value = _(
@@ -196,6 +196,7 @@ class FileExplorerController:
 
                 # Similarly, return if termination signal is detected
                 if stop_event.is_set():
+                    await _close_transfer_conn()
                     return
 
                 abs_path = os.path.join(parent_path, filename)
@@ -237,35 +238,69 @@ class FileExplorerController:
                         )
                     )
                     upload_dialog.error_column.update()
+                    continue
 
                 max_retries = 2
 
                 for retry in range(1, max_retries + 1):
-                    transfer_conn = None
                     try:
-                        transfer_conn = await get_connection(
-                            server_address=self.app_config.server_address,
-                            disable_ssl_enforcement=self.app_config.disable_ssl_enforcement,
-                            proxy=self.app_config.preferences["settings"][
-                                "proxy_settings"
-                            ],
-                            max_size=1024**2 * 4,
+                        # reuse a persistent connection stored on the function object
+                        transfer_conn = getattr(
+                            create_dirs_from_tree, "_transfer_conn", None
                         )
-                        async for current_size, file_size in upload_file_to_server(
+
+                        if transfer_conn is None:
+                            transfer_conn = await get_connection(
+                                server_address=self.app_config.server_address,
+                                disable_ssl_enforcement=self.app_config.disable_ssl_enforcement,
+                                proxy=self.app_config.preferences["settings"][
+                                    "proxy_settings"
+                                ],
+                                max_size=1024**2 * 4,
+                            )
+                            setattr(
+                                create_dirs_from_tree, "_transfer_conn", transfer_conn
+                            )
+
+                        gen = upload_file_to_server(
                             transfer_conn,
                             create_document_response["data"]["task_data"]["task_id"],
                             abs_path,
-                        ):
+                        )
+                        async for current_size, file_size in gen:
                             upload_dialog.progress_bar.value = current_size / file_size
                             upload_dialog.progress_text.value = f"{current_size / 1024 / 1024:.2f} MB/{file_size / 1024 / 1024:.2f} MB"
                             upload_dialog.progress_column.update()
                             if stop_event.is_set():
                                 break
-                        await transfer_conn.close()
+
+                        # if stop was set during upload, ensure connection closed and stop processing
+                        if stop_event.is_set():
+                            await _close_transfer_conn()
+                            return
+
+                        # success -> stop retrying
                         break
-                    except (
-                        Exception
-                    ) as e:  # (TimeoutError, websockets.exceptions.ConnectionClosedError)
+
+                    except Exception as e:
+                        # On exception, close and remove the persistent connection so next attempt will recreate it
+                        transfer_conn = getattr(
+                            create_dirs_from_tree, "_transfer_conn", None
+                        )
+                        if transfer_conn:
+                            try:
+                                await transfer_conn.close()
+                            except (
+                                ConnectionClosed,
+                                ConnectionResetError,
+                                ConnectionAbortedError,
+                            ):
+                                pass
+                            try:
+                                delattr(create_dirs_from_tree, "_transfer_conn")
+                            except Exception:
+                                pass
+
                         if retry >= max_retries:
                             upload_dialog.error_column.controls.append(
                                 ft.Text(
@@ -274,7 +309,6 @@ class FileExplorerController:
                                     ).format(filename=filename, err=str(e))
                                 )
                             )
-
                             upload_dialog.error_column.update()
                         else:
                             upload_dialog.progress_text.value = _(
@@ -284,9 +318,23 @@ class FileExplorerController:
                                 max_retries=max_retries,
                                 strerr=str(e),
                             )
-
                             upload_dialog.progress_text.update()
                         continue
+
+                # If this is the last file in the root directory, close any persistent connection
+                if _current_number == _total_number and parent_path == root_path:
+                    transfer_conn = getattr(
+                        create_dirs_from_tree, "_transfer_conn", None
+                    )
+                    if transfer_conn:
+                        try:
+                            await transfer_conn.close()
+                        except Exception:
+                            pass
+                        try:
+                            delattr(create_dirs_from_tree, "_transfer_conn")
+                        except Exception:
+                            pass
 
         upload_dialog.progress_text.value = _("Please wait")
         upload_dialog.progress_text.update()

@@ -1,5 +1,3 @@
-import asyncio
-
 from flet_model import Model, Router, route
 import flet as ft
 

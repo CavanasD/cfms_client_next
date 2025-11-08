@@ -4,6 +4,7 @@ from typing import Any
 
 from websockets import ConnectionClosed
 from websockets.asyncio.client import ClientConnection
+from include.classes.response import Response
 from include.util.connect import get_connection
 from include.classes.config import AppConfig
 import asyncio
@@ -53,6 +54,32 @@ async def do_request(
         break
 
     return response
+
+
+async def do_request_2(
+    action: str,
+    data: dict = {},
+    message: str = "",
+    username=None,
+    token=None,
+    max_retries: int = 3,
+) -> Response:
+    
+    response = await do_request(
+        action,
+        data,
+        message,
+        username=username,
+        token=token,
+        max_retries=max_retries,
+    )
+
+    return Response(
+        code=response["code"],
+        message=response.get("message", ""),
+        data=response.get("data", {}),
+        timestamp=response.get("timestamp", 0.0),
+    )
 
 
 def _get_conn_lock(conn: ClientConnection) -> asyncio.Lock:
