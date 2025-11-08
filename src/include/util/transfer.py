@@ -364,4 +364,3 @@ async def batch_upload_file_to_server(
         if transfer_conn:
             await transfer_conn.close()
             transfer_conn = None
-            raise
