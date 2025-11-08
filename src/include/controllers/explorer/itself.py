@@ -7,7 +7,7 @@ import flet as ft
 from websockets import ConnectionClosed
 
 from include.classes.config import AppConfig
-from include.classes.exceptions.request import InvaildResponseError
+from include.classes.exceptions.request import InvalidResponseError
 from include.ui.controls.dialogs.explorer import (
     BatchUploadFileAlertDialog,
     UploadDirectoryAlertDialog,
@@ -67,14 +67,12 @@ class FileExplorerController:
 
         while True:
             try:
-                index, filename, current_size, file_size, exc = (
-                    await ait.__anext__()
-                )
+                index, filename, current_size, file_size, exc = await ait.__anext__()
 
             except StopAsyncIteration:
                 break
 
-            if isinstance(exc, InvaildResponseError):
+            if isinstance(exc, InvalidResponseError):
                 if (code := exc.response.code) == 403:
                     self.view.send_error(
                         _("Upload failed: No permission to upload files")
@@ -108,9 +106,7 @@ class FileExplorerController:
 
             # 正常更新进度条
             progress_bar.value = current_size / file_size
-            progress_info.value = (
-                f"[{index+1}/{len(files)}] {current_size / 1024 / 1024:.2f} MB/{file_size / 1024 / 1024:.2f} MB"
-            )
+            progress_info.value = f"[{index+1}/{len(files)}] {current_size / 1024 / 1024:.2f} MB/{file_size / 1024 / 1024:.2f} MB"
             progress_column.update()
 
             if stop_event.is_set():
@@ -251,7 +247,9 @@ class FileExplorerController:
 
                         if transfer_conn is None:
                             transfer_conn = await get_connection(
-                                server_address=self.app_config.server_address,
+                                server_address=self.app_config.get_not_none_attribute(
+                                    "server_address"
+                                ),
                                 disable_ssl_enforcement=self.app_config.disable_ssl_enforcement,
                                 proxy=self.app_config.preferences["settings"][
                                     "proxy_settings"
