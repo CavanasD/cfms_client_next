@@ -102,7 +102,7 @@ async def get_document(id: str | None, filename: str, view: "FileListView"):
         file_path = f"./{filename if filename else task_id[0:17]}"
 
     transfer_conn = await get_connection(
-        view.parent_manager.app_config.server_address,
+        view.parent_manager.app_config.get_not_none_attribute("server_address"),
         max_size=1024**2 * 4,
         disable_ssl_enforcement=view.parent_manager.app_config.disable_ssl_enforcement,
         proxy=view.parent_manager.app_config.preferences["settings"]["proxy_settings"],
