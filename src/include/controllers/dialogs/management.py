@@ -15,6 +15,7 @@ if TYPE_CHECKING:
     )
 
 from include.util.locale import get_translation
+
 t = get_translation()
 _ = t.gettext
 
@@ -40,7 +41,11 @@ class AddUserAccountDialogController(BaseController):
             token=self.app_config.token,
         )
         if (code := response["code"]) != 200:
-            self.control.send_error(_("Create user failed: ({code}) {message}").format(code=code, message=response['message']))
+            self.control.send_error(
+                _("Create user failed: ({code}) {message}").format(
+                    code=code, message=response["message"]
+                )
+            )
         else:
             await self.control.parent_view.refresh_user_list()
 
@@ -58,7 +63,7 @@ class RenameUserNicknameDialogController(BaseController):
         response = await do_request(
             action="rename_user",
             data={
-                "username": self.control.parent_dialog.username,
+                "username": self.control.username,
                 "nickname": self.control.nickname_field.value,
             },
             username=self.app_config.username,
@@ -67,10 +72,12 @@ class RenameUserNicknameDialogController(BaseController):
 
         if (code := response["code"]) != 200:
             self.control.send_error(
-                _("Rename user nickname failed: ({code}) {message}").format(code=code, message=response['message']),
+                _("Rename user nickname failed: ({code}) {message}").format(
+                    code=code, message=response["message"]
+                ),
             )
         else:
-            await self.control.parent_dialog.parent_listview.parent_manager.refresh_user_list()
+            await self.control.parent_manager.refresh_user_list()
 
         self.control.close()
 
@@ -85,7 +92,7 @@ class EditUserGroupDialogController(BaseController):
         response = await do_request(
             action="change_user_groups",
             data={
-                "username": self.control.parent_dialog.username,
+                "username": self.control.username,
                 "groups": to_submit_list,
             },
             username=self.app_config.username,
@@ -93,11 +100,13 @@ class EditUserGroupDialogController(BaseController):
         )
         if (code := response["code"]) != 200:
             self.control.send_error(
-                _("Change user group failed: ({code}) {message}").format(code=code, message=response['message']),
+                _("Change user group failed: ({code}) {message}").format(
+                    code=code, message=response["message"]
+                ),
             )
 
         self.control.close()
-        await self.control.parent_dialog.parent_listview.parent_manager.refresh_user_list()
+        await self.control.parent_manager.refresh_user_list()
 
     async def action_refresh_permission_list(self):
         self.control.disable_interactions()
@@ -114,7 +123,9 @@ class EditUserGroupDialogController(BaseController):
         )
         if (code := group_list_response["code"]) != 200:
             self.control.send_error(
-                _("Failed to fetch user group list: ({code}) {message}").format(code=code, message=group_list_response['message']),
+                _("Failed to fetch user group list: ({code}) {message}").format(
+                    code=code, message=group_list_response["message"]
+                ),
             )
             return
 
@@ -125,14 +136,16 @@ class EditUserGroupDialogController(BaseController):
         user_data_response = await do_request(
             action="get_user_info",
             data={
-                "username": self.control.parent_dialog.username,
+                "username": self.control.username,
             },
             username=self.app_config.username,
             token=self.app_config.token,
         )
         if (code := user_data_response["code"]) != 200:
             self.control.send_error(
-                _("Failed to fetch user info: ({code}) {message}").format(code=code, message=user_data_response['message']),
+                _("Failed to fetch user info: ({code}) {message}").format(
+                    code=code, message=user_data_response["message"]
+                ),
             )
             return
         user_membership_list = user_data_response["data"]["groups"]
@@ -164,7 +177,7 @@ class ViewUserInfoDialogController(BaseController):
         response = await do_request(
             action="get_user_info",
             data={
-                "username": self.control.parent_dialog.username,
+                "username": self.control.username,
             },
             username=self.app_config.username,
             token=self.app_config.token,
@@ -172,21 +185,54 @@ class ViewUserInfoDialogController(BaseController):
         if (code := response["code"]) != 200:
             self.control.close()
             self.control.send_error(
-                _("Failed to fetch user info: ({code}) {message}").format(code=code, message=response['message']),
+                _("Failed to fetch user info: ({code}) {message}").format(
+                    code=code, message=response["message"]
+                ),
             )
         else:
             self.control.info_listview.controls = [
-                ft.Text(_("Username: {username}").format(username=response['data']['username'])),
                 ft.Text(
-                    _("User nickname: {nickname}").format(nickname=response['data']['nickname'] if response['data']['nickname'] else _('(None)'))
-                ),
-                ft.Text(_("User permissions: {permissions}").format(permissions=response['data']['permissions'])),
-                ft.Text(_("User groups: {groups}").format(groups=response['data']['groups'])),
-                ft.Text(
-                    _("User registration time: {created_time}").format(created_time=datetime.fromtimestamp(response['data']['created_time']).strftime('%Y-%m-%d %H:%M:%S'))
+                    _("Username: {username}").format(
+                        username=response["data"]["username"]
+                    )
                 ),
                 ft.Text(
-                    _("Last login: {last_login}").format(last_login=datetime.fromtimestamp(response['data']['last_login']).strftime('%Y-%m-%d %H:%M:%S'))
+                    _("User nickname: {nickname}").format(
+                        nickname=(
+                            response["data"]["nickname"]
+                            if response["data"]["nickname"]
+                            else _("(None)")
+                        )
+                    )
+                ),
+                ft.Text(
+                    _("User permissions: {permissions}").format(
+                        permissions=response["data"]["permissions"]
+                    )
+                ),
+                ft.Text(
+                    _("User groups: {groups}").format(groups=response["data"]["groups"])
+                ),
+                ft.Text(
+                    _("User registration time: {created_time}").format(
+                        created_time=datetime.fromtimestamp(
+                            response["data"]["created_time"]
+                        ).strftime("%Y-%m-%d %H:%M:%S")
+                    )
+                ),
+                ft.Text(
+                    _("Last login: {last_login}").format(
+                        last_login=datetime.fromtimestamp(
+                            response["data"]["last_login"]
+                        ).strftime("%Y-%m-%d %H:%M:%S")
+                    )
+                ),
+                ft.Text(
+                    _("Password last changed: {passwd_changed_time}").format(
+                        passwd_changed_time=datetime.fromtimestamp(
+                            response["data"]["passwd_last_modified"]
+                        ).strftime("%Y-%m-%d %H:%M:%S")
+                    )
                 ),
             ]
             self.control.progress_ring.visible = False

@@ -1,3 +1,4 @@
+from warnings import deprecated
 from typing import TYPE_CHECKING
 from include.controllers.base import BaseController
 from include.ui.controls.dialogs.wait import wait
@@ -122,6 +123,7 @@ class DirectoryContextMenuController(BaseController):
         self.control.page.show_dialog(GetDirectoryInfoDialog(self.control.directory_id))
 
 
+@deprecated("Use FileContextMenuController instead")
 class FileGestureListTileController(BaseController):
     def __init__(self, control: "FileGestureListTile") -> None:
         super().__init__(control)
@@ -140,6 +142,7 @@ class FileGestureListTileController(BaseController):
         )
 
 
+@deprecated("Use DirectoryContextMenuController instead")
 class DirectoryGestureListTileController:
     def __init__(self, control: "DirectoryGestureListTile") -> None:
         self.control = control

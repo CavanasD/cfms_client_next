@@ -8,6 +8,7 @@ if TYPE_CHECKING:
     from include.ui.controls.views.login import LoginForm
 
 from include.util.locale import get_translation
+
 t = get_translation()
 _ = t.gettext
 
@@ -46,9 +47,16 @@ class LoginFormController:
             await self.view.page.push_route("/home")
 
         elif code == 403:
-            self.app_config.username = username
-            self.view.page.show_dialog(PasswdUserDialog(_("Password must be changed before login.")))
+            self.view.page.show_dialog(
+                PasswdUserDialog(
+                    username, tip=_("Password must be changed before login.")
+                )
+            )
             return
 
         else:
-            self.view.send_error(_("Login failed: ({code}) {message}").format(code=code, message=response['message']))
+            self.view.send_error(
+                _("Login failed: ({code}) {message}").format(
+                    code=code, message=response["message"]
+                )
+            )

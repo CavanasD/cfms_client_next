@@ -6,10 +6,10 @@ import flet as ft
 from include.classes.config import AppConfig
 from include.controllers.explorer.tile import (
     FileContextMenuController,
-    DirectoryContextMenuController
+    DirectoryContextMenuController,
 )
 
-from include.ui.controls.menus.base import ContentMenu2
+from include.ui.controls.menus.base import ContextMenu2
 from include.util.locale import get_translation
 
 if TYPE_CHECKING:
@@ -19,7 +19,7 @@ t = get_translation()
 _ = t.gettext
 
 
-class FileContextMenu(ContentMenu2):
+class FileContextMenu(ContextMenu2):
     def __init__(
         self,
         file_id: str,
@@ -87,20 +87,20 @@ class FileContextMenu(ContentMenu2):
     async def listtile_click(self, event: ft.Event[ft.ListTile]):
         self.page.run_task(self.controller.action_open_file)
 
-    async def delete_button_click(self, event: ft.Event[ft.ListTile]):
+    async def delete_button_click(self, event: ft.Event[ft.PopupMenuItem]):
         self.page.run_task(self.controller.action_delete_file)
 
-    async def rename_button_click(self, event: ft.Event[ft.ListTile]):
+    async def rename_button_click(self, event: ft.Event[ft.PopupMenuItem]):
         self.page.run_task(self.controller.action_rename_file)
 
-    async def set_access_rules_button_click(self, event: ft.Event[ft.ListTile]):
+    async def set_access_rules_button_click(self, event: ft.Event[ft.PopupMenuItem]):
         self.page.run_task(self.controller.action_set_access_rules)
 
-    async def open_document_info_click(self, event: ft.Event[ft.ListTile]):
+    async def open_document_info_click(self, event: ft.Event[ft.PopupMenuItem]):
         self.page.run_task(self.controller.action_open_document_info)
 
 
-class DirectoryContextMenu(ContentMenu2):
+class DirectoryContextMenu(ContextMenu2):
     def __init__(
         self,
         parent_listview: "FileListView",

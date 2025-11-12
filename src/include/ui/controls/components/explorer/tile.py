@@ -10,7 +10,7 @@ from include.controllers.explorer.tile import (
     FileGestureListTileController,
 )
 
-from include.ui.controls.menus.base import ContentMenu2
+from include.ui.controls.menus.base import ContextMenu2
 from include.util.locale import get_translation
 
 if TYPE_CHECKING:

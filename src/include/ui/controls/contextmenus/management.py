@@ -1,0 +1,99 @@
+from typing import Optional, TYPE_CHECKING
+from datetime import datetime
+import flet as ft
+from include.controllers.contextmenus.management import UserContextMenuController
+from include.ui.controls.menus.base import ContextMenu2
+from include.util.locale import get_translation
+
+if TYPE_CHECKING:
+    from include.ui.controls.views.admin.account import UserListView
+
+t = get_translation()
+_ = t.gettext
+
+
+class UserContextMenu(ContextMenu2):
+    def __init__(
+        self,
+        username: str,
+        user_listview: "UserListView",
+        nickname: Optional[str] = None,
+        groups: list[str] = [],
+        last_login: Optional[float] = None,
+        ref: ft.Ref | None = None,
+    ):
+        self.page: ft.Page
+
+        self.username = username
+        self.nickname = nickname
+        self.groups = groups
+        self.last_login = last_login
+        self.user_listview = user_listview
+        self.controller = UserContextMenuController(self)
+
+        self._listtile = ft.ListTile(
+            leading=ft.Icon(ft.Icons.ACCOUNT_CIRCLE),
+            title=ft.Text(nickname or username),
+            subtitle=ft.Text(
+                f"{groups}\n"
+                + _("Last login: {last_login}").format(
+                    last_login=(
+                        datetime.fromtimestamp(last_login).strftime("%Y-%m-%d %H:%M:%S")
+                        if last_login
+                        else _("(Unknown)")
+                    )
+                )
+            ),
+            is_three_line=True,
+            on_click=self.listtile_click,
+        )
+
+        super().__init__(
+            self._listtile,
+            ref=ref,
+            menu_items=[
+                {
+                    "icon": ft.Icons.DELETE,
+                    "content": _("Delete"),
+                    "on_click": self.delete_button_click,
+                },
+                {
+                    "icon": ft.Icons.DRIVE_FILE_RENAME_OUTLINE_OUTLINED,
+                    "content": _("Change Nickname"),
+                    "on_click": self.rename_button_click,
+                },
+                {
+                    "icon": ft.Icons.FORMAT_LIST_BULLETED,
+                    "content": _("Edit User Group"),
+                    "on_click": self.edit_group_button_click,
+                },
+                {
+                    "icon": ft.Icons.PASSWORD_OUTLINED,
+                    "content": _("Reset Password"),
+                    "on_click": self.passwd_button_click,
+                },
+                {
+                    "icon": ft.Icons.INFO_OUTLINED,
+                    "content": _("Properties"),
+                    "on_click": self.properties_button_click,
+                },
+            ],
+        )
+
+    async def listtile_click(self, event: ft.Event[ft.ListTile]):
+        await self.open()
+
+    async def delete_button_click(self, event: ft.Event[ft.PopupMenuItem]):
+        self.page.run_task(self.controller.action_delete_user)
+
+    async def rename_button_click(self, event: ft.Event[ft.PopupMenuItem]) -> None:
+        self.page.run_task(self.controller.action_open_rename_dialog)
+
+    async def edit_group_button_click(self, event: ft.Event[ft.PopupMenuItem]) -> None:
+        self.page.run_task(self.controller.action_edit_user_groups)
+
+    async def passwd_button_click(self, event: ft.Event[ft.PopupMenuItem]) -> None:
+        self.page.run_task(self.controller.action_passwd_user)
+
+    async def properties_button_click(self, event: ft.Event[ft.PopupMenuItem]) -> None:
+        self.page.run_task(self.controller.action_view_user_info)

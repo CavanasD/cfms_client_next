@@ -1,10 +1,8 @@
 from typing import TYPE_CHECKING
 import asyncio
-import gettext
 
 import flet as ft
 
-from include.constants import LOCALE_PATH
 from include.controllers.dialogs.directory import (
     CreateDirectoryDialogController,
     OpenDirectoryDialogController,
@@ -15,6 +13,7 @@ if TYPE_CHECKING:
     from include.ui.controls.views.explorer import FileManagerView
 
 from include.util.locale import get_translation
+
 t = get_translation()
 _ = t.gettext
 
@@ -47,7 +46,9 @@ class CreateDirectoryDialog(AlertDialog):
             _("Create"),
             on_click=self.ok_button_click,
         )
-        self.cancel_button = ft.TextButton(_("Cancel"), on_click=self.cancel_button_click)
+        self.cancel_button = ft.TextButton(
+            _("Cancel"), on_click=self.cancel_button_click
+        )
 
         self.content = ft.Column(
             controls=[self.directory_textfield],
@@ -211,6 +212,7 @@ class OpenDirectoryDialog(AlertDialog):
 
         self.directory_textfield = ft.TextField(
             label=_("Directory ID"),
+            helper=_("If you want to go back to the root directory, enter '/'."),
             on_submit=self.ok_button_click,
             expand=True,
         )
@@ -219,7 +221,9 @@ class OpenDirectoryDialog(AlertDialog):
             _("Submit"),
             on_click=self.ok_button_click,
         )
-        self.cancel_button = ft.TextButton(_("Cancel"), on_click=self.cancel_button_click)
+        self.cancel_button = ft.TextButton(
+            _("Cancel"), on_click=self.cancel_button_click
+        )
 
         self.content = ft.Column(
             controls=[self.directory_textfield],

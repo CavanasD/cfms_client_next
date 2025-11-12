@@ -1,11 +1,5 @@
-from datetime import datetime
 from typing import TYPE_CHECKING
-import gettext
-
-import flet as ft
-
-from include.constants import LOCALE_PATH
-from include.ui.controls.menus.admin.account import UserRightMenuDialog
+from include.ui.controls.contextmenus.management import UserContextMenu
 
 if TYPE_CHECKING:
     from include.ui.controls.views.admin.account import UserListView
@@ -16,49 +10,15 @@ _ = t.gettext
 
 
 def update_user_controls(view: "UserListView", users: list[dict], _update=True):
-
-    async def user_right_click(
-        event: (
-            ft.TapEvent[ft.GestureDetector] | ft.LongPressStartEvent[ft.GestureDetector]
-        ),
-    ):
-        assert event.control.content
-        event.page.show_dialog(UserRightMenuDialog(event.control.content.data, view))
-
-    async def user_click(
-        event: ft.Event[ft.ListTile],
-    ):
-        assert event.control.data
-        event.page.show_dialog(UserRightMenuDialog(event.control.data, view))
-
     view.controls = []  # reset
     view.controls.extend(
         [
-            ft.GestureDetector(
-                ft.ListTile(
-                    leading=ft.Icon(ft.Icons.ACCOUNT_CIRCLE),
-                    title=ft.Text(
-                        user["nickname"] if user["nickname"] else user["username"]
-                    ),
-                    subtitle=ft.Text(
-                        f"{user["groups"]}\n"
-                        + _("Last login: {last_login}").format(
-                            last_login=(
-                                datetime.fromtimestamp(user["last_login"]).strftime(
-                                    "%Y-%m-%d %H:%M:%S"
-                                )
-                                if user["last_login"]
-                                else "Unknown"
-                            )
-                        )
-                    ),
-                    is_three_line=True,
-                    data=user["username"],
-                    on_click=user_click,
-                ),
-                data=user["username"],
-                on_secondary_tap=user_right_click,
-                on_long_press_start=user_right_click,
+            UserContextMenu(
+                username=user["username"],
+                nickname=user.get("nickname"),
+                groups=user.get("groups", []),
+                last_login=user.get("last_login"),
+                user_listview=view,
             )
             for user in users
         ]

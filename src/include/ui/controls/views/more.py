@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from include.ui.models.home import HomeModel
 
 from include.util.locale import get_translation
+
 t = get_translation()
 _ = t.gettext
 
@@ -91,7 +92,9 @@ class MoreView(ft.Container):
         )
 
     async def passwd_listtile_click(self, event: ft.Event[ft.ListTile]):
-        self.page.show_dialog(PasswdUserDialog())
+        self.page.show_dialog(
+            PasswdUserDialog(self.app_config.get_not_none_attribute("username"))
+        )
 
     async def settings_listtile_click(self, event: ft.Event[ft.ListTile]):
         assert type(self.page) == ft.Page

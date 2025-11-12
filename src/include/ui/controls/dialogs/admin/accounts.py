@@ -18,6 +18,7 @@ if TYPE_CHECKING:
     from include.ui.controls.menus.admin.account import UserRightMenuDialog
 
 from include.util.locale import get_translation
+
 t = get_translation()
 _ = t.gettext
 
@@ -25,7 +26,9 @@ _ = t.gettext
 class PasswdUserDialog(AlertDialog):
     def __init__(
         self,
+        username: str,
         tip: str = "",
+        passwd_other: bool = False,
         ref: ft.Ref | None = None,
         visible=True,
     ):
@@ -33,10 +36,16 @@ class PasswdUserDialog(AlertDialog):
         self.page: ft.Page
         self.app_config = AppConfig()
         self.controller = PasswdDialogController(self)
+        self.username = username
+        self.passwd_other = passwd_other
 
         self.modal = False
         self.scrollable = True
-        self.title = ft.Text(_("Reset User Password"))
+        self.title = ft.Text(
+            _("{action_type} User Password").format(
+                action_type=_("Change") if not passwd_other else _("Reset")
+            )
+        )
 
         self.progress_ring = ft.ProgressRing(visible=False)
 
@@ -46,6 +55,7 @@ class PasswdUserDialog(AlertDialog):
             can_reveal_password=True,
             on_submit=lambda e: asyncio.create_task(self.new_passwd_field.focus()),
             expand=True,
+            visible=not passwd_other,
         )
         self.new_passwd_field = ft.TextField(
             label=_("New Password"),
@@ -55,11 +65,37 @@ class PasswdUserDialog(AlertDialog):
             expand=True,
         )
         self.tip_text = ft.Text(tip, text_align=ft.TextAlign.CENTER, visible=bool(tip))
-        self.submit_button = ft.TextButton(_("Submit"), on_click=self.request_passwd_user)
-        self.cancel_button = ft.TextButton(_("Cancel"), on_click=self.cancel_button_click)
+        self.bypass_requirements_checkbox = ft.Checkbox(
+            label=_("Bypass password requirements"),
+            value=False,
+            visible=passwd_other,
+        )
+        self.force_update_after_login_checkbox = ft.Checkbox(
+            label=_("Force user to update password after next login"),
+            value=False,
+            visible=passwd_other,
+        )
+
+        self.submit_button = ft.TextButton(
+            _("Submit"), on_click=self.request_passwd_user
+        )
+        self.cancel_button = ft.TextButton(
+            _("Cancel"), on_click=self.cancel_button_click
+        )
 
         self.content = ft.Column(
-            controls=[self.old_passwd_field, self.new_passwd_field, self.tip_text],
+            controls=[
+                self.old_passwd_field,
+                self.new_passwd_field,
+                self.tip_text,
+                ft.Column(
+                    [
+                        self.bypass_requirements_checkbox,
+                        self.force_update_after_login_checkbox,
+                    ],
+                    spacing=0,
+                ),
+            ],
             width=400,
             alignment=ft.MainAxisAlignment.CENTER,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -118,10 +154,12 @@ class AddUserAccountDialog(AlertDialog):
         )
 
         self.submit_button = ft.TextButton(
-            "Create",
+            _("Create"),
             on_click=self.request_create_user,
         )
-        self.cancel_button = ft.TextButton("Cancel", on_click=self.cancel_button_click)
+        self.cancel_button = ft.TextButton(
+            _("Cancel"), on_click=self.cancel_button_click
+        )
 
         self.content = ft.Column(
             controls=[self.username_field, self.nickname_field, self.password_field],
@@ -159,15 +197,17 @@ class AddUserAccountDialog(AlertDialog):
 class RenameUserNicknameDialog(AlertDialog):
     def __init__(
         self,
-        parent_dialog: "UserRightMenuDialog",
+        username: str,
+        parent_manager: "ManageAccountsView",
         ref: ft.Ref | None = None,
         visible=True,
     ):
         super().__init__(ref=ref, visible=visible)
         self.page: ft.Page
-        self.controller = RenameUserNicknameDialogController(self)
-        self.parent_dialog = parent_dialog
+        self.username = username
         self.app_config = AppConfig()
+        self.parent_manager = parent_manager
+        self.controller = RenameUserNicknameDialogController(self)
 
         self.modal = False
         self.scrollable = True
@@ -176,10 +216,16 @@ class RenameUserNicknameDialog(AlertDialog):
         self.progress_ring = ft.ProgressRing(visible=False)
 
         self.nickname_field = ft.TextField(
-            label=_("User's New Nickname"), on_submit=self.request_rename_user, expand=True
+            label=_("User's New Nickname"),
+            on_submit=self.request_rename_user,
+            expand=True,
         )
-        self.submit_button = ft.TextButton(_("Rename"), on_click=self.request_rename_user)
-        self.cancel_button = ft.TextButton("Cancel", on_click=self.cancel_button_click)
+        self.submit_button = ft.TextButton(
+            _("Rename"), on_click=self.request_rename_user
+        )
+        self.cancel_button = ft.TextButton(
+            _("Cancel"), on_click=self.cancel_button_click
+        )
 
         self.content = ft.Column(
             controls=[
@@ -215,20 +261,28 @@ class RenameUserNicknameDialog(AlertDialog):
 class EditUserGroupDialog(AlertDialog):
     def __init__(
         self,
-        parent_dialog: "UserRightMenuDialog",
+        username: str,
+        parent_manager: "ManageAccountsView",
         ref: ft.Ref | None = None,
         visible=True,
     ):
         super().__init__(ref=ref, visible=visible)
         self.page: ft.Page
         self.controller = EditUserGroupDialogController(self)
+        self.username = username
+        self.parent_manager = parent_manager
+        self.app_config = AppConfig()
 
         self.refresh_button = ft.IconButton(
             ft.Icons.REFRESH,
             on_click=self.refresh_button_click,
         )
-        self.submit_button = ft.TextButton("Submit", on_click=self.submit_button_click)
-        self.cancel_button = ft.TextButton("Cancel", on_click=self.cancel_button_click)
+        self.submit_button = ft.TextButton(
+            _("Submit"), on_click=self.submit_button_click
+        )
+        self.cancel_button = ft.TextButton(
+            _("Cancel"), on_click=self.cancel_button_click
+        )
 
         self.modal = False
         self.title = ft.Column(
@@ -241,9 +295,6 @@ class EditUserGroupDialog(AlertDialog):
                 ),
             ]
         )
-
-        self.parent_dialog = parent_dialog
-        self.app_config = AppConfig()
 
         self.progress_ring = ft.ProgressRing(visible=False)
         self.group_listview = ft.ListView(expand=True, auto_scroll=True)
@@ -300,14 +351,14 @@ class EditUserGroupDialog(AlertDialog):
 class ViewUserInfoDialog(AlertDialog):
     def __init__(
         self,
-        parent_dialog: "UserRightMenuDialog",
+        username: str,
         ref: ft.Ref | None = None,
         visible=True,
     ):
         super().__init__(ref=ref, visible=visible)
         self.page: ft.Page
         self.controller = ViewUserInfoDialogController(self)
-        self.parent_dialog = parent_dialog
+        self.username = username
         self.app_config = AppConfig()
 
         self.modal = False
@@ -325,7 +376,9 @@ class ViewUserInfoDialog(AlertDialog):
 
         self.progress_ring = ft.ProgressRing(visible=True)
 
-        self.cancel_button = ft.TextButton("Cancel", on_click=self.cancel_button_click)
+        self.cancel_button = ft.TextButton(
+            _("Cancel"), on_click=self.cancel_button_click
+        )
 
         self.info_listview = ft.ListView(visible=False)
 

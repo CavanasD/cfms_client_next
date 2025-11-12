@@ -63,7 +63,7 @@ class RightMenuDialog(AlertDialog):
         self.content = ft.Container(self.menu_listview, width=480)
 
 
-class ContentMenu2(ft.ContextMenu):
+class ContextMenu2(ft.ContextMenu):
     """
     A context menu that displays a list of menu items with icons, titles, subtitles, and click handlers.
     Each menu item is represented as a dictionary with the following structure:

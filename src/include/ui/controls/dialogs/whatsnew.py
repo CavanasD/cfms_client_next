@@ -12,6 +12,14 @@ _ = t.gettext
 
 changelogs = [
     ChangelogEntry(
+        "v0.2.33",
+        "User Management Context Menu Rewrite & PasswdDialog Improvements",
+        "This version rewrites the user management context menu, and added more " \
+        "options for PasswdDialog to enable sysops to have more control when " \
+        "resetting user passwords.",
+        date(2025, 11, 12),
+    ),
+    ChangelogEntry(
         "v0.2.29",
         "Bug fixes",
         "This version fixes an issue that prevented re-connection logic from "
