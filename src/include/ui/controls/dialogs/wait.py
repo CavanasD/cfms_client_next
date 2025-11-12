@@ -25,7 +25,7 @@ class PendingResponseDialog(AlertDialog):
         visible: bool = True,
     ):
         super().__init__(
-            title=_(f"In Progress"),
+            title=_("In Progress"),
             content=ft.Column(
                 controls=[
                     ft.ProgressRing(),
