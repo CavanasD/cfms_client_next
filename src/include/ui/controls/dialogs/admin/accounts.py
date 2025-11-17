@@ -94,6 +94,8 @@ class PasswdUserDialog(AlertDialog):
                         self.force_update_after_login_checkbox,
                     ],
                     spacing=0,
+                    expand=True,
+                    expand_loose=True,
                 ),
             ],
             width=400,
