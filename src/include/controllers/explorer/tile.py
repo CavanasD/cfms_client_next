@@ -1,11 +1,6 @@
-from warnings import deprecated
 from typing import TYPE_CHECKING
 from include.controllers.base import BaseController
 from include.ui.controls.dialogs.wait import wait
-from include.ui.controls.menus.explorer import (
-    DirectoryRightMenuDialog,
-    DocumentRightMenuDialog,
-)
 from include.ui.controls.dialogs.contextmenu.explorer import (
     GetDirectoryInfoDialog,
     GetDocumentInfoDialog,
@@ -18,10 +13,6 @@ from include.ui.util.notifications import send_error
 from include.util.locale import get_translation
 
 if TYPE_CHECKING:
-    from include.ui.controls.components.explorer.tile import (
-        FileGestureListTile,
-        DirectoryGestureListTile,
-    )
     from include.ui.controls.contextmenus.explorer import (
         FileContextMenu,
         DirectoryContextMenu,
@@ -40,7 +31,7 @@ class FileContextMenuController(BaseController):
         await get_document(
             self.control.file_id,
             filename=self.control.filename,
-            view=self.control.parent_listview,
+            page=self.control.page,
         )
 
     async def action_delete_file(self):
@@ -121,41 +112,3 @@ class DirectoryContextMenuController(BaseController):
 
     async def action_open_directory_info(self):
         self.control.page.show_dialog(GetDirectoryInfoDialog(self.control.directory_id))
-
-
-@deprecated("Use FileContextMenuController instead")
-class FileGestureListTileController(BaseController):
-    def __init__(self, control: "FileGestureListTile") -> None:
-        super().__init__(control)
-        self.control: FileGestureListTile
-
-    async def action_open_file(self):
-        await get_document(
-            self.control.file_id,
-            filename=self.control.filename,
-            view=self.control.parent_listview,
-        )
-
-    async def action_open_context_menu(self):
-        self.control.page.show_dialog(
-            DocumentRightMenuDialog(self.control.file_id, self.control.parent_listview)
-        )
-
-
-@deprecated("Use DirectoryContextMenuController instead")
-class DirectoryGestureListTileController:
-    def __init__(self, control: "DirectoryGestureListTile") -> None:
-        self.control = control
-
-    async def action_open_directory(self):
-        self.control.parent_listview.parent_manager.indicator.go(self.control.dir_name)
-        await get_directory(
-            self.control.directory_id, view=self.control.parent_listview
-        )
-
-    async def action_open_context_menu(self):
-        self.control.page.show_dialog(
-            DirectoryRightMenuDialog(
-                self.control.directory_id, self.control.parent_listview
-            )
-        )

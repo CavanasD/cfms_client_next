@@ -2,12 +2,14 @@
 
 import os
 import threading
+import hashlib
 from typing import Any, Optional
 
 import yaml
 from flet_permission_handler import PermissionHandler
 from websockets.asyncio.client import ClientConnection
 
+from include.classes.preferences import UserPreference
 from include.constants import FLET_APP_STORAGE_DATA
 
 PREFERENCES_PATH = f"{FLET_APP_STORAGE_DATA}/preferences.yaml"
@@ -18,11 +20,11 @@ __all__ = ["AppConfig"]
 class AppConfig:
     """
     Singleton application configuration manager.
-    
+
     This class manages global application state including server connection,
     user credentials, and user preferences. It implements the singleton pattern
     to ensure only one instance exists throughout the application lifecycle.
-    
+
     Attributes:
         server_address: URL of the connected server
         server_info: Information about the connected server
@@ -37,7 +39,7 @@ class AppConfig:
         ph_service: Permission handler service instance
         preferences: User preferences dictionary loaded from YAML
     """
-    
+
     _instance = None
     _instance_lock = threading.Lock()
 
@@ -55,9 +57,10 @@ class AppConfig:
 
         # Server configuration
         self.server_address: Optional[str] = None
+        self._server_address_hash: Optional[str] = None
         self.server_info: dict[str, Any] = {}
         self.disable_ssl_enforcement: bool = False
-        
+
         # User authentication
         self.username: Optional[str] = None
         self.token: Optional[str] = None
@@ -65,10 +68,13 @@ class AppConfig:
         self.nickname: Optional[str] = None
         self.user_permissions: list[str] = []
         self.user_groups: list[str] = []
-        
+
         # Connection and services
         self.conn: Optional[ClientConnection] = None
         self.ph_service: Optional[PermissionHandler] = None
+
+        # User preferences
+        self.user_perference: Optional[UserPreference] = None
 
         # Load preferences
         if not os.path.exists(PREFERENCES_PATH):
@@ -79,16 +85,29 @@ class AppConfig:
 
         self._initialized = True
 
+    @property
+    def server_address_hash(self) -> Optional[str]:
+        """Get the hashed server address for caching purposes."""
+        if self._server_address_hash is not None:
+            return self._server_address_hash
+        else:
+            if not self.server_address:
+                raise ValueError("Server address is not set")
+            self._server_address_hash = hashlib.sha256(
+                self.server_address.encode("utf-8")
+            ).hexdigest()
+            return self._server_address_hash
+
     def get_not_none_attribute(self, name: str):
         """
         Get an attribute value, asserting it is not None.
-        
+
         Args:
             name: Name of the attribute to retrieve
-            
+
         Returns:
             The attribute value
-            
+
         Raises:
             AssertionError: If the attribute is None
         """

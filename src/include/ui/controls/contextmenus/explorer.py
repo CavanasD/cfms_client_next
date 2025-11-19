@@ -9,6 +9,7 @@ from include.controllers.explorer.tile import (
     DirectoryContextMenuController,
 )
 
+from include.ui.controls.components.explorer.tile import FileTile
 from include.ui.controls.menus.base import ContextMenu2
 from include.util.locale import get_translation
 
@@ -39,25 +40,22 @@ class FileContextMenu(ContextMenu2):
         self.app_config = AppConfig()
 
         # Instantiate ListTile
-        self._listtile = ft.ListTile(
-            leading=ft.Icon(ft.Icons.FILE_COPY),
-            title=filename,
-            subtitle=ft.Text(
-                _("Last modified: {last_modified}\n").format(
-                    last_modified=datetime.fromtimestamp(last_modified).strftime(
-                        "%Y-%m-%d %H:%M:%S"
-                    )
-                )
-                + (f"{size / 1024 / 1024:.3f} MB" if size > 0 else "0 Byte")
-            ),
-            is_three_line=True,
+        assert self.app_config.user_perference
+        self.filetile = FileTile(
+            filename=filename,
+            file_id=file_id,
+            size=size,
+            last_modified=last_modified,
+            starred=file_id in self.app_config.user_perference.favourites.get("files", []),
             on_click=self.listtile_click,
         )
 
         self.controller = FileContextMenuController(self)
 
         super().__init__(
-            self._listtile,
+            self.filetile,
+            on_enter=self.tilerow_on_enter,
+            on_exit=self.tilerow_on_exit,
             ref=ref,
             menu_items=[
                 {
@@ -83,6 +81,15 @@ class FileContextMenu(ContextMenu2):
                 },
             ],
         )
+
+    async def tilerow_on_enter(self, event: ft.Event[ft.GestureDetector]):
+        self.filetile.star_button.visible = True
+        self.filetile.update()
+
+    async def tilerow_on_exit(self, event: ft.Event[ft.GestureDetector]):
+        if not self.filetile.starred:
+            self.filetile.star_button.visible = False
+            self.filetile.update()
 
     async def listtile_click(self, event: ft.Event[ft.ListTile]):
         self.page.run_task(self.controller.action_open_file)

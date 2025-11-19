@@ -1,8 +1,6 @@
 from typing import Optional
 import asyncio
-import gettext
 import os
-import threading
 
 from flet_open_file import OpenFile
 from flet_permission_handler import Permission, PermissionHandler, PermissionStatus
@@ -10,7 +8,7 @@ import flet as ft
 import requests
 
 from include.classes.config import AppConfig
-from include.constants import FLET_APP_STORAGE_TEMP, LOCALE_PATH, RUNTIME_PATH
+from include.constants import FLET_APP_STORAGE_TEMP, RUNTIME_PATH
 from include.ui.controls.dialogs.base import AlertDialog
 from include.ui.util.notifications import send_error
 from include.util.locale import get_translation
@@ -119,6 +117,7 @@ class UpgradeDialog(AlertDialog):
             _update_script = f"""@echo off
 timeout /t 2 /nobreak >nul
 taskkill /f /im cfms_client_next.exe >nul 2>&1
+rmdir /s /q "{RUNTIME_PATH}\\*"
 xcopy "{FLET_APP_STORAGE_TEMP}\\update\\build\\windows" "{RUNTIME_PATH}" /I /Y /S
 rmdir /s /q "{FLET_APP_STORAGE_TEMP}\\update"
 exit

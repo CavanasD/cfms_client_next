@@ -81,8 +81,7 @@ async def get_directory(
     view.parent_manager.show_content()
 
 
-async def get_document(id: str | None, filename: str, view: "FileListView"):
-    assert type(view.page) == ft.Page
+async def get_document(id: str | None, filename: str, page: ft.Page):
     response = await do_request(
         action="get_document",
         data={"document_id": id},
@@ -95,17 +94,17 @@ async def get_document(id: str | None, filename: str, view: "FileListView"):
     task_start_time = task_data["start_time"]
     task_end_time = task_data["end_time"]
 
-    assert view.page.platform
-    if view.page.platform.value in ["android"]:
+    assert page.platform
+    if page.platform.value in ["android"]:
         file_path = f"/storage/emulated/0/{filename if filename else task_id[0:17]}"
     else:
         file_path = f"./{filename if filename else task_id[0:17]}"
 
     transfer_conn = await get_connection(
-        view.parent_manager.app_config.get_not_none_attribute("server_address"),
+        _app_config.get_not_none_attribute("server_address"),
         max_size=1024**2 * 4,
-        disable_ssl_enforcement=view.parent_manager.app_config.disable_ssl_enforcement,
-        proxy=view.parent_manager.app_config.preferences["settings"]["proxy_settings"],
+        disable_ssl_enforcement=_app_config.disable_ssl_enforcement,
+        proxy=_app_config.preferences["settings"]["proxy_settings"],
     )
 
     # build progress bar
@@ -119,8 +118,8 @@ async def get_document(id: str | None, filename: str, view: "FileListView"):
         ),
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
     )
-    view.page.overlay.append(progress_column)
-    view.page.update()
+    page.overlay.append(progress_column)
+    page.update()
 
     try:
         async for stage, *data in receive_file_from_server(
@@ -152,9 +151,9 @@ async def get_document(id: str | None, filename: str, view: "FileListView"):
 
             progress_column.update()
     except FileHashMismatchError as exc:
-        send_error(view.page, _("File hash mismatch: {exc}").format(exc=str(exc)))
+        send_error(page, _("File hash mismatch: {exc}").format(exc=str(exc)))
     except FileSizeMismatchError as exc:
-        send_error(view.page, _("File size mismatch: {exc}").format(exc=str(exc)))
+        send_error(page, _("File size mismatch: {exc}").format(exc=str(exc)))
     finally:
-        view.page.overlay.remove(progress_column)
-        view.page.update()
+        page.overlay.remove(progress_column)
+        page.update()

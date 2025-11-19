@@ -23,6 +23,7 @@ LOCALE_PATH = f"{ROOT_PATH}/include/ui/locale"
 RUNTIME_PATH = os.environ.get("PYTHONHOME", "")
 FLET_APP_STORAGE_TEMP = os.environ.get("FLET_APP_STORAGE_TEMP", ".")
 FLET_APP_STORAGE_DATA = os.environ.get("FLET_APP_STORAGE_DATA", ".")
+USER_PREFERENCES_PATH = f"{FLET_APP_STORAGE_DATA}/user_preferences"
 
 # Application Info
 DEFAULT_WINDOW_TITLE = "CFMS Client"
@@ -30,8 +31,8 @@ GITHUB_REPO = "Creeper19472/cfms_client_next"
 
 # Version Information
 CHANNEL = "alpha"
-BUILD_VERSION = "v0.2.35"
-MODIFIED = "20251112"
+BUILD_VERSION = "v0.2.36"
+MODIFIED = "20251119"
 APP_VERSION = f"{BUILD_VERSION[1:]}.{MODIFIED}_{CHANNEL} NEXT"
 
 # Protocol

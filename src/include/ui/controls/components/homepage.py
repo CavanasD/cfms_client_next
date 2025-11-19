@@ -3,8 +3,11 @@ from typing import TYPE_CHECKING
 import flet as ft
 
 from include.classes.config import AppConfig
+from include.ui.controls.components.explorer.tile import FileTile
 from include.ui.controls.views.explorer import FileManagerView
 from include.ui.util.file_controls import get_directory
+from include.ui.util.path import get_document
+
 
 if TYPE_CHECKING:
     from include.ui.models.home import HomeModel
@@ -27,7 +30,9 @@ class HomeNavigationBar(ft.NavigationBar):
 
         nav_destinations = [
             ft.NavigationBarDestination(icon=ft.Icons.FOLDER, label=_("Files")),
-            ft.NavigationBarDestination(icon=ft.Icons.ARROW_CIRCLE_DOWN, label=_("Tasks")),
+            ft.NavigationBarDestination(
+                icon=ft.Icons.ARROW_CIRCLE_DOWN, label=_("Tasks")
+            ),
             ft.NavigationBarDestination(icon=ft.Icons.HOME, label=_("Home")),
             ft.NavigationBarDestination(icon=ft.Icons.MORE_HORIZ, label=_("More")),
             ft.NavigationBarDestination(
@@ -47,6 +52,7 @@ class HomeNavigationBar(ft.NavigationBar):
             for view in self.views:
                 if self.views.index(view) == index:
                     view.visible = True
+                    view.did_mount()
                 else:
                     view.visible = False
 
@@ -105,6 +111,50 @@ class WelcomeInfoCard(ft.Card):
         )
 
 
+class HomeFavoritesContainer(ft.Container):
+    def __init__(self, ref: ft.Ref | None = None, visible=True):
+        super().__init__(ref=ref, visible=visible, margin=15)
+        self.page: ft.Page
+        self.app_config = AppConfig()
+
+        self.listview = ft.ListView(controls=[])
+        self.content = self.listview
+
+    def update_favorites(self):
+        # add favorite files and directories
+        assert self.app_config.user_perference
+        favorite_files = self.app_config.user_perference.favourites.get("files", {})
+        favorite_directories = self.app_config.user_perference.favourites.get(
+            "directories", {}
+        )
+
+        # clear existing controls
+        self.listview.controls.clear()
+
+        async def on_filetile_click(event: ft.Event[ft.ListTile]):
+            assert type(event.control) == FileTile
+            await get_document(
+                event.control.file_id,
+                filename=event.control.filename,
+                page=self.page,
+            )
+
+        for file_id in favorite_files:
+            file = FileTile(
+                filename=favorite_files[file_id],
+                file_id=file_id,
+                starred=True,
+                show_id=True,
+                on_click=on_filetile_click,
+            )
+            self.listview.controls.append(file)
+
+        if not self.listview.controls:
+            self.listview.controls.append(
+                ft.Text(_("You have not favorited any documents or folders yet."))
+            )
+
+
 class HomeTabs(ft.Tabs):
     def __init__(
         self,
@@ -112,6 +162,7 @@ class HomeTabs(ft.Tabs):
     ):
         self.tabbar_ref = ft.Ref[ft.TabBar]()
         self.tabbarview_ref = ft.Ref[ft.TabBarView]()
+        self.home_favorites_container = HomeFavoritesContainer()
 
         _tabbar = ft.TabBar(
             tabs=[
@@ -122,19 +173,7 @@ class HomeTabs(ft.Tabs):
         _tabbarview = ft.TabBarView(
             expand=True,
             controls=[
-                ft.Container(
-                    ft.Column(
-                        controls=[
-                            ft.Text(
-                                _(
-                                    "You have not favorited any documents or folders yet."
-                                )
-                            )
-                        ],
-                        # alignment=ft.alignment.center,
-                    ),
-                    margin=15,
-                ),
+                self.home_favorites_container,
             ],
             ref=self.tabbarview_ref,  # pyright: ignore[reportArgumentType]
         )
@@ -147,6 +186,10 @@ class HomeTabs(ft.Tabs):
             ref=ref,
         )
 
+    def did_mount(self):
+        super().did_mount()
+        self.home_favorites_container.update_favorites()
+
 
 class HomeView(ft.Container):
     def __init__(self, ref: ft.Ref | None = None, visible=True):
@@ -155,10 +198,13 @@ class HomeView(ft.Container):
         self.margin = 10
         self.padding = 10
 
+        self.welcome_info_card = WelcomeInfoCard()
+        self.home_tabs = HomeTabs()
+
         self.content = ft.Column(
             controls=[
-                WelcomeInfoCard(),
-                HomeTabs(),
+                self.welcome_info_card,
+                self.home_tabs,
             ]
         )
 
@@ -167,3 +213,7 @@ class HomeView(ft.Container):
         # Form reference definitions
 
         # Form element definitions
+
+    def did_mount(self):
+        super().did_mount()
+        self.home_tabs.home_favorites_container.update_favorites()

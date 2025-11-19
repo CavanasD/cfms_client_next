@@ -2,10 +2,6 @@ from typing import TYPE_CHECKING
 
 import flet as ft
 
-from include.ui.controls.components.explorer.tile import (
-    FileGestureListTile,
-    DirectoryGestureListTile,
-)
 from include.ui.controls.contextmenus.explorer import DirectoryContextMenu, FileContextMenu
 from include.ui.util.path import get_directory
 

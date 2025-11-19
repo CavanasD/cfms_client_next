@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 from include.classes.config import AppConfig
 from include.ui.controls.dialogs.admin.accounts import PasswdUserDialog
 from include.util.requests import do_request
+from include.util.user import load_user_preference
 
 if TYPE_CHECKING:
     from include.ui.controls.views.login import LoginForm
@@ -41,6 +42,7 @@ class LoginFormController:
             self.app_config.token_exp = response["data"].get("exp")
             self.app_config.user_permissions = response["data"]["permissions"]
             self.app_config.user_groups = response["data"]["groups"]
+            self.app_config.user_perference = load_user_preference(username)
 
             self.view.clear_fields()
 

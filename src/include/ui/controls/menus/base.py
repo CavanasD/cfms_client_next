@@ -87,6 +87,8 @@ class ContextMenu2(ft.ContextMenu):
     def __init__(
         self,
         content: ft.Control,
+        on_enter: ft.ControlEventHandler[ft.GestureDetector] | None = None,
+        on_exit: ft.ControlEventHandler[ft.GestureDetector] | None = None,
         menu_items: list[dict[str, Any]] = [],
         ref: ft.Ref | None = None,
     ):
@@ -135,6 +137,8 @@ class ContextMenu2(ft.ContextMenu):
             expand_loose=True,
             on_long_press_start=self.trigger_open_menu,
             on_secondary_tap_down=self.trigger_open_menu,  # see flet-dev/flet issue #5786
+            on_enter=on_enter,
+            on_exit=on_exit,
             content=content,
         )
         super().__init__(content=self.gesture_detector, items=controls, ref=ref)
