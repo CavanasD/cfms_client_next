@@ -12,10 +12,18 @@ _ = t.gettext
 
 changelogs = [
     ChangelogEntry(
+        "v0.2.36",
+        "Add to Favourites Button for Documents & Directories",
+        "This version adds an 'Add to Favourites' button for documents and "
+        "directories. A variety of bug fixes and performance improvements "
+        "have also be implemented.",
+        date(2025, 11, 19),
+    ),
+    ChangelogEntry(
         "v0.2.33",
         "User Management Context Menu Rewrite & PasswdDialog Improvements",
-        "This version rewrites the user management context menu, and added more " \
-        "options for PasswdDialog to enable sysops to have more control when " \
+        "This version rewrites the user management context menu, and added more "
+        "options for PasswdDialog to enable sysops to have more control when "
         "resetting user passwords.",
         date(2025, 11, 12),
     ),

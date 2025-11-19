@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 import flet as ft
 
 from include.classes.config import AppConfig
-from include.ui.controls.components.explorer.tile import FileTile
+from include.ui.controls.components.explorer.tile import DirectoryTile, FileTile
 from include.ui.controls.views.explorer import FileManagerView
 from include.ui.util.file_controls import get_directory
 from include.ui.util.path import get_document
@@ -138,6 +138,19 @@ class HomeFavoritesContainer(ft.Container):
                 filename=event.control.filename,
                 page=self.page,
             )
+
+        async def on_dirtile_click(event: ft.Event[ft.ListTile]):
+            pass
+
+        for dir_id in favorite_directories:
+            directory = DirectoryTile(
+                dir_name=favorite_directories[dir_id],
+                directory_id=dir_id,
+                starred=True,
+                show_id=True,
+                on_click=on_dirtile_click,
+            )
+            self.listview.controls.append(directory)
 
         for file_id in favorite_files:
             file = FileTile(

@@ -9,7 +9,7 @@ from include.controllers.explorer.tile import (
     DirectoryContextMenuController,
 )
 
-from include.ui.controls.components.explorer.tile import FileTile
+from include.ui.controls.components.explorer.tile import FileTile, DirectoryTile
 from include.ui.controls.menus.base import ContextMenu2
 from include.util.locale import get_translation
 
@@ -46,7 +46,8 @@ class FileContextMenu(ContextMenu2):
             file_id=file_id,
             size=size,
             last_modified=last_modified,
-            starred=file_id in self.app_config.user_perference.favourites.get("files", []),
+            starred=file_id
+            in self.app_config.user_perference.favourites.get("files", []),
             on_click=self.listtile_click,
         )
 
@@ -54,8 +55,8 @@ class FileContextMenu(ContextMenu2):
 
         super().__init__(
             self.filetile,
-            on_enter=self.tilerow_on_enter,
-            on_exit=self.tilerow_on_exit,
+            on_enter=self.filetile_on_enter,
+            on_exit=self.filetile_on_exit,
             ref=ref,
             menu_items=[
                 {
@@ -82,11 +83,11 @@ class FileContextMenu(ContextMenu2):
             ],
         )
 
-    async def tilerow_on_enter(self, event: ft.Event[ft.GestureDetector]):
+    async def filetile_on_enter(self, event: ft.Event[ft.GestureDetector]):
         self.filetile.star_button.visible = True
         self.filetile.update()
 
-    async def tilerow_on_exit(self, event: ft.Event[ft.GestureDetector]):
+    async def filetile_on_exit(self, event: ft.Event[ft.GestureDetector]):
         if not self.filetile.starred:
             self.filetile.star_button.visible = False
             self.filetile.update()
@@ -125,22 +126,24 @@ class DirectoryContextMenu(ContextMenu2):
         self.dir_name = dir_name
         self.created_at = created_at
 
+        # has to set manually
+        self.app_config = AppConfig()
+
         # Instantiate ListTile
-        self._listtile = ft.ListTile(
-            leading=ft.Icon(ft.Icons.FOLDER),
-            title=dir_name,
-            subtitle=ft.Text(
-                _("Created time: {created_time}").format(
-                    created_time=datetime.fromtimestamp(self.created_at).strftime(
-                        "%Y-%m-%d %H:%M:%S"
-                    )
-                )
-            ),
+        assert self.app_config.user_perference
+        self.dirtile = DirectoryTile(
+            dir_name=dir_name,
+            directory_id=directory_id,
+            created_at=created_at,
+            starred=directory_id
+            in self.app_config.user_perference.favourites.get("directories", []),
             on_click=self.listtile_click,
         )
 
         super().__init__(
-            content=self._listtile,
+            content=self.dirtile,
+            on_enter=self.dirtile_on_enter,
+            on_exit=self.dirtile_on_exit,
             menu_items=[
                 {
                     "icon": ft.Icons.DELETE,
@@ -171,6 +174,15 @@ class DirectoryContextMenu(ContextMenu2):
             ],
             ref=ref,
         )
+
+    async def dirtile_on_enter(self, event: ft.Event[ft.GestureDetector]):
+        self.dirtile.star_button.visible = True
+        self.dirtile.update()
+
+    async def dirtile_on_exit(self, event: ft.Event[ft.GestureDetector]):
+        if not self.dirtile.starred:
+            self.dirtile.star_button.visible = False
+            self.dirtile.update()
 
     async def listtile_click(self, event: ft.Event[ft.ListTile]):
         self.page.run_task(self.controller.action_open_directory)
