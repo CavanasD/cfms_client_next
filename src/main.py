@@ -18,6 +18,9 @@ from include.util.locale import set_translation
 DEFAULT_WINDOW_WIDTH = 1024
 DEFAULT_WINDOW_HEIGHT = 768
 
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
 
 async def main(page: ft.Page):
     """
