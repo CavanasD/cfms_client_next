@@ -6,6 +6,7 @@ from include.ui.controls.dialogs.contextmenu.explorer import (
     GetDocumentInfoDialog,
     RenameDialog,
 )
+from include.ui.controls.dialogs.authorize import AuthorizeDialog
 from include.ui.controls.components.rulemanager import RuleManager
 from include.ui.util.path import get_directory, get_document
 from include.util.requests import do_request
@@ -22,10 +23,9 @@ t = get_translation()
 _ = t.gettext
 
 
-class FileContextMenuController(BaseController):
+class FileContextMenuController(BaseController["FileContextMenu"]):
     def __init__(self, control: "FileContextMenu") -> None:
         super().__init__(control)
-        self.control: FileContextMenu
 
     async def action_open_file(self):
         await get_document(
@@ -59,6 +59,11 @@ class FileContextMenuController(BaseController):
             RenameDialog("document", self.control.file_id, self.control.parent_listview)
         )
 
+    async def action_authorize(self):
+        self.control.page.show_dialog(
+            AuthorizeDialog("document", self.control.file_id, self.control.parent_listview)
+        )
+
     async def action_set_access_rules(self):
         self.control.page.show_dialog(RuleManager(self.control.file_id, "document"))
 
@@ -66,10 +71,9 @@ class FileContextMenuController(BaseController):
         self.control.page.show_dialog(GetDocumentInfoDialog(self.control.file_id))
 
 
-class DirectoryContextMenuController(BaseController):
+class DirectoryContextMenuController(BaseController["DirectoryContextMenu"]):
     def __init__(self, control: "DirectoryContextMenu") -> None:
         super().__init__(control)
-        self.control: DirectoryContextMenu
 
     async def action_open_directory(self):
         self.control.parent_listview.parent_manager.indicator.go(self.control.dir_name)
@@ -101,6 +105,13 @@ class DirectoryContextMenuController(BaseController):
     async def action_rename_directory(self):
         self.control.page.show_dialog(
             RenameDialog(
+                "directory", self.control.directory_id, self.control.parent_listview
+            )
+        )
+
+    async def action_authorize(self):
+        self.control.page.show_dialog(
+            AuthorizeDialog(
                 "directory", self.control.directory_id, self.control.parent_listview
             )
         )
