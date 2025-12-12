@@ -223,6 +223,8 @@ class AuthorizeDialog(AlertDialog):
                     ],
                     spacing=20,
                     alignment=ft.MainAxisAlignment.CENTER,
+                    run_alignment=ft.MainAxisAlignment.CENTER,
+                    wrap=True,
                 ),
             ],
             width=500,
