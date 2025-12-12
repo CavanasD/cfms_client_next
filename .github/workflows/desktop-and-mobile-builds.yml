@@ -90,7 +90,7 @@ jobs:
 
     - name: Flet Build Windows
       run: |
-        uv run flet build windows -v --no-rich-output
+        uv run flet build windows --yes -v --no-rich-output
 
     # - name: Upload Windows Artifact
     #   uses: actions/upload-artifact@v4.3.4
@@ -175,7 +175,7 @@ jobs:
 
     - name: Flet Build APK
       run: |
-        uv run flet build apk -v --no-rich-output --android-signing-key-store keystore.jks --android-signing-key-alias key0 --android-signing-key-store-password ${{ secrets.FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD }} --android-signing-key-password ${{ secrets.FLET_ANDROID_SIGNING_KEY_PASSWORD }}
+        uv run flet build apk --yes -v --no-rich-output --android-signing-key-store keystore.jks --android-signing-key-alias key0 --android-signing-key-store-password ${{ secrets.FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD }} --android-signing-key-password ${{ secrets.FLET_ANDROID_SIGNING_KEY_PASSWORD }}
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4.3.4
