@@ -5,7 +5,7 @@ t = get_translation()
 _ = t.gettext
 
 
-class AboutPageTestInfoBlock(ft.Container):
+class VersionTypeBlock(ft.Container):
     """
     A row to show the stage and other info during
     the software test.

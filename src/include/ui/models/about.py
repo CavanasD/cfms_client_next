@@ -7,7 +7,7 @@ import flet as ft
 import requests
 
 from include.constants import APP_VERSION, BUILD_VERSION, LOCALE_PATH
-from include.ui.controls.components.about import AboutPageTestInfoBlock
+from include.ui.controls.components.about import VersionTypeBlock
 from include.ui.controls.dialogs.upgrade import UpgradeDialog
 from include.ui.controls.dialogs.whatsnew import ChangelogHistoryDialog
 from include.ui.util.notifications import send_error
@@ -145,7 +145,7 @@ class AboutModel(Model):
         )
 
         self.controls = [
-            AboutPageTestInfoBlock(),
+            VersionTypeBlock(),
             self.about_container,
             self.software_updater_container,
         ]
