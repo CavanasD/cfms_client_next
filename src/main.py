@@ -134,6 +134,9 @@ async def main(page: ft.Page):
     page.services.append(ph_service)
 
     AppConfig().ph_service = ph_service
+    
+    assert page.platform
+    AppConfig().is_mobile = page.platform.is_mobile()
 
     # Navigate to initial screen
     await page.push_route("/connect")

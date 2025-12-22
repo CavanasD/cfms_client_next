@@ -54,6 +54,9 @@ class AppConfig:
     def __init__(self):
         if getattr(self, "_initialized", False):
             return
+        
+        # Runtime constants
+        self.is_mobile: bool = False
 
         # Server configuration
         self.server_address: Optional[str] = None

@@ -2,6 +2,7 @@
 
 import os
 from pathlib import Path
+from .classes.version import ChannelType
 
 
 __all__ = [
@@ -30,10 +31,14 @@ DEFAULT_WINDOW_TITLE = "CFMS Client"
 GITHUB_REPO = "Creeper19472/cfms_client_next"
 
 # Version Information
-CHANNEL = "alpha"
-BUILD_VERSION = "v0.2.40"
+CHANNEL = ChannelType.ALPHA
+BUILD_VERSION = "v0.3.0"
 MODIFIED = "20251222"
-APP_VERSION = f"{BUILD_VERSION[1:]}.{MODIFIED}_{CHANNEL} NEXT"
+
+if CHANNEL == ChannelType.STABLE:
+    APP_VERSION = f"{BUILD_VERSION[1:]}.{MODIFIED} NEXT"
+else:
+    APP_VERSION = f"{BUILD_VERSION[1:]}.{MODIFIED}_{CHANNEL.value} NEXT"
 
 # Protocol
 PROTOCOL_VERSION = 4

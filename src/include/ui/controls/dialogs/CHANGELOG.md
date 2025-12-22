@@ -3,6 +3,14 @@
 This document contains the release history and changelog for CFMS Client NEXT.
 
 ---
+## v0.3.0
+**Released on:** 2025-12-22
+
+**Title:** Minor release
+
+This version includes minor updates and improvements.
+
+---
 ## v0.2.40
 **Released on:** 2025-12-22
 

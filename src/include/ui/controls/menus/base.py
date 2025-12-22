@@ -92,11 +92,41 @@ class ContextMenu2(ft.ContextMenu):
         menu_items: list[dict[str, Any]] = [],
         ref: ft.Ref | None = None,
     ):
+
         self.app_config = AppConfig()
+        self._content = content
+        self._on_enter = on_enter
+        self._on_exit = on_exit
+        self._ref = ref
 
-        # Validate menu_items structure
+        self.menu_items = menu_items  # Will trigger setter and UI build
+
+        super().__init__(
+            content=ft.GestureDetector(
+                expand=True,
+                expand_loose=True,
+                on_long_press_start=self.trigger_open_menu,
+                on_secondary_tap_down=self.trigger_open_menu,
+                on_enter=self._on_enter,
+                on_exit=self._on_exit,
+                content=content,
+            ),
+            items=self._controls,
+            ref=ref,
+        )
+
+
+    @property
+    def menu_items(self):
+        return self._menu_items
+
+    @menu_items.setter
+    def menu_items(self, value):
+        self._menu_items = value
+        self._controls = self._build_controls(value)
+
+    def _build_controls(self, menu_items):
         required_keys = ["icon", "content", "on_click"]
-
         controls = []
         for item in menu_items:
             if not isinstance(item, dict):
@@ -131,17 +161,7 @@ class ContextMenu2(ft.ContextMenu):
                     ref=item_ref,
                 )
             )
-
-        self.gesture_detector = ft.GestureDetector(
-            expand=True,
-            expand_loose=True,
-            on_long_press_start=self.trigger_open_menu,
-            on_secondary_tap_down=self.trigger_open_menu,  # see flet-dev/flet issue #5786
-            on_enter=on_enter,
-            on_exit=on_exit,
-            content=content,
-        )
-        super().__init__(content=self.gesture_detector, items=controls, ref=ref)
+        return controls
 
     async def trigger_open_menu(
         self,

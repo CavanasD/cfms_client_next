@@ -1,5 +1,6 @@
 import platform
 import flet as ft
+import flet.version
 from flet_model import Model, Router, route
 from include.ui.util.route import get_parent_route
 from include.constants import (
@@ -38,10 +39,12 @@ class DebuggingViewModel(Model):
             ),
             ft.Text(f"Machine: {platform.machine()}"),
             ft.Text(f"Processor: {platform.processor()}"),
-            ft.Text(f"Python Version: {platform.python_version()}"),
             ft.Text(f"Architecture: {platform.architecture()[0]}"),
+            ft.Text(f"Python version: {platform.python_version()}"),
+            ft.Text(f"Flet version: {flet.version.flet_version}"),
+            ft.Text(f"Flutter version: {flet.version.flutter_version}"),
             ft.Text(
-                f"Flet Build Platform: {getattr(self.page.platform, "value", "(Not provided)")}",
+                f"Flet build platform: {getattr(self.page.platform, "value", "(Not provided)")}",
             ),
             ft.Divider(),
             ft.Text(f"Environment Variables", size=16, weight=ft.FontWeight.BOLD),

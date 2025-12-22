@@ -148,38 +148,58 @@ class DirectoryContextMenu(ContextMenu2):
             on_click=self.listtile_click,
         )
 
+        __menu_items = [
+            {
+                "icon": ft.Icons.DELETE,
+                "content": _("Delete"),
+                "on_click": self.delete_button_click,
+            },
+            {
+                "icon": ft.Icons.DRIVE_FILE_RENAME_OUTLINE_OUTLINED,
+                "content": _("Rename"),
+                "on_click": self.rename_button_click,
+            },
+            {
+                "icon": ft.Icons.LOCK_PERSON_OUTLINED,
+                "content": _("Authorize"),
+                "on_click": self.authorize_button_click,
+            },
+            {
+                "icon": ft.Icons.SETTINGS_OUTLINED,
+                "content": _("Set Permissions"),
+                "on_click": self.set_access_rules_button_click,
+                "require": {"set_access_rules"},
+            },
+            {
+                "icon": ft.Icons.INFO_OUTLINED,
+                "content": _("Properties"),
+                "on_click": self.open_directory_info_click,
+            },
+        ]
+
+        # if not self.app_config.is_mobile:
+        #     __menu_items.extend(
+        #         [
+        #             {},
+        #             {
+        #                 "icon": (
+        #                     ft.Icons.STAR_OUTLINED
+        #                     if self.dirtile.starred
+        #                     else ft.Icons.STAR_BORDER_OUTLINED
+        #                 ),
+        #                 "content": (
+        #                     _("Star") if not self.dirtile.starred else _("Unstar")
+        #                 ),
+        #                 "on_click": self.dirtile.on_star_click,
+        #             },
+        #         ]
+        #     )
+
         super().__init__(
             content=self.dirtile,
             on_enter=self.dirtile_on_enter,
             on_exit=self.dirtile_on_exit,
-            menu_items=[
-                {
-                    "icon": ft.Icons.DELETE,
-                    "content": _("Delete"),
-                    "on_click": self.delete_button_click,
-                },
-                {
-                    "icon": ft.Icons.DRIVE_FILE_RENAME_OUTLINE_OUTLINED,
-                    "content": _("Rename"),
-                    "on_click": self.rename_button_click,
-                },
-                {
-                    "icon": ft.Icons.LOCK_PERSON_OUTLINED,
-                    "content": _("Authorize"),
-                    "on_click": self.authorize_button_click,
-                },
-                {
-                    "icon": ft.Icons.SETTINGS_OUTLINED,
-                    "content": _("Set Permissions"),
-                    "on_click": self.set_access_rules_button_click,
-                    "require": {"set_access_rules"},
-                },
-                {
-                    "icon": ft.Icons.INFO_OUTLINED,
-                    "content": _("Properties"),
-                    "on_click": self.open_directory_info_click,
-                },
-            ],
+            menu_items=__menu_items,
             ref=ref,
         )
 
