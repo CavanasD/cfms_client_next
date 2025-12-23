@@ -4,7 +4,7 @@ from typing import Optional
 import flet as ft
 from include.classes.config import AppConfig
 from include.util.locale import get_translation
-from include.util.user import save_user_preference
+from include.util.userpref import save_user_preference
 
 
 t = get_translation()

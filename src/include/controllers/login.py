@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from include.controllers.base import BaseController
 from include.ui.controls.dialogs.admin.accounts import PasswdUserDialog
 from include.util.requests import do_request
-from include.util.user import load_user_preference
+from include.util.userpref import load_user_preference
 
 if TYPE_CHECKING:
     from include.ui.controls.views.login import LoginForm

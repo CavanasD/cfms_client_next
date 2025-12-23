@@ -1,12 +1,11 @@
 import asyncio
-import gettext
 import os
 
 from flet_model import Model, Router, route
 import flet as ft
 import requests
 
-from include.constants import APP_VERSION, BUILD_VERSION, LOCALE_PATH
+from include.constants import APP_VERSION, BUILD_VERSION
 from include.ui.controls.components.about import VersionTypeBlock
 from include.ui.controls.dialogs.upgrade import UpgradeDialog
 from include.ui.controls.dialogs.whatsnew import ChangelogHistoryDialog
@@ -61,7 +60,7 @@ class AboutModel(Model):
             content=ft.Column(
                 controls=[
                     ft.Text(
-                        "Classified File Management System Client",
+                        "Confidential File Management System Client",
                         size=22,
                         text_align=ft.TextAlign.CENTER,
                     ),

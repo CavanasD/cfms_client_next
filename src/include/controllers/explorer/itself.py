@@ -15,7 +15,7 @@ from include.ui.controls.dialogs.explorer import (
 from include.ui.util.path import get_directory
 from include.util.connect import get_connection
 from include.util.create import create_directory
-from include.util.path import build_directory_tree
+from include.util.tree import build_directory_tree
 from include.util.requests import do_request
 from include.util.transfer import batch_upload_file_to_server, upload_file_to_server
 

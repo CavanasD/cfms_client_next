@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2025-12-12 13:44+0800\n"
+"POT-Creation-Date: 2025-12-23 12:23+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -249,20 +249,32 @@ msgstr ""
 msgid "Check for Updates"
 msgstr ""
 
-#: .\include\ui\controls\components\about.py:23
+#: .\include\ui\controls\components\about.py:53
 msgid "Alpha Test"
 msgstr ""
 
-#: .\include\ui\controls\components\about.py:24
+#: .\include\ui\controls\components\about.py:54
 msgid "This software is currently in alpha testing phase."
 msgstr ""
 
-#: .\include\ui\controls\components\about.py:26
+#: .\include\ui\controls\components\about.py:56
 msgid "Software at this stage may receive intensive updates, but many problems may also appear and disappear in a short period of time."
 msgstr ""
 
-#: .\include\ui\controls\components\about.py:33
+#: .\include\ui\controls\components\about.py:63
 msgid "Any issues encountered should be reported in time, but may take a long time to get resolved."
+msgstr ""
+
+#: .\include\ui\controls\components\about.py:97
+msgid "Beta Test"
+msgstr ""
+
+#: .\include\ui\controls\components\about.py:98
+msgid "This software is currently in beta testing phase."
+msgstr ""
+
+#: .\include\ui\controls\components\about.py:100
+msgid "Although the application at this stage is still in testing, it has become relatively stable and is more suitable for general users to try. After one or more versions are released, the application may enter a stable version."
 msgstr ""
 
 #: .\include\ui\controls\components\explorer\bar.py:117
@@ -327,7 +339,7 @@ msgid "More"
 msgstr ""
 
 #: .\include\ui\controls\components\homepage.py:39
-#: .\include\ui\controls\dialogs\authorize.py:116
+#: .\include\ui\controls\dialogs\authorize.py:128
 msgid "Manage"
 msgstr ""
 
@@ -385,7 +397,7 @@ msgstr ""
 #: .\include\ui\controls\dialogs\admin\accounts.py:286
 #: .\include\ui\controls\dialogs\admin\accounts.py:382
 #: .\include\ui\controls\dialogs\admin\groups.py:51
-#: .\include\ui\controls\dialogs\authorize.py:175
+#: .\include\ui\controls\dialogs\authorize.py:187
 #: .\include\ui\controls\dialogs\contextmenu\explorer.py:67
 #: .\include\ui\controls\dialogs\contextmenu\explorer.py:139
 #: .\include\ui\controls\dialogs\contextmenu\explorer.py:275
@@ -464,7 +476,7 @@ msgid "This is a management system specifically designed for the secure transmis
 msgstr ""
 
 #: .\include\ui\controls\contextmenus\explorer.py:64
-#: .\include\ui\controls\contextmenus\explorer.py:158
+#: .\include\ui\controls\contextmenus\explorer.py:154
 #: .\include\ui\controls\contextmenus\management.py:57
 #: .\include\ui\controls\menus\admin\account.py:41
 #: .\include\ui\controls\menus\admin\group.py:36
@@ -474,7 +486,7 @@ msgid "Delete"
 msgstr ""
 
 #: .\include\ui\controls\contextmenus\explorer.py:69
-#: .\include\ui\controls\contextmenus\explorer.py:163
+#: .\include\ui\controls\contextmenus\explorer.py:159
 #: .\include\ui\controls\dialogs\admin\accounts.py:226
 #: .\include\ui\controls\menus\admin\group.py:42
 #: .\include\ui\controls\menus\explorer.py:59
@@ -483,15 +495,15 @@ msgid "Rename"
 msgstr ""
 
 #: .\include\ui\controls\contextmenus\explorer.py:74
-#: .\include\ui\controls\contextmenus\explorer.py:168
-#: .\include\ui\controls\dialogs\authorize.py:171
+#: .\include\ui\controls\contextmenus\explorer.py:164
+#: .\include\ui\controls\dialogs\authorize.py:183
 #: .\include\ui\controls\menus\explorer.py:65
 #: .\include\ui\controls\menus\explorer.py:170
 msgid "Authorize"
 msgstr ""
 
 #: .\include\ui\controls\contextmenus\explorer.py:79
-#: .\include\ui\controls\contextmenus\explorer.py:173
+#: .\include\ui\controls\contextmenus\explorer.py:169
 #: .\include\ui\controls\menus\admin\group.py:48
 #: .\include\ui\controls\menus\explorer.py:71
 #: .\include\ui\controls\menus\explorer.py:176
@@ -499,7 +511,7 @@ msgid "Set Permissions"
 msgstr ""
 
 #: .\include\ui\controls\contextmenus\explorer.py:85
-#: .\include\ui\controls\contextmenus\explorer.py:179
+#: .\include\ui\controls\contextmenus\explorer.py:175
 #: .\include\ui\controls\contextmenus\management.py:77
 #: .\include\ui\controls\menus\admin\account.py:59
 #: .\include\ui\controls\menus\explorer.py:79
@@ -605,100 +617,109 @@ msgstr ""
 msgid "Failed to create user group: ({code}) {message}"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\authorize.py:40
+#: .\include\ui\controls\dialogs\authorize.py:42
 msgid "File"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\authorize.py:42
+#: .\include\ui\controls\dialogs\authorize.py:44
 #: .\include\ui\controls\dialogs\contextmenu\explorer.py:44
 msgid "Directory"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\authorize.py:48
+#: .\include\ui\controls\dialogs\authorize.py:50
 msgid "Authorize Access to {display_name}"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\authorize.py:58
+#: .\include\ui\controls\dialogs\authorize.py:65
 msgid "Username or Group Name"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\authorize.py:59
+#: .\include\ui\controls\dialogs\authorize.py:66
+#: .\include\ui\controls\dialogs\authorize.py:272
 msgid "Enter username or group name"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\authorize.py:67
+#: .\include\ui\controls\dialogs\authorize.py:74
 msgid "Search"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\authorize.py:73
+#: .\include\ui\controls\dialogs\authorize.py:81
 msgid "Select Entity"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\authorize.py:74
+#: .\include\ui\controls\dialogs\authorize.py:82
 msgid "Search to see available options"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\authorize.py:84
+#: .\include\ui\controls\dialogs\authorize.py:93
 msgid "User"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\authorize.py:85
+#: .\include\ui\controls\dialogs\authorize.py:94
 msgid "Group"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\authorize.py:101
+#: .\include\ui\controls\dialogs\authorize.py:113
 msgid "Read"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\authorize.py:106
+#: .\include\ui\controls\dialogs\authorize.py:118
 msgid "Write"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\authorize.py:111
+#: .\include\ui\controls\dialogs\authorize.py:123
 msgid "Move"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\authorize.py:126
+#: .\include\ui\controls\dialogs\authorize.py:138
 msgid "Date Range"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\authorize.py:139
+#: .\include\ui\controls\dialogs\authorize.py:151
 msgid "Start Time"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\authorize.py:156
+#: .\include\ui\controls\dialogs\authorize.py:168
 msgid "End Time"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\authorize.py:182
+#: .\include\ui\controls\dialogs\authorize.py:194
 msgid "Select Target"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\authorize.py:192
+#: .\include\ui\controls\dialogs\authorize.py:204
 msgid "Authorization Period"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\authorize.py:197
+#: .\include\ui\controls\dialogs\authorize.py:209
 msgid "Date Range:"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\authorize.py:207
+#: .\include\ui\controls\dialogs\authorize.py:219
 msgid "Start Time:"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\authorize.py:216
+#: .\include\ui\controls\dialogs\authorize.py:228
 msgid "End Time:"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\authorize.py:296
+#: .\include\ui\controls\dialogs\authorize.py:270
+msgid "Enter username or group name to search"
+msgstr ""
+
+#: .\include\ui\controls\dialogs\authorize.py:338
 msgid "Please enter a search term"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\authorize.py:344
+#: .\include\ui\controls\dialogs\authorize.py:396
 msgid "Please select a target"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\authorize.py:365
+#: .\include\ui\controls\dialogs\authorize.py:403
+msgid "Please enter a username or group name"
+msgstr ""
+
+#: .\include\ui\controls\dialogs\authorize.py:426
 msgid "End time must be after start time"
 msgstr ""
 
