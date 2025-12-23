@@ -17,31 +17,37 @@ if TYPE_CHECKING:
 
 PREFERENCES_PATH = f"{FLET_APP_STORAGE_DATA}/preferences.yaml"
 
-__all__ = ["AppConfig"]
+__all__ = ["AppShared"]
 
 
-class AppConfig:
+class AppShared:
     """
-    Singleton application configuration manager.
-
-    This class manages global application state including server connection,
-    user credentials, and user preferences. It implements the singleton pattern
-    to ensure only one instance exists throughout the application lifecycle.
-
+    AppShared is a singleton class that manages shared application state and configuration.
+    This class provides a centralized place to store runtime constants, server configuration,
+    user authentication details, connection and service references, and user preferences.
+    It ensures only one instance exists throughout the application's lifecycle.
     Attributes:
-        server_address: URL of the connected server
-        server_info: Information about the connected server
-        disable_ssl_enforcement: Whether to skip SSL certificate validation
-        username: Current logged-in username
-        token: Authentication token
-        token_exp: Token expiration timestamp
-        nickname: User's display name
-        user_permissions: List of user permission strings
-        user_groups: List of groups the user belongs to
-        conn: Active WebSocket connection to server
-        ph_service: Permission handler service instance
-        service_manager: Background service manager instance
-        preferences: User preferences dictionary loaded from YAML
+        is_mobile (bool): Indicates if the application is running on a mobile device.
+        server_address (Optional[str]): The address of the server.
+        _server_address_hash (Optional[str]): Cached hash of the server address.
+        server_info (dict[str, Any]): Information about the connected server.
+        disable_ssl_enforcement (bool): Whether SSL enforcement is disabled.
+        username (Optional[str]): The username of the authenticated user.
+        token (Optional[str]): The authentication token.
+        token_exp (Optional[float]): Expiration time of the authentication token.
+        nickname (Optional[str]): The user's nickname.
+        user_permissions (list[str]): List of permissions assigned to the user.
+        user_groups (list[str]): List of groups the user belongs to.
+        conn (Optional[ClientConnection]): The client connection object.
+        ph_service (Optional[PermissionHandler]): The permission handler service.
+        service_manager (Optional["ServiceManager"]): The service manager instance.
+        user_perference (Optional[UserPreference]): The user's preferences.
+        preferences (dict): Loaded user preferences from disk.
+    Methods:
+        server_address_hash: Returns the hashed server address for caching purposes.
+        get_not_none_attribute(name): Retrieves an attribute value, asserting it is not None.
+        _init_preferences(): Initializes the preferences file with default values.
+        dump_preferences(): Saves the current preferences to disk.
     """
 
     _instance = None

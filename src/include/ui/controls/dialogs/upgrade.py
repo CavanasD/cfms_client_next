@@ -7,7 +7,7 @@ from flet_permission_handler import Permission, PermissionHandler, PermissionSta
 import flet as ft
 import requests
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.constants import FLET_APP_STORAGE_TEMP, RUNTIME_PATH
 from include.ui.controls.dialogs.base import AlertDialog
 from include.ui.util.notifications import send_error
@@ -145,8 +145,8 @@ exit
 
     async def _handle_other_platforms_update(self):
         assert isinstance(self.page, ft.Page)
-        app_config = AppConfig()
-        ph: PermissionHandler = app_config.get_not_none_attribute("ph_service")
+        app_shared = AppShared()
+        ph: PermissionHandler = app_shared.get_not_none_attribute("ph_service")
 
         async def _async_request():
             if (

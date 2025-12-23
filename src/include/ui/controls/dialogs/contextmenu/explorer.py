@@ -4,7 +4,7 @@ import asyncio
 
 import flet as ft
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.controllers.dialogs.menus import (
     GetDirectoryInfoController,
     RenameDialogController,
@@ -121,7 +121,7 @@ class GetDocumentInfoDialog(AlertDialog):
     ):
         super().__init__(ref=ref, visible=visible)
         self.document_id = document_id
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
 
         self.modal = False
         self.title = ft.Row(
@@ -176,8 +176,8 @@ class GetDocumentInfoDialog(AlertDialog):
             data={
                 "document_id": self.document_id,
             },
-            username=self.app_config.username,
-            token=self.app_config.token,
+            username=self.app_shared.username,
+            token=self.app_shared.token,
         )
         if (code := response["code"]) != 200:
             self.close()

@@ -1,6 +1,6 @@
 import flet as ft
 from websockets import ClientConnection
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.classes.datacls import User
 from include.util.locale import get_translation
 from include.util.requests import do_request_2
@@ -22,7 +22,7 @@ class UserPicker(ft.AlertDialog):
     ):
         super().__init__(ref=ref, visible=visible)
         self.page: ft.Page
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
         self.title = ft.Text(_("Select User"))
 
         self.progress_ring = ft.ProgressRing(visible=False)
@@ -64,8 +64,8 @@ class UserPicker(ft.AlertDialog):
         response = await do_request_2(
             "list_users",
             {},
-            username=self.app_config.username,
-            token=self.app_config.token,
+            username=self.app_shared.username,
+            token=self.app_shared.token,
         )
         users_data = response.data["users"]
 
@@ -91,7 +91,7 @@ class UserPicker(ft.AlertDialog):
         """
 
         # Load users from config
-        users = self.app_config.get_users()
+        users = self.app_shared.get_users()
         self.user_dropdown.options = [ft.dropdown.Option(user) for user in users]
 
         # Show dialog

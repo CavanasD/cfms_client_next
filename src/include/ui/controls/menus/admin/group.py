@@ -3,7 +3,7 @@ import gettext
 
 import flet as ft
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.constants import LOCALE_PATH
 from include.ui.controls.dialogs.base import AlertDialog
 from include.ui.controls.menus.base import RightMenuDialog
@@ -27,7 +27,7 @@ class GroupRightMenuDialog(RightMenuDialog):
         visible=True,
     ):
         self.group_name = group_name
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
         self.parent_listview = parent_listview
 
         menu_items = [
@@ -61,8 +61,8 @@ class GroupRightMenuDialog(RightMenuDialog):
         response = await do_request(
             action="delete_group",
             data={"group_name": self.group_name},
-            username=self.app_config.username,
-            token=self.app_config.token,
+            username=self.app_shared.username,
+            token=self.app_shared.token,
         )
         if (code := response["code"]) != 200:
             send_error(self.page, _("Failed to delete user group: ({code}) {message}").format(code=code, message=response['message']))
@@ -93,7 +93,7 @@ class RenameGroupDialog(AlertDialog):
         self.title = ft.Text(_("Rename User Group"))
 
         self.parent_dialog = parent_dialog
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
 
         self.progress_ring = ft.ProgressRing(visible=False)
         self.name_textfield = ft.TextField(
@@ -153,8 +153,8 @@ class RenameGroupDialog(AlertDialog):
                 "group_name": self.parent_dialog.group_name,
                 "display_name": new_display_name,
             },
-            username=self.app_config.username,
-            token=self.app_config.token,
+            username=self.app_shared.username,
+            token=self.app_shared.token,
         )
 
         if (code := response["code"]) != 200:
@@ -208,7 +208,7 @@ class EditGroupPermissionDialog(AlertDialog):
         )
 
         self.parent_dialog = parent_dialog
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
 
         self.progress_ring = ft.ProgressRing(visible=False)
         self.permission_listview = ft.ListView(expand=True, auto_scroll=True)
@@ -277,8 +277,8 @@ class EditGroupPermissionDialog(AlertDialog):
                 "group_name": self.parent_dialog.group_name,
                 "permissions": to_submit_list,
             },
-            username=self.app_config.username,
-            token=self.app_config.token,
+            username=self.app_shared.username,
+            token=self.app_shared.token,
         )
         if (code := response["code"]) != 200:
             send_error(
@@ -310,8 +310,8 @@ class EditGroupPermissionDialog(AlertDialog):
         group_info_response = await do_request(
             action="get_group_info",
             data={"group_name": self.parent_dialog.group_name},
-            username=self.app_config.username,
-            token=self.app_config.token,
+            username=self.app_shared.username,
+            token=self.app_shared.token,
         )
         if (code := group_info_response["code"]) != 200:
             send_error(

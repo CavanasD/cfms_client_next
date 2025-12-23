@@ -5,7 +5,7 @@ import gettext
 import flet as ft
 import flet_datatable2 as fdt
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.constants import LOCALE_PATH
 from include.ui.util.notifications import send_error
 from include.util.locale import get_translation
@@ -81,7 +81,7 @@ class AuditLogView(ft.Container):
     ):
         super().__init__(ref=ref, visible=visible)
         self.parent_model: "ManageModel" = parent_model
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
 
         self.margin = 10
         self.padding = 10
@@ -205,8 +205,8 @@ class AuditLogView(ft.Container):
             response = await do_request(
                 action="view_audit_logs",
                 data={"offset": self.audit_view_offset, "count": self.audit_view_count},
-                username=self.app_config.username,
-                token=self.app_config.token,
+                username=self.app_shared.username,
+                token=self.app_shared.token,
             )
 
             if (code := response["code"]) != 200:

@@ -6,19 +6,19 @@ description: Expert in application configuration, user preferences, settings man
 ## Configuration System Overview
 
 CFMS Client NEXT uses a dual-layer configuration system:
-1. **AppConfig**: Singleton managing runtime state and global configuration
+1. **AppShared**: Singleton managing runtime state and global configuration
 2. **User Preferences**: YAML-based persistent settings storage
 
-## AppConfig Singleton
+## AppShared Singleton
 
 **Location**: `include/classes/config.py`
 
-The `AppConfig` class is a thread-safe singleton managing all global application state.
+The `AppShared` class is a thread-safe singleton managing all global application state.
 
 ### Implementation Pattern
 
 ```python
-class AppConfig:
+class AppShared:
     _instance = None
     _instance_lock = threading.Lock()
     
@@ -39,7 +39,7 @@ class AppConfig:
 
 **Thread Safety**: Uses double-checked locking pattern to ensure only one instance exists, even in multi-threaded environments.
 
-### AppConfig Attributes
+### AppShared Attributes
 
 #### Server Configuration
 ```python
@@ -104,26 +104,26 @@ def get_not_none_attribute(self, attr_name: str) -> Any:
 
 Usage:
 ```python
-app_config = AppConfig()
-conn = app_config.get_not_none_attribute("conn")  # Raises if conn is None
+app_shared = AppShared()
+conn = app_shared.get_not_none_attribute("conn")  # Raises if conn is None
 ```
 
 ### Usage Pattern
 
 ```python
 # Always use the singleton
-app_config = AppConfig()
+app_shared = AppShared()
 
 # Access shared state
-server_url = app_config.server_address
-user_perms = app_config.user_permissions
+server_url = app_shared.server_address
+user_perms = app_shared.user_permissions
 
 # Modify state
-app_config.username = "john_doe"
-app_config.token = "abc123..."
+app_shared.username = "john_doe"
+app_shared.token = "abc123..."
 
 # Check authentication
-if app_config.token and app_config.username:
+if app_shared.token and app_shared.username:
     # User is authenticated
     pass
 ```
@@ -168,7 +168,7 @@ settings:
 
 ### Initialization
 
-**Auto-initialization** in `AppConfig.__init__()`:
+**Auto-initialization** in `AppShared.__init__()`:
 ```python
 if not os.path.exists(PREFERENCES_PATH):
     self._init_preferences()
@@ -198,38 +198,38 @@ def _init_preferences(self):
 ### Accessing Preferences
 
 ```python
-app_config = AppConfig()
+app_shared = AppShared()
 
 # Get language
-language = app_config.preferences.get("settings", {}).get("language", "zh_CN")
+language = app_shared.preferences.get("settings", {}).get("language", "zh_CN")
 
 # Get proxy settings
-proxy = app_config.preferences["settings"]["proxy_settings"]
+proxy = app_shared.preferences["settings"]["proxy_settings"]
 
 # Get nested settings
-auto_connect = app_config.preferences.get("settings", {}).get("connection", {}).get("auto_connect", False)
+auto_connect = app_shared.preferences.get("settings", {}).get("connection", {}).get("auto_connect", False)
 ```
 
 ### Modifying Preferences
 
 ```python
-app_config = AppConfig()
+app_shared = AppShared()
 
 # Modify in memory
-app_config.preferences["settings"]["language"] = "en"
+app_shared.preferences["settings"]["language"] = "en"
 
 # Persist to file
 with open(PREFERENCES_PATH, "w", encoding="utf-8") as file:
-    yaml.dump(app_config.preferences, file, default_flow_style=False)
+    yaml.dump(app_shared.preferences, file, default_flow_style=False)
 ```
 
 **Helper function** (recommended to create):
 ```python
 async def save_preferences():
     """Save current preferences to file."""
-    app_config = AppConfig()
+    app_shared = AppShared()
     with open(PREFERENCES_PATH, "w", encoding="utf-8") as file:
-        yaml.dump(app_config.preferences, file, default_flow_style=False)
+        yaml.dump(app_shared.preferences, file, default_flow_style=False)
 ```
 
 ## Settings UI
@@ -283,8 +283,8 @@ class LanguageSettingsModel(Model):
     def __init__(self, page: ft.Page, router: Router):
         super().__init__(page, router)
         
-        app_config = AppConfig()
-        current_lang = app_config.preferences.get("settings", {}).get("language", "zh_CN")
+        app_shared = AppShared()
+        current_lang = app_shared.preferences.get("settings", {}).get("language", "zh_CN")
         
         self.language_dropdown = ft.Dropdown(
             label=_("Language"),
@@ -299,11 +299,11 @@ class LanguageSettingsModel(Model):
         self.controls = [self.language_dropdown]
     
     async def language_changed(self, e):
-        app_config = AppConfig()
+        app_shared = AppShared()
         new_language = self.language_dropdown.value
         
         # Update in memory
-        app_config.preferences["settings"]["language"] = new_language
+        app_shared.preferences["settings"]["language"] = new_language
         
         # Save to file
         await save_preferences()
@@ -324,23 +324,23 @@ class LanguageSettingsModel(Model):
 ```python
 class ConnectionSettingsModel(Model):
     def __init__(self, page, router):
-        app_config = AppConfig()
+        app_shared = AppShared()
         
         self.server_field = ft.TextField(
             label=_("Server Address"),
-            value=app_config.preferences["settings"]["connection"]["default_server"],
+            value=app_shared.preferences["settings"]["connection"]["default_server"],
             hint_text="wss://server.example.com"
         )
         
         self.ssl_switch = ft.Switch(
             label=_("Verify SSL Certificates"),
-            value=app_config.preferences["settings"]["safety"]["verify_ssl"],
+            value=app_shared.preferences["settings"]["safety"]["verify_ssl"],
             on_change=self.ssl_changed
         )
         
         self.proxy_field = ft.TextField(
             label=_("Proxy Server"),
-            value=app_config.preferences["settings"]["proxy_settings"] or "",
+            value=app_shared.preferences["settings"]["proxy_settings"] or "",
             hint_text="http://proxy:8080 or leave blank"
         )
         
@@ -350,7 +350,7 @@ class ConnectionSettingsModel(Model):
         )
     
     async def save_settings(self, e):
-        app_config = AppConfig()
+        app_shared = AppShared()
         
         # Validate server address
         server = self.server_field.value
@@ -359,8 +359,8 @@ class ConnectionSettingsModel(Model):
             return
         
         # Update preferences
-        app_config.preferences["settings"]["connection"]["default_server"] = server
-        app_config.preferences["settings"]["proxy_settings"] = self.proxy_field.value or None
+        app_shared.preferences["settings"]["connection"]["default_server"] = server
+        app_shared.preferences["settings"]["proxy_settings"] = self.proxy_field.value or None
         
         # Save
         await save_preferences()
@@ -435,7 +435,7 @@ Multi-line string containing PEM-encoded certificates.
 
 ## State Persistence Strategies
 
-### Session-Only Data (AppConfig)
+### Session-Only Data (AppShared)
 
 **Characteristics**:
 - Stored in memory only
@@ -481,7 +481,7 @@ Multi-line string containing PEM-encoded certificates.
 ```python
 # After login
 response = await do_request_2(action="get_user_profile")
-app_config.user_data = response.data
+app_shared.user_data = response.data
 ```
 
 ## Configuration Best Practices
@@ -490,7 +490,7 @@ app_config.user_data = response.data
 
 Always provide defaults:
 ```python
-language = app_config.preferences.get("settings", {}).get("language", "zh_CN")
+language = app_shared.preferences.get("settings", {}).get("language", "zh_CN")
 ```
 
 ### 2. Validation
@@ -564,13 +564,13 @@ import shutil
 
 async def save_preferences_atomic():
     """Save preferences with atomic write."""
-    app_config = AppConfig()
+    app_shared = AppShared()
     
     # Write to temp file first
     temp_fd, temp_path = tempfile.mkstemp(suffix='.yaml')
     try:
         with os.fdopen(temp_fd, 'w', encoding='utf-8') as f:
-            yaml.dump(app_config.preferences, f, default_flow_style=False)
+            yaml.dump(app_shared.preferences, f, default_flow_style=False)
         
         # Atomic rename
         shutil.move(temp_path, PREFERENCES_PATH)
@@ -590,9 +590,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-app_config = AppConfig()
-logger.info(f"Server: {app_config.server_address}")
-logger.info(f"Language: {app_config.preferences.get('settings', {}).get('language')}")
+app_shared = AppShared()
+logger.info(f"Server: {app_shared.server_address}")
+logger.info(f"Language: {app_shared.preferences.get('settings', {}).get('language')}")
 # Don't log sensitive data like tokens!
 ```
 
@@ -602,16 +602,16 @@ For debugging, create a sanitized config dump:
 ```python
 def dump_config():
     """Dump configuration for debugging (sanitized)."""
-    app_config = AppConfig()
+    app_shared = AppShared()
     
     config_info = {
-        "server_address": app_config.server_address,
-        "username": app_config.username,
-        "has_token": bool(app_config.token),
-        "permissions": app_config.user_permissions,
+        "server_address": app_shared.server_address,
+        "username": app_shared.username,
+        "has_token": bool(app_shared.token),
+        "permissions": app_shared.user_permissions,
         "preferences": {
-            "language": app_config.preferences.get("settings", {}).get("language"),
-            "has_proxy": bool(app_config.preferences.get("settings", {}).get("proxy_settings")),
+            "language": app_shared.preferences.get("settings", {}).get("language"),
+            "has_proxy": bool(app_shared.preferences.get("settings", {}).get("proxy_settings")),
             # ... other non-sensitive settings
         }
     }
@@ -625,16 +625,16 @@ def dump_config():
 
 ```python
 import unittest
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 
-class TestAppConfig(unittest.TestCase):
+class TestAppShared(unittest.TestCase):
     def test_singleton(self):
-        config1 = AppConfig()
-        config2 = AppConfig()
+        config1 = AppShared()
+        config2 = AppShared()
         self.assertIs(config1, config2)
     
     def test_server_hash(self):
-        config = AppConfig()
+        config = AppShared()
         config.server_address = "wss://test.com"
         hash1 = config.server_address_hash
         hash2 = config.server_address_hash
@@ -648,4 +648,4 @@ class TestAppConfig(unittest.TestCase):
 - [ ] Invalid preferences handled gracefully
 - [ ] Language changes apply correctly
 - [ ] Connection settings save and load
-- [ ] AppConfig singleton works in multi-threaded context
+- [ ] AppShared singleton works in multi-threaded context

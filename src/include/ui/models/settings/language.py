@@ -1,7 +1,7 @@
 from flet_model import Model, route, Router
 import flet as ft
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.ui.util.notifications import send_success
 from include.ui.util.route import get_parent_route
 from include.util.locale import set_translation
@@ -26,7 +26,7 @@ class LanguageSettingsModel(Model):
             ],
             actions_padding=10,
         )
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
 
         # Language selection dropdown
         self.language_dropdown = ft.Dropdown(
@@ -60,14 +60,14 @@ class LanguageSettingsModel(Model):
         selected_language = self.language_dropdown.value
         
         if selected_language:
-            self.app_config.preferences["settings"]["language"] = selected_language
-            self.app_config.dump_preferences()
+            self.app_shared.preferences["settings"]["language"] = selected_language
+            self.app_shared.dump_preferences()
             set_translation(selected_language)
             self._router.clear_cache()
             send_success(self.page, "Language setting saved. Please restart the application for changes to take effect.")
 
 
     async def load_language_setting(self):
-        current_language = self.app_config.preferences["settings"].get("language", "zh_CN")
+        current_language = self.app_shared.preferences["settings"].get("language", "zh_CN")
         self.language_dropdown.value = current_language
         self.update()

@@ -21,15 +21,15 @@ class ConnectFormController(BaseController["ConnectForm"]):
         super().__init__(control)
 
     async def close_previous_connection(self):
-        if self.app_config.conn:
-            await self.app_config.conn.close()
+        if self.app_shared.conn:
+            await self.app_shared.conn.close()
 
     async def action_connect(self, server_address: str):
         try:
             conn = await get_connection(
                 server_address,
                 self.control.disable_ssl_enforcement_switch.value,
-                proxy=self.app_config.preferences["settings"]["proxy_settings"],
+                proxy=self.app_shared.preferences["settings"]["proxy_settings"],
             )
         except ConnectionResetError as e:
             self.control.enable_interactions()
@@ -68,20 +68,20 @@ class ConnectFormController(BaseController["ConnectForm"]):
             await self.control.push_route("/connect/about")
             return
 
-        self.app_config.server_address = server_address
-        self.app_config.server_info = server_info_response["data"]
-        self.app_config.conn = conn
-        self.app_config.disable_ssl_enforcement = (
+        self.app_shared.server_address = server_address
+        self.app_shared.server_info = server_info_response["data"]
+        self.app_shared.conn = conn
+        self.app_shared.disable_ssl_enforcement = (
             self.control.disable_ssl_enforcement_switch.value
         )
 
         self.control.page.title = f"CFMS Client - {server_address}"
         self.control.update()
 
-        assert self.app_config.ph_service
+        assert self.app_shared.ph_service
         assert self.control.page.platform
         if (
-            await self.app_config.ph_service.request(
+            await self.app_shared.ph_service.request(
                 fph.Permission.MANAGE_EXTERNAL_STORAGE
             )
             == fph.PermissionStatus.DENIED

@@ -123,7 +123,7 @@ Main controller handling file operations:
 class FileExplorerController:
     def __init__(self, view: "FileManagerView"):
         self.view = view
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
         
     async def action_upload(self, files: list[FilePickerFile])
     async def action_download(self, file_id: str, filename: str)
@@ -169,7 +169,7 @@ async for index, filename, current_size, file_size, exc in batch_upload_file_to_
 **`batch_upload_file_to_server()`**:
 ```python
 async def batch_upload_file_to_server(
-    app_config: AppConfig,
+    app_shared: AppShared,
     directory_id: str,
     files: list[FilePickerFile]
 ) -> AsyncIterator[tuple[int, str, int, int, Optional[Exception]]]:
@@ -249,7 +249,7 @@ async def download_file_from_server(
 async def create_directory(
     parent_id: str,
     name: str,
-    app_config: AppConfig
+    app_shared: AppShared
 ) -> Response:
     response = await do_request_2(
         action="create_directory",
@@ -458,8 +458,8 @@ Structure supports adding preview functionality:
 
 Files and directories have associated permissions:
 ```python
-# User permissions (from AppConfig)
-user_permissions = app_config.user_permissions
+# User permissions (from AppShared)
+user_permissions = app_shared.user_permissions
 
 # Common permissions
 if "file_upload" in user_permissions:

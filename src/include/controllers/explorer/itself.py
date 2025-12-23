@@ -53,7 +53,7 @@ class FileExplorerController(BaseController["FileManagerView"]):
 
         # 使用手动迭代器，这样可以在取下一个元素时捕获异常并 continue
         ait = batch_upload_file_to_server(
-            self.app_config,
+            self.app_shared,
             self.control.current_directory_id,
             files,
         )
@@ -169,14 +169,14 @@ class FileExplorerController(BaseController["FileManagerView"]):
             upload_dialog.progress_bar.value = None
             upload_dialog.progress_column.update()
 
-            # conn = self.app_config.get_not_none_attribute("conn")
+            # conn = self.app_shared.get_not_none_attribute("conn")
 
             # Create directory on server
             dir_id = await create_directory(
                 parent_id,
                 os.path.basename(parent_path),
-                self.app_config.username,
-                self.app_config.token,
+                self.app_shared.username,
+                self.app_shared.token,
                 exists_ok=True,
             )
 
@@ -217,8 +217,8 @@ class FileExplorerController(BaseController["FileManagerView"]):
                         "folder_id": dir_id,
                         "access_rules": {},
                     },
-                    username=self.app_config.username,
-                    token=self.app_config.token,
+                    username=self.app_shared.username,
+                    token=self.app_shared.token,
                 )
 
                 if create_document_response.get("code") != 200:
@@ -246,11 +246,11 @@ class FileExplorerController(BaseController["FileManagerView"]):
 
                         if transfer_conn is None:
                             transfer_conn = await get_connection(
-                                server_address=self.app_config.get_not_none_attribute(
+                                server_address=self.app_shared.get_not_none_attribute(
                                     "server_address"
                                 ),
-                                disable_ssl_enforcement=self.app_config.disable_ssl_enforcement,
-                                proxy=self.app_config.preferences["settings"][
+                                disable_ssl_enforcement=self.app_shared.disable_ssl_enforcement,
+                                proxy=self.app_shared.preferences["settings"][
                                     "proxy_settings"
                                 ],
                                 max_size=1024**2 * 4,

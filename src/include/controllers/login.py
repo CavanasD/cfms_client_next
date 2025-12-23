@@ -35,13 +35,13 @@ class LoginFormController(BaseController["LoginForm"]):
         )
 
         if (code := response["code"]) == 200:
-            self.app_config.username = username
-            self.app_config.nickname = response["data"].get("nickname")
-            self.app_config.token = response["data"]["token"]
-            self.app_config.token_exp = response["data"].get("exp")
-            self.app_config.user_permissions = response["data"]["permissions"]
-            self.app_config.user_groups = response["data"]["groups"]
-            self.app_config.user_perference = load_user_preference(username)
+            self.app_shared.username = username
+            self.app_shared.nickname = response["data"].get("nickname")
+            self.app_shared.token = response["data"]["token"]
+            self.app_shared.token_exp = response["data"].get("exp")
+            self.app_shared.user_permissions = response["data"]["permissions"]
+            self.app_shared.user_groups = response["data"]["groups"]
+            self.app_shared.user_perference = load_user_preference(username)
 
             self.control.clear_fields()
 

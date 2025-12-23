@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Literal, cast
 
 import flet as ft
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.controllers.dialogs.authorize import AuthorizeDialogController
 from include.ui.controls.dialogs.base import AlertDialog
 from include.ui.util.notifications import send_error
@@ -35,7 +35,7 @@ class AuthorizeDialog(AlertDialog):
         self.object_type = object_type
         self.object_id = object_id
         self.parent_listview = parent_listview
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
 
         match self.object_type:
             case "document":
@@ -56,8 +56,8 @@ class AuthorizeDialog(AlertDialog):
         self.progress_ring = ft.ProgressRing(visible=False)
 
         # Check if user has permissions to list users/groups
-        self.has_list_users = "list_users" in self.app_config.user_permissions
-        self.has_list_groups = "list_groups" in self.app_config.user_permissions
+        self.has_list_users = "list_users" in self.app_shared.user_permissions
+        self.has_list_groups = "list_groups" in self.app_shared.user_permissions
 
         # User/Group search field
         # If user doesn't have list permissions, this becomes a direct input field

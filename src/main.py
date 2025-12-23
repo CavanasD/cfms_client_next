@@ -5,14 +5,13 @@ This module initializes the Flet application, configures localization,
 and sets up the UI components and page settings.
 """
 
-import asyncio
 import os
 import warnings
 
 import flet as ft
 import flet_permission_handler as fph
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.classes.services.manager import ServiceManager
 from include.classes.services.autoupdate import AutoUpdateService
 from include.util.locale import set_translation
@@ -22,7 +21,14 @@ DEFAULT_WINDOW_WIDTH = 1024
 DEFAULT_WINDOW_HEIGHT = 768
 
 import logging
-logging.basicConfig(level=logging.DEBUG)
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="[%(asctime)s %(levelname)s] | %(name)s | %(message)s",
+    filename="cfms_client.log",
+    filemode="w",
+    # datefmt="%Y-%m-%d %H:%M:%S",
+)
 
 
 async def main(page: ft.Page):
@@ -42,8 +48,8 @@ async def main(page: ft.Page):
     """
     # Load language preference and set environment variable
     try:
-        preferred_language = AppConfig().preferences.get("settings", {}).get(
-            "language", "zh_CN"
+        preferred_language = (
+            AppShared().preferences.get("settings", {}).get("language", "zh_CN")
         )
 
         # Set environment variable for gettext to use
@@ -132,19 +138,23 @@ async def main(page: ft.Page):
     # Register event handlers
     page.on_keyboard_event = on_keyboard
 
+    # Get app_shared
+    app_shared = AppShared()
+
+    # Set runtime platform info
+    assert page.platform
+    app_shared.is_mobile = page.platform.is_mobile()
+
     # Register Flet services
     ph_service = fph.PermissionHandler()
     page.services.append(ph_service)
 
-    AppConfig().ph_service = ph_service
-    
-    assert page.platform
-    AppConfig().is_mobile = page.platform.is_mobile()
+    app_shared.ph_service = ph_service
 
     # Initialize service manager and register services
     service_manager = ServiceManager()
-    AppConfig().service_manager = service_manager
-    
+    app_shared.service_manager = service_manager
+
     # Register auto-update service
     # Check for updates every 6 hours (21600 seconds)
     # Don't check immediately on start to avoid slowing down app launch
@@ -156,16 +166,19 @@ async def main(page: ft.Page):
         notify_user=True,
     )
     service_manager.register(autoupdate_service)
-    
+
+    # Register download manager service
+    # TODO: Implement download manager service
+
     # Start all registered services
     await service_manager.start_all()
-    
+
     # Register cleanup handler for when the page closes
     async def on_page_close(e):
         """Clean up services when the page closes."""
         logging.info("Page closing, stopping all services...")
         await service_manager.stop_all()
-    
+
     page.on_close = on_page_close
 
     # Navigate to initial screen

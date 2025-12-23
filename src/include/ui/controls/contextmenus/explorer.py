@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 import flet as ft
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.controllers.explorer.tile import (
     FileContextMenuController,
     DirectoryContextMenuController,
@@ -37,17 +37,17 @@ class FileContextMenu(ContextMenu2):
         self.last_modified = last_modified
         self.parent_listview = parent_listview
 
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
 
         # Instantiate ListTile
-        assert self.app_config.user_perference
+        assert self.app_shared.user_perference
         self.filetile = FileTile(
             filename=filename,
             file_id=file_id,
             size=size,
             last_modified=last_modified,
             starred=file_id
-            in self.app_config.user_perference.favourites.get("files", []),
+            in self.app_shared.user_perference.favourites.get("files", []),
             on_click=self.listtile_click,
         )
 
@@ -135,16 +135,16 @@ class DirectoryContextMenu(ContextMenu2):
         self.created_at = created_at
 
         # has to set manually
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
 
         # Instantiate ListTile
-        assert self.app_config.user_perference
+        assert self.app_shared.user_perference
         self.dirtile = DirectoryTile(
             dir_name=dir_name,
             directory_id=directory_id,
             created_at=created_at,
             starred=directory_id
-            in self.app_config.user_perference.favourites.get("directories", []),
+            in self.app_shared.user_perference.favourites.get("directories", []),
             on_click=self.listtile_click,
         )
 
@@ -177,7 +177,7 @@ class DirectoryContextMenu(ContextMenu2):
             },
         ]
 
-        # if not self.app_config.is_mobile:
+        # if not self.app_shared.is_mobile:
         #     __menu_items.extend(
         #         [
         #             {},

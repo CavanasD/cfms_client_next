@@ -59,7 +59,7 @@ These prompts provide comprehensive documentation about different aspects of the
 **Use when**: Implementing authentication features, managing permissions, or addressing security concerns.
 
 ### 6. Configuration & Preferences (`configuration-preferences.md`)
-- AppConfig singleton usage
+- AppShared singleton usage
 - User preferences (YAML)
 - Settings UI implementation
 - State persistence strategies

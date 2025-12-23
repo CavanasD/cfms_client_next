@@ -1,6 +1,6 @@
 import os
 import json
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.classes.preferences import UserPreference
 from include.constants import USER_PREFERENCES_PATH
 
@@ -8,7 +8,7 @@ from include.constants import USER_PREFERENCES_PATH
 # TODO: Implement encryption for stored preferences
 def load_user_preference(username: str) -> UserPreference:
     pref_path = (
-        f"{USER_PREFERENCES_PATH}/{AppConfig().server_address_hash}_{username}.json"
+        f"{USER_PREFERENCES_PATH}/{AppShared().server_address_hash}_{username}.json"
     )
 
     if not os.path.exists(pref_path):
@@ -24,7 +24,7 @@ def load_user_preference(username: str) -> UserPreference:
 
 def save_user_preference(username: str, preferences: UserPreference) -> None:
     pref_path = (
-        f"{USER_PREFERENCES_PATH}/{AppConfig().server_address_hash}_{username}.json"
+        f"{USER_PREFERENCES_PATH}/{AppShared().server_address_hash}_{username}.json"
     )
     os.makedirs(os.path.dirname(pref_path), exist_ok=True)
 

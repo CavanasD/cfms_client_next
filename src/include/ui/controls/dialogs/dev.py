@@ -3,7 +3,7 @@ import json
 
 import flet as ft
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.constants import LOCALE_PATH
 from include.ui.util.notifications import send_error
 from include.util.locale import get_translation
@@ -22,7 +22,7 @@ class DevRequestDialog(ft.AlertDialog):
             ref=ref,
             visible=visible
         )
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
         self.req_name = ft.TextField(label=_("Request Name"), expand=True)
         self.req_data = ft.TextField(label=_("Request Data"), expand=True)
         self.result = ft.TextField(
@@ -67,8 +67,8 @@ class DevRequestDialog(ft.AlertDialog):
         resp = await do_request(
             request_name,
             data_to_send,
-            username=self.app_config.username,
-            token=self.app_config.token,
+            username=self.app_shared.username,
+            token=self.app_shared.token,
         )
         self.result.value = json.dumps(resp)
         self.update()

@@ -94,8 +94,8 @@ formatted = _("Welcome, {username}").format(username=user)
 async def main(page: ft.Page):
     # Load language preference
     try:
-        app_config = AppConfig()
-        preferred_language = app_config.preferences.get("settings", {}).get(
+        app_shared = AppShared()
+        preferred_language = app_shared.preferences.get("settings", {}).get(
             "language", "zh_CN"
         )
         
@@ -278,8 +278,8 @@ class LanguageSettingsModel(Model):
     def __init__(self, page: ft.Page, router: Router):
         super().__init__(page, router)
         
-        app_config = AppConfig()
-        current_lang = app_config.preferences.get("settings", {}).get(
+        app_shared = AppShared()
+        current_lang = app_shared.preferences.get("settings", {}).get(
             "language", "zh_CN"
         )
         
@@ -306,17 +306,17 @@ class LanguageSettingsModel(Model):
         ]
     
     async def on_language_changed(self, e):
-        app_config = AppConfig()
+        app_shared = AppShared()
         new_language = self.language_dropdown.value
         
         # Update preference
-        if "settings" not in app_config.preferences:
-            app_config.preferences["settings"] = {}
-        app_config.preferences["settings"]["language"] = new_language
+        if "settings" not in app_shared.preferences:
+            app_shared.preferences["settings"] = {}
+        app_shared.preferences["settings"]["language"] = new_language
         
         # Save to file
         with open(PREFERENCES_PATH, "w", encoding="utf-8") as f:
-            yaml.dump(app_config.preferences, f, default_flow_style=False)
+            yaml.dump(app_shared.preferences, f, default_flow_style=False)
         
         # Show confirmation
         self.page.show_snack_bar(
@@ -517,8 +517,8 @@ if not is_valid_email(email):
 
 1. **Change Language**:
    ```python
-   app_config = AppConfig()
-   app_config.preferences["settings"]["language"] = "en"
+   app_shared = AppShared()
+   app_shared.preferences["settings"]["language"] = "en"
    ```
 
 2. **Restart Application**
@@ -628,7 +628,7 @@ echo $LANGUAGE
 ### Wrong Language Displayed
 
 **Check**:
-1. `AppConfig.preferences["settings"]["language"]` value
+1. `AppShared.preferences["settings"]["language"]` value
 2. `os.environ["LANGUAGE"]` value
 3. `.mo` file exists for language
 4. Fallback working (should default to zh_CN)

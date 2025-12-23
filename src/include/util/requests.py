@@ -9,7 +9,7 @@ from typing import Any, Optional
 from websockets import ConnectionClosed
 from websockets.asyncio.client import ClientConnection
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.classes.response import Response
 from include.util.connect import get_connection
 
@@ -48,8 +48,8 @@ async def do_request(
         ConnectionError: If all retry attempts fail
     """
 
-    _app_config = AppConfig()
-    _conn = _app_config.get_not_none_attribute("conn")
+    _app_shared = AppShared()
+    _conn = _app_shared.get_not_none_attribute("conn")
 
     assert max_retries >= 1, "max_retries must be at least 1"
 
@@ -69,11 +69,11 @@ async def do_request(
                 raise
             # Reconnect and retry
             _conn = await get_connection(
-                server_address=_app_config.get_not_none_attribute("server_address"),
-                disable_ssl_enforcement=_app_config.disable_ssl_enforcement,
-                proxy=_app_config.preferences["settings"]["proxy_settings"],
+                server_address=_app_shared.get_not_none_attribute("server_address"),
+                disable_ssl_enforcement=_app_shared.disable_ssl_enforcement,
+                proxy=_app_shared.preferences["settings"]["proxy_settings"],
             )
-            _app_config.conn = _conn
+            _app_shared.conn = _conn
             continue
 
         break

@@ -27,8 +27,8 @@ class UserContextMenuController(BaseController["UserContextMenu"]):
         response = await do_request_2(
             action="delete_user",
             data={"username": self.control.username},
-            username=self.app_config.username,
-            token=self.app_config.token,
+            username=self.app_shared.username,
+            token=self.app_shared.token,
         )
 
         if response.code != 200:

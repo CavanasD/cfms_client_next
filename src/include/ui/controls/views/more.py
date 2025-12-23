@@ -3,7 +3,7 @@ import gettext
 
 import flet as ft
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.constants import LOCALE_PATH
 from include.ui.controls.dialogs.admin.accounts import PasswdUserDialog
 from include.ui.util.quotes import get_quote, refresh_quote
@@ -28,7 +28,7 @@ class MoreView(ft.Container):
         self.expand = True
         self.visible = False
 
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
 
         self.moreview_avatar = ft.CircleAvatar(
             content=ft.Text(),
@@ -81,11 +81,11 @@ class MoreView(ft.Container):
 
     def did_mount(self):
         super().did_mount()
-        if self.app_config.nickname:
-            self.moreview_username_display.value = self.app_config.nickname
+        if self.app_shared.nickname:
+            self.moreview_username_display.value = self.app_shared.nickname
         else:
             self.moreview_username_display.value = (
-                self.app_config.get_not_none_attribute("username")
+                self.app_shared.get_not_none_attribute("username")
             )
         self.moreview_avatar.content = ft.Text(
             self.moreview_username_display.value[0].upper()
@@ -93,7 +93,7 @@ class MoreView(ft.Container):
 
     async def passwd_listtile_click(self, event: ft.Event[ft.ListTile]):
         self.page.show_dialog(
-            PasswdUserDialog(self.app_config.get_not_none_attribute("username"))
+            PasswdUserDialog(self.app_shared.get_not_none_attribute("username"))
         )
 
     async def settings_listtile_click(self, event: ft.Event[ft.ListTile]):

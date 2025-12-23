@@ -2,7 +2,7 @@ from typing import Any
 
 import flet as ft
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.ui.controls.dialogs.base import AlertDialog
 
 __all__ = ["RightMenuDialog"]
@@ -33,12 +33,12 @@ class RightMenuDialog(AlertDialog):
         super().__init__(
             title=title, modal=modal, scrollable=True, ref=ref, visible=visible
         )
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
         # Create menu listview directly with ListTiles
         controls = []
         for item in menu_items:
             item_require = set(item.get("require", {}))
-            if (item_require & set(self.app_config.user_permissions)) != item_require:
+            if (item_require & set(self.app_shared.user_permissions)) != item_require:
                 continue
 
             item_icon = item["icon"]
@@ -93,7 +93,7 @@ class ContextMenu2(ft.ContextMenu):
         ref: ft.Ref | None = None,
     ):
 
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
         self._content = content
         self._on_enter = on_enter
         self._on_exit = on_exit
@@ -142,7 +142,7 @@ class ContextMenu2(ft.ContextMenu):
                 )
 
             item_require = set(item.get("require", {}))
-            if (item_require & set(self.app_config.user_permissions)) != item_require:
+            if (item_require & set(self.app_shared.user_permissions)) != item_require:
                 continue
 
             item_icon = item["icon"]

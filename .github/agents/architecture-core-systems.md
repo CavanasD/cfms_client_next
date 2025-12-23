@@ -21,7 +21,7 @@ src/
 ├── assets/                    # Application assets (fonts, icons, images)
 ├── include/
 │   ├── classes/              # Core data classes and configuration
-│   │   ├── config.py         # Singleton AppConfig for global state
+│   │   ├── config.py         # Singleton AppShared for global state
 │   │   ├── datacls.py        # Data classes (User)
 │   │   ├── response.py       # Response data class
 │   │   ├── preferences.py    # User preferences management
@@ -73,8 +73,8 @@ src/
 
 ## Core Architecture Patterns
 
-### 1. Singleton Pattern: AppConfig
-The `AppConfig` class (`include/classes/config.py`) is a thread-safe singleton that manages global application state:
+### 1. Singleton Pattern: AppShared
+The `AppShared` class (`include/classes/config.py`) is a thread-safe singleton that manages global application state:
 - Server connection information
 - User authentication (username, token, permissions, groups)
 - WebSocket connection instance
@@ -113,7 +113,7 @@ All controllers inherit from `BaseController[T]` where T is the control type:
 ```python
 class BaseController(Generic[T]):
     control: T                    # The UI control being managed
-    app_config: AppConfig        # Singleton config instance
+    app_shared: AppShared        # Singleton config instance
 ```
 
 This provides consistent access to global state and type-safe control references.
@@ -183,7 +183,7 @@ Response(
 
 ### User Preferences
 - Stored in YAML format at `{FLET_APP_STORAGE_DATA}/preferences.yaml`
-- Loaded into `AppConfig.preferences` dictionary
+- Loaded into `AppShared.preferences` dictionary
 - Contains settings like language, proxy configuration, connection settings
 
 ## Exception Handling
@@ -194,14 +194,14 @@ Custom exception hierarchy:
 
 ## Best Practices for Development
 
-1. **State Management**: Always use `AppConfig()` singleton for shared state
+1. **State Management**: Always use `AppShared()` singleton for shared state
 2. **Async Operations**: All I/O must be async; use `await` and `async def`
 3. **Error Handling**: Wrap WebSocket operations in try/except for `ConnectionClosed`
 4. **Localization**: Import and use `get_translation()` for all user-facing strings
 5. **Type Safety**: Use type hints; controllers use Generic[T] pattern
 6. **Connection Resilience**: Use `do_request()` which auto-retries on connection loss
 7. **UI Updates**: Call `page.update()` or `control.update()` after state changes
-8. **Threading**: AppConfig uses locks for thread-safety
+8. **Threading**: AppShared uses locks for thread-safety
 
 ## Critical Implementation Details
 

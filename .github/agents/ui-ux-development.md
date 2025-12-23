@@ -117,7 +117,7 @@ class ConnectToServerModel(Model):
 **Controllers** (`include/controllers/`):
 - Extend `BaseController[T]` where T is the view type
 - Handle user interactions and business logic
-- Access AppConfig singleton for state
+- Access AppShared singleton for state
 
 ### 2. Component Composition
 
@@ -373,7 +373,7 @@ result = await file_picker.pick_files(allow_multiple=True)
 
 ## Best Practices
 
-1. **State Management**: Keep state in models or AppConfig, not in UI controls
+1. **State Management**: Keep state in models or AppShared, not in UI controls
 2. **Async Updates**: Always use async/await for I/O operations
 3. **Update Calls**: Call `update()` after modifying control properties
 4. **Refs**: Use `ft.Ref()` for accessing controls from event handlers

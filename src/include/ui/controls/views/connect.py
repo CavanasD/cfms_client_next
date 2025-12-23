@@ -4,7 +4,7 @@ import re
 import flet as ft
 import flet_permission_handler as fph
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.constants import DEFAULT_WINDOW_TITLE
 from include.constants import LOCALE_PATH
 from include.controllers.connect import ConnectFormController
@@ -30,7 +30,7 @@ class ConnectForm(ft.Container):
         self.padding = 20
 
         # Form variable definitions
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
 
         # Form reference definitions
 

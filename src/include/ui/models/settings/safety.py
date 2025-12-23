@@ -1,7 +1,7 @@
 from flet_model import Model, Router, route
 import flet as ft
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.ui.util.notifications import send_success
 from include.ui.util.route import get_parent_route
 
@@ -25,7 +25,7 @@ class SafetySettingsModel(Model):
             ],
             actions_padding=10,
         )
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
 
         self.enable_logging_switch = ft.Switch(
             label=ft.Text(
@@ -52,11 +52,11 @@ class SafetySettingsModel(Model):
         await self.page.push_route(get_parent_route(self.page.route))
 
     async def save_button_click(self, event: ft.Event[ft.IconButton]):
-        self.app_config.preferences["settings"][
+        self.app_shared.preferences["settings"][
             "enable_conn_history_logging"
         ] = self.enable_logging_switch.value
 
-        self.app_config.dump_preferences()
+        self.app_shared.dump_preferences()
         send_success(self.page, "Settings Saved.")
 
     async def switch_click(self, event: ft.Event[ft.Switch]):
@@ -64,7 +64,7 @@ class SafetySettingsModel(Model):
 
     async def load_switch_status(self):
         self.enable_logging_switch.value = bool(
-            self.app_config.preferences["settings"].get("enable_conn_history_logging")
+            self.app_shared.preferences["settings"].get("enable_conn_history_logging")
         )
         await self.flush_switch()
 

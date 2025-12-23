@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 import flet as ft
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.ui.controls.components.explorer.tile import DirectoryTile, FileTile
 from include.ui.controls.views.explorer import FileManagerView
 from include.ui.util.file_controls import get_directory
@@ -21,7 +21,7 @@ _ = t.gettext
 class HomeNavigationBar(ft.NavigationBar):
     def __init__(self, parent_view: "HomeModel", views: list[ft.Control] = []):
         self.parent_view = parent_view
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
 
         self.last_selected_index = (
             2  # Setting default to initially selected page works better
@@ -81,7 +81,7 @@ class HomeNavigationBar(ft.NavigationBar):
             "list_groups",
             "apply_lockdown",
             "bypass_lockdown",
-        } & set(self.app_config.user_permissions):
+        } & set(self.app_shared.user_permissions):
             self.destinations[4].visible = True
 
 
@@ -115,16 +115,16 @@ class HomeFavoritesContainer(ft.Container):
     def __init__(self, ref: ft.Ref | None = None, visible=True):
         super().__init__(ref=ref, visible=visible, margin=15)
         self.page: ft.Page
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
 
         self.listview = ft.ListView(controls=[])
         self.content = self.listview
 
     def update_favorites(self):
         # add favorite files and directories
-        assert self.app_config.user_perference
-        favorite_files = self.app_config.user_perference.favourites.get("files", {})
-        favorite_directories = self.app_config.user_perference.favourites.get(
+        assert self.app_shared.user_perference
+        favorite_files = self.app_shared.user_perference.favourites.get("files", {})
+        favorite_directories = self.app_shared.user_perference.favourites.get(
             "directories", {}
         )
 

@@ -86,7 +86,7 @@ class DocumentRightMenuDialog(RightMenuDialog):
         )
 
     def build(self):
-        self.user_permissions = self.app_config.user_permissions
+        self.user_permissions = self.app_shared.user_permissions
         assert self.access_settings_ref.current
         self.access_settings_ref.current.visible = (
             "set_access_rules" in self.user_permissions
@@ -96,14 +96,14 @@ class DocumentRightMenuDialog(RightMenuDialog):
         self.menu_listview.disabled = True
 
     async def delete_button_click(self, event: ft.Event[ft.ListTile]):
-        conn = self.app_config.get_not_none_attribute("conn")
+        conn = self.app_shared.get_not_none_attribute("conn")
         yield self.disable_interactions()
 
         response = await do_request(
             action="delete_document",
             data={"document_id": self.document_id},
-            username=self.app_config.username,
-            token=self.app_config.token,
+            username=self.app_shared.username,
+            token=self.app_shared.token,
         )
         if (code := response["code"]) != 200:
             send_error(
@@ -191,7 +191,7 @@ class DirectoryRightMenuDialog(RightMenuDialog):
         )
 
     def build(self):
-        self.user_permissions = self.app_config.user_permissions
+        self.user_permissions = self.app_shared.user_permissions
         assert self.access_settings_ref.current
         self.access_settings_ref.current.visible = (
             "set_access_rules" in self.user_permissions
@@ -201,14 +201,14 @@ class DirectoryRightMenuDialog(RightMenuDialog):
         self.menu_listview.disabled = True
 
     async def delete_button_click(self, event: ft.Event[ft.ListTile]):
-        conn = self.app_config.get_not_none_attribute("conn")
+        conn = self.app_shared.get_not_none_attribute("conn")
         yield self.disable_interactions()
 
         response = await do_request(
             action="delete_directory",
             data={"folder_id": self.directory_id},
-            username=self.app_config.username,
-            token=self.app_config.token,
+            username=self.app_shared.username,
+            token=self.app_shared.token,
         )
         if (code := response["code"]) != 200:
             send_error(

@@ -1,6 +1,6 @@
 import flet as ft
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.controllers.login import LoginFormController
 from include.ui.util.notifications import send_error
 from include.util.locale import get_translation
@@ -29,7 +29,7 @@ class LoginForm(ft.Container):
         self.page: ft.Page
         self.parent: LoginView
         self.controller = LoginFormController(self)
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
 
         # Form style definitions
         self.width = const.FORM_WIDTH
@@ -91,7 +91,7 @@ class LoginForm(ft.Container):
         )
 
     def did_mount(self) -> None:
-        self.server_info = self.app_config.server_info
+        self.server_info = self.app_shared.server_info
         self.parent.welcome_text.value = (
             f"{self.server_info.get('server_name', 'CFMS Server')}"
         )

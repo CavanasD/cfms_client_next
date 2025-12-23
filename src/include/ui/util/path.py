@@ -3,7 +3,7 @@ import os
 
 import flet as ft
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.classes.exceptions.request import RequestFailureError
 from include.classes.exceptions.transmission import (
     FileHashMismatchError,
@@ -22,7 +22,7 @@ from include.util.locale import get_translation
 t = get_translation()
 _ = t.gettext
 
-_app_config = AppConfig()
+_app_shared = AppShared()
 
 
 async def get_directory(
@@ -39,8 +39,8 @@ async def get_directory(
     response = await do_request(
         action="list_directory",
         data={"folder_id": id},
-        username=_app_config.username,
-        token=_app_config.token,
+        username=_app_shared.username,
+        token=_app_shared.token,
     )
 
     if (code := response["code"]) != 200:
@@ -85,8 +85,8 @@ async def get_document(id: str | None, filename: str, page: ft.Page):
     response = await do_request(
         action="get_document",
         data={"document_id": id},
-        username=_app_config.username,
-        token=_app_config.token,
+        username=_app_shared.username,
+        token=_app_shared.token,
     )
 
     task_data = response["data"]["task_data"]
@@ -101,10 +101,10 @@ async def get_document(id: str | None, filename: str, page: ft.Page):
         file_path = f"./{filename if filename else task_id[0:17]}"
 
     transfer_conn = await get_connection(
-        _app_config.get_not_none_attribute("server_address"),
+        _app_shared.get_not_none_attribute("server_address"),
         max_size=1024**2 * 4,
-        disable_ssl_enforcement=_app_config.disable_ssl_enforcement,
-        proxy=_app_config.preferences["settings"]["proxy_settings"],
+        disable_ssl_enforcement=_app_shared.disable_ssl_enforcement,
+        proxy=_app_shared.preferences["settings"]["proxy_settings"],
     )
 
     # build progress bar

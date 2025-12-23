@@ -91,13 +91,13 @@ await service_manager.start_all()
 
 ### Accessing Services from Anywhere
 
-Services can be accessed through the `AppConfig` singleton:
+Services can be accessed through the `AppShared` singleton:
 
 ```python
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 
 # Get the service manager
-service_manager = AppConfig().service_manager
+service_manager = AppShared().service_manager
 
 # Get a specific service
 autoupdate = service_manager.get_service("autoupdate")
@@ -111,9 +111,9 @@ if autoupdate and autoupdate.is_running():
 ### Controlling Services
 
 ```python
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 
-service_manager = AppConfig().service_manager
+service_manager = AppShared().service_manager
 
 # Start a specific service
 await service_manager.start_service("my_service")

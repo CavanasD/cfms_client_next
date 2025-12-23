@@ -27,8 +27,8 @@ class PasswdDialogController(BaseController["PasswdUserDialog"]):
                 "bypass_passwd_requirements": self.control.bypass_requirements_checkbox.value,
                 "force_update_after_login": self.control.force_update_after_login_checkbox.value,
             },  # Change password, username and token not required outside data
-            username=self.app_config.username if self.control.passwd_other else None,
-            token=self.app_config.token if self.control.passwd_other else None,
+            username=self.app_shared.username if self.control.passwd_other else None,
+            token=self.app_shared.token if self.control.passwd_other else None,
         )
 
         self.control.close()

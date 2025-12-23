@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 import flet as ft
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.controllers.base import BaseController
 from include.ui.util.path import get_directory
 from include.util.requests import do_request
@@ -32,8 +32,8 @@ class RenameDialogController(BaseController["RenameDialog"]):
                     "new_title": new_title,
                 },
                 "",
-                self.app_config.username,
-                self.app_config.token,
+                self.app_shared.username,
+                self.app_shared.token,
             )
         elif self.control.object_type == "directory":
             response = await do_request(
@@ -43,8 +43,8 @@ class RenameDialogController(BaseController["RenameDialog"]):
                     "new_name": new_title,
                 },
                 "",
-                self.app_config.username,
-                self.app_config.token,
+                self.app_shared.username,
+                self.app_shared.token,
             )
         else:
             raise TypeError
@@ -67,7 +67,7 @@ class RenameDialogController(BaseController["RenameDialog"]):
 class GetDirectoryInfoController:
     def __init__(self, view: "GetDirectoryInfoDialog"):
         self.view = view
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
 
     async def fetch_directory_info(self):
         response = await do_request(
@@ -75,8 +75,8 @@ class GetDirectoryInfoController:
             data={
                 "directory_id": self.view.directory_id,
             },
-            username=self.app_config.username,
-            token=self.app_config.token,
+            username=self.app_shared.username,
+            token=self.app_shared.token,
         )
         if (code := response["code"]) != 200:
             self.view.close()

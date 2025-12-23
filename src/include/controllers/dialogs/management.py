@@ -36,8 +36,8 @@ class AddUserAccountDialogController(BaseController["AddUserAccountDialog"]):
                 "permissions": [],  # TODO
                 "groups": [],
             },
-            username=self.app_config.username,
-            token=self.app_config.token,
+            username=self.app_shared.username,
+            token=self.app_shared.token,
         )
         if (code := response["code"]) != 200:
             self.control.send_error(
@@ -64,8 +64,8 @@ class RenameUserNicknameDialogController(BaseController["RenameUserNicknameDialo
                 "username": self.control.username,
                 "nickname": self.control.nickname_field.value,
             },
-            username=self.app_config.username,
-            token=self.app_config.token,
+            username=self.app_shared.username,
+            token=self.app_shared.token,
         )
 
         if (code := response["code"]) != 200:
@@ -92,8 +92,8 @@ class EditUserGroupDialogController(BaseController["EditUserGroupDialog"]):
                 "username": self.control.username,
                 "groups": to_submit_list,
             },
-            username=self.app_config.username,
-            token=self.app_config.token,
+            username=self.app_shared.username,
+            token=self.app_shared.token,
         )
         if (code := response["code"]) != 200:
             self.control.send_error(
@@ -115,8 +115,8 @@ class EditUserGroupDialogController(BaseController["EditUserGroupDialog"]):
         group_list_response = await do_request(
             action="list_groups",
             data={},
-            username=self.app_config.username,
-            token=self.app_config.token,
+            username=self.app_shared.username,
+            token=self.app_shared.token,
         )
         if (code := group_list_response["code"]) != 200:
             self.control.send_error(
@@ -135,8 +135,8 @@ class EditUserGroupDialogController(BaseController["EditUserGroupDialog"]):
             data={
                 "username": self.control.username,
             },
-            username=self.app_config.username,
-            token=self.app_config.token,
+            username=self.app_shared.username,
+            token=self.app_shared.token,
         )
         if (code := user_data_response["code"]) != 200:
             self.control.send_error(
@@ -175,8 +175,8 @@ class ViewUserInfoDialogController(BaseController["ViewUserInfoDialog"]):
             data={
                 "username": self.control.username,
             },
-            username=self.app_config.username,
-            token=self.app_config.token,
+            username=self.app_shared.username,
+            token=self.app_shared.token,
         )
         if (code := response["code"]) != 200:
             self.control.close()

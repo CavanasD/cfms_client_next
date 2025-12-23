@@ -5,7 +5,7 @@ from copy import deepcopy
 import flet as ft
 
 from websockets.asyncio.client import ClientConnection
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.controllers.explorer.itself import FileExplorerController
 from include.ui.controls.components.explorer.bar import ExplorerTopBar, FileSortBar
 from include.ui.util.notifications import send_error
@@ -123,7 +123,7 @@ class FileManagerView(ft.Container):
         self.page: ft.Page
         self.parent_model: HomeModel = parent_model
         self.controller = FileExplorerController(self)
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
 
         self.margin = 10
         self.padding = 10
@@ -157,7 +157,7 @@ class FileManagerView(ft.Container):
         )
 
     def build(self):
-        self.conn = self.app_config.get_not_none_attribute("conn")
+        self.conn = self.app_shared.get_not_none_attribute("conn")
 
     def send_error(self, msg: str):
         send_error(self.page, msg)

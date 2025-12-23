@@ -1,7 +1,7 @@
 from flet_model import Model, Router, route
 import flet as ft
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.ui.controls.views.admin.account import ManageAccountsView
 from include.ui.controls.views.admin.audit import AuditLogView
 from include.ui.controls.views.admin.group import ManageGroupsView
@@ -60,7 +60,7 @@ class ManageModel(Model):
     def __init__(self, page: ft.Page, router: Router):
         super().__init__(page, router)
 
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
 
         self.appbar = ft.AppBar(
             title=ft.Text(_("Management")),
@@ -86,4 +86,4 @@ class ManageModel(Model):
 
     def did_mount(self) -> None:
         pass
-        # self.floating_action_button.visible = "apply_lockdown" in self.app_config.user_permissions
+        # self.floating_action_button.visible = "apply_lockdown" in self.app_shared.user_permissions

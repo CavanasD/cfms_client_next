@@ -4,7 +4,7 @@ import gettext
 
 import flet as ft
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.constants import LOCALE_PATH
 from include.ui.controls.dialogs.admin.groups import AddUserGroupDialog
 from include.ui.util.group_controls import update_group_controls
@@ -38,7 +38,7 @@ class ManageGroupsView(ft.Container):
     ):
         super().__init__(ref=ref, visible=visible)
         self.parent_model: "ManageModel" = parent_model
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
 
         self.margin = 10
         self.padding = 10
@@ -105,8 +105,8 @@ class ManageGroupsView(ft.Container):
         response = await do_request(
             action="list_groups",
             data={},
-            username=self.app_config.username,
-            token=self.app_config.token,
+            username=self.app_shared.username,
+            token=self.app_shared.token,
         )
 
         if (code := response["code"]) != 200:

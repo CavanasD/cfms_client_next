@@ -38,8 +38,8 @@ class FileContextMenuController(BaseController["FileContextMenu"]):
         response = await do_request(
             action="delete_document",
             data={"document_id": self.control.file_id},
-            username=self.app_config.username,
-            token=self.app_config.token,
+            username=self.app_shared.username,
+            token=self.app_shared.token,
         )
         if (code := response["code"]) != 200:
             send_error(
@@ -86,8 +86,8 @@ class DirectoryContextMenuController(BaseController["DirectoryContextMenu"]):
         response = await do_request(
             action="delete_directory",
             data={"folder_id": self.control.directory_id},
-            username=self.app_config.username,
-            token=self.app_config.token,
+            username=self.app_shared.username,
+            token=self.app_shared.token,
         )
         if (code := response["code"]) != 200:
             send_error(

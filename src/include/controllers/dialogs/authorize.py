@@ -33,8 +33,8 @@ class AuthorizeDialogController(BaseController["AuthorizeDialog"]):
                 response = await do_request_2(
                     "list_users",
                     {},
-                    username=self.app_config.username,
-                    token=self.app_config.token,
+                    username=self.app_shared.username,
+                    token=self.app_shared.token,
                 )
 
                 if response.code != 200:
@@ -70,8 +70,8 @@ class AuthorizeDialogController(BaseController["AuthorizeDialog"]):
                 response = await do_request_2(
                     "list_groups",
                     {},
-                    username=self.app_config.username,
-                    token=self.app_config.token,
+                    username=self.app_shared.username,
+                    token=self.app_shared.token,
                 )
 
                 if response.code != 200:
@@ -139,8 +139,8 @@ class AuthorizeDialogController(BaseController["AuthorizeDialog"]):
             response = await do_request_2(
                 "grant_access",
                 data,
-                username=self.app_config.username,
-                token=self.app_config.token,
+                username=self.app_shared.username,
+                token=self.app_shared.token,
             )
 
             if response.code != 200:

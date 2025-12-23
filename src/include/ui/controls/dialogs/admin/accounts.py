@@ -3,7 +3,7 @@ import asyncio
 
 import flet as ft
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.controllers.dialogs.management import (
     AddUserAccountDialogController,
     EditUserGroupDialogController,
@@ -34,7 +34,7 @@ class PasswdUserDialog(AlertDialog):
     ):
         super().__init__(ref=ref, visible=visible)
         self.page: ft.Page
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
         self.controller = PasswdDialogController(self)
         self.username = username
         self.passwd_other = passwd_other
@@ -129,7 +129,7 @@ class AddUserAccountDialog(AlertDialog):
         self.page: ft.Page
         self.controller = AddUserAccountDialogController(self)
         self.parent_view = parent_view
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
 
         self.modal = False
         self.scrollable = True
@@ -207,7 +207,7 @@ class RenameUserNicknameDialog(AlertDialog):
         super().__init__(ref=ref, visible=visible)
         self.page: ft.Page
         self.username = username
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
         self.parent_manager = parent_manager
         self.controller = RenameUserNicknameDialogController(self)
 
@@ -273,7 +273,7 @@ class EditUserGroupDialog(AlertDialog):
         self.controller = EditUserGroupDialogController(self)
         self.username = username
         self.parent_manager = parent_manager
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
 
         self.refresh_button = ft.IconButton(
             ft.Icons.REFRESH,
@@ -361,7 +361,7 @@ class ViewUserInfoDialog(AlertDialog):
         self.page: ft.Page
         self.controller = ViewUserInfoDialogController(self)
         self.username = username
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
 
         self.modal = False
         self.scrollable = True

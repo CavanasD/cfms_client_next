@@ -29,8 +29,8 @@ class CreateDirectoryDialogController(BaseController["CreateDirectoryDialog"]):
             await create_directory(
                 self.control.parent_manager.current_directory_id,
                 directory_name,
-                self.app_config.username,
-                self.app_config.token,
+                self.app_shared.username,
+                self.app_shared.token,
             )
         except CreateDirectoryFailureError as err:
             self.control.send_error(str(err))

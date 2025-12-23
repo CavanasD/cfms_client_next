@@ -3,7 +3,7 @@ from typing import Literal
 from flet_model import Model, Router, route
 import flet as ft
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.ui.util.notifications import send_success
 from include.ui.util.route import get_parent_route
 
@@ -27,7 +27,7 @@ class ConnectionSettingsModel(Model):
             ],
             actions_padding=10,
         )
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
 
         self.enable_proxy_switch = ft.Switch(
             label="Enable proxy", on_change=self.switch_click
@@ -59,7 +59,7 @@ class ConnectionSettingsModel(Model):
         proxy_settings_value = None
         custom_proxy_value = self.custom_proxy_textfield.value
 
-        self.app_config.preferences["settings"]["custom_proxy"] = custom_proxy_value
+        self.app_shared.preferences["settings"]["custom_proxy"] = custom_proxy_value
 
         if self.enable_proxy_switch.value:
             if self.follow_system_proxy_switch.value:
@@ -71,20 +71,20 @@ class ConnectionSettingsModel(Model):
         else:
             proxy_settings_value = None
 
-        self.app_config.preferences["settings"]["proxy_settings"] = proxy_settings_value
-        self.app_config.dump_preferences()
+        self.app_shared.preferences["settings"]["proxy_settings"] = proxy_settings_value
+        self.app_shared.dump_preferences()
         send_success(self.page, "Settings Saved.")
 
     async def switch_click(self, event: ft.Event[ft.Switch]):
         await self.flush_switch()
 
     async def load_switch_status(self):
-        proxy_settings: str | Literal[True] | None = self.app_config.preferences[
+        proxy_settings: str | Literal[True] | None = self.app_shared.preferences[
             "settings"
         ].get("proxy_settings")
         self.enable_proxy_switch.value = bool(proxy_settings)
         self.follow_system_proxy_switch.value = proxy_settings == True
-        self.custom_proxy_textfield.value = self.app_config.preferences["settings"].get(
+        self.custom_proxy_textfield.value = self.app_shared.preferences["settings"].get(
             "custom_proxy", ""
         )
         await self.flush_switch()

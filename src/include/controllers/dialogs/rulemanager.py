@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, Any
 import json
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.controllers.base import BaseController
 from include.util.requests import do_request
 
@@ -35,8 +35,8 @@ class RuleManagerController(BaseController["RuleManager"]):
         info_resp = await do_request(
             action,
             data,
-            username=self.app_config.username,
-            token=self.app_config.token,
+            username=self.app_shared.username,
+            token=self.app_shared.token,
         )
         if info_resp["code"] != 200:
             self.control.content_textfield.value = (
@@ -70,8 +70,8 @@ class RuleManagerController(BaseController["RuleManager"]):
         submit_resp = await do_request(
             action,
             data,
-            username=self.app_config.username,
-            token=self.app_config.token,
+            username=self.app_shared.username,
+            token=self.app_shared.token,
         )
 
         if submit_resp["code"] != 200:
@@ -87,4 +87,4 @@ class RuleManagerController(BaseController["RuleManager"]):
 class VisualRuleEditorController:
     def __init__(self, view: "VisualRuleEditor"):
         self.view = view
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()

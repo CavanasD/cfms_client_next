@@ -4,7 +4,7 @@ import gettext
 
 import flet as ft
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.constants import LOCALE_PATH
 from include.ui.controls.dialogs.base import AlertDialog
 from include.ui.util.notifications import send_error
@@ -27,7 +27,7 @@ class AddUserGroupDialog(AlertDialog):
     ):
         super().__init__(ref=ref, visible=visible)
         self.parent_view = parent_view
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
 
         self.modal = False
         self.scrollable = True
@@ -87,8 +87,8 @@ class AddUserGroupDialog(AlertDialog):
                 "display_name": self.display_name_field.value,
                 "permissions": [],  # TODO
             },
-            username=self.app_config.username,
-            token=self.app_config.token,
+            username=self.app_shared.username,
+            token=self.app_shared.token,
         )
         if (code := response["code"]) != 200:
             send_error(self.page, _("Failed to create user group: ({code}) {message}").format(code=code, message=response['message']))

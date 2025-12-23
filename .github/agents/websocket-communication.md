@@ -54,9 +54,9 @@ else:
 ### Connection State Management
 
 **Global Connection Storage**:
-- Stored in `AppConfig.conn` (singleton)
+- Stored in `AppShared.conn` (singleton)
 - Type: `Optional[ClientConnection]` from `websockets.asyncio.client`
-- Accessed via `AppConfig().conn`
+- Accessed via `AppShared().conn`
 
 **Connection Lock Pattern**:
 ```python
@@ -95,8 +95,8 @@ Standard request structure:
 - `action` (required): Command/operation name
 - `data` (optional): Operation-specific payload
 - `message` (optional): Additional message context
-- `username` (optional): User identifier (from AppConfig if not provided)
-- `token` (optional): Authentication token (from AppConfig if not provided)
+- `username` (optional): User identifier (from AppShared if not provided)
+- `token` (optional): Authentication token (from AppShared if not provided)
 
 ### Response Format
 
@@ -150,7 +150,7 @@ async def do_request_2(
 Both functions automatically handle connection failures:
 1. Catch `ConnectionClosed`, `ConnectionAbortedError`, `ConnectionResetError`
 2. Reconnect using `get_connection()` with saved server settings
-3. Update `AppConfig.conn` with new connection
+3. Update `AppShared.conn` with new connection
 4. Retry the request
 5. Fail after `max_retries` attempts
 
@@ -210,10 +210,10 @@ response = await do_request_2(
 if response.code == 200:
     token = response.data["token"]
     token_exp = response.data["exp"]
-    # Store in AppConfig
-    app_config.username = username
-    app_config.token = token
-    app_config.token_exp = token_exp
+    # Store in AppShared
+    app_shared.username = username
+    app_shared.token = token
+    app_shared.token_exp = token_exp
 ```
 
 ### File Operations
@@ -340,7 +340,7 @@ Server → Client: Hash verification response
 **Batch Upload Generator**:
 ```python
 async def batch_upload_file_to_server(
-    app_config: AppConfig,
+    app_shared: AppShared,
     directory_id: str,
     files: list[FilePickerFile]
 ) -> AsyncIterator[tuple[int, str, int, int, Optional[Exception]]]:
@@ -386,11 +386,11 @@ for attempt in range(max_retries):
             raise
         # Reconnect
         conn = await get_connection(
-            server_address=app_config.server_address,
-            disable_ssl_enforcement=app_config.disable_ssl_enforcement,
-            proxy=app_config.preferences["settings"]["proxy_settings"],
+            server_address=app_shared.server_address,
+            disable_ssl_enforcement=app_shared.disable_ssl_enforcement,
+            proxy=app_shared.preferences["settings"]["proxy_settings"],
         )
-        app_config.conn = conn
+        app_shared.conn = conn
         continue
     break
 ```
@@ -401,14 +401,14 @@ Always use `do_request()` or `do_request_2()` which include retry logic, rather 
 ## Proxy Support
 
 **Proxy Configuration**:
-- Stored in `AppConfig.preferences["settings"]["proxy_settings"]`
+- Stored in `AppShared.preferences["settings"]["proxy_settings"]`
 - Types: `True` (system proxy), `"http://proxy:port"` (custom), `None` (no proxy)
 
 **Usage**:
 ```python
 conn = await get_connection(
     server_address="wss://server.example.com",
-    proxy=app_config.preferences["settings"]["proxy_settings"]
+    proxy=app_shared.preferences["settings"]["proxy_settings"]
 )
 ```
 
@@ -416,13 +416,13 @@ conn = await get_connection(
 
 1. **Always Use High-Level Functions**: Prefer `do_request_2()` over `_request()`
 2. **Handle Response Codes**: Check `response.code` before accessing `response.data`
-3. **Use AppConfig for Auth**: Let functions pull `username` and `token` from AppConfig
+3. **Use AppShared for Auth**: Let functions pull `username` and `token` from AppShared
 4. **Verify File Hashes**: Always calculate and verify SHA256 for uploads/downloads
 5. **Progress Feedback**: Use async generators to report upload/download progress to UI
 6. **Error Recovery**: Catch `InvalidResponseError` and handle specific codes (403, 404, etc.)
-7. **Connection Reuse**: Don't create new connections; use `AppConfig.conn`
+7. **Connection Reuse**: Don't create new connections; use `AppShared.conn`
 8. **Async Operations**: All WebSocket operations must be `async`/`await`
-9. **Lock Awareness**: Don't manually send/recv on `AppConfig.conn`; use request functions
+9. **Lock Awareness**: Don't manually send/recv on `AppShared.conn`; use request functions
 10. **Timeout Handling**: Consider implementing timeouts for long-running operations
 
 ## Security Considerations
@@ -433,8 +433,8 @@ conn = await get_connection(
 - Only disable SSL for local development/testing
 
 ### Authentication Tokens
-- Tokens stored in `AppConfig.token`
-- Token expiration in `AppConfig.token_exp` (Unix timestamp)
+- Tokens stored in `AppShared.token`
+- Token expiration in `AppShared.token_exp` (Unix timestamp)
 - Check expiration before long-running operations
 - Re-authenticate if token expired
 

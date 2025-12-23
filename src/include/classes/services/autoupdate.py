@@ -5,7 +5,7 @@ from typing import Optional
 
 import flet as ft
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.classes.services.base import BaseService
 from include.constants import BUILD_VERSION
 from include.util.upgrade.updater import GithubRelease, get_latest_release, is_new_version

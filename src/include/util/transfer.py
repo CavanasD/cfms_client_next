@@ -14,7 +14,7 @@ from Crypto.Cipher import AES
 from flet import FilePickerFile
 from websockets.asyncio.client import ClientConnection
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.classes.exceptions.request import InvalidResponseError
 from include.classes.exceptions.transmission import (
     FileHashMismatchError,
@@ -276,7 +276,7 @@ async def receive_file_from_server(
 
 
 async def batch_upload_file_to_server(
-    app_config: AppConfig,
+    app_shared: AppShared,
     directory_id: Optional[str],
     files: list[FilePickerFile],
     max_size: int = 1024**2 * 4,
@@ -289,7 +289,7 @@ async def batch_upload_file_to_server(
     its contents. Yields progress information for each file.
     
     Args:
-        app_config: Application configuration containing auth and connection info
+        app_shared: Application configuration containing auth and connection info
         directory_id: Target directory ID on server, or None for root
         files: List of files to upload
         max_size: Maximum WebSocket message size in bytes (default: 4MB)
@@ -313,9 +313,9 @@ async def batch_upload_file_to_server(
                     # check whether transfer_conn exists
                     if not transfer_conn:
                         transfer_conn = await get_connection(
-                            server_address=app_config.get_not_none_attribute("server_address"),
-                            disable_ssl_enforcement=app_config.disable_ssl_enforcement,
-                            proxy=app_config.preferences["settings"]["proxy_settings"],
+                            server_address=app_shared.get_not_none_attribute("server_address"),
+                            disable_ssl_enforcement=app_shared.disable_ssl_enforcement,
+                            proxy=app_shared.preferences["settings"]["proxy_settings"],
                             max_size=max_size,
                         )
 
@@ -327,8 +327,8 @@ async def batch_upload_file_to_server(
                             "folder_id": directory_id,
                             "access_rules": {},
                         },
-                        username=app_config.username,
-                        token=app_config.token,
+                        username=app_shared.username,
+                        token=app_shared.token,
                     )
 
                     if response.code != 200:

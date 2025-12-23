@@ -55,14 +55,14 @@ CFMS Client NEXT implements a comprehensive security model including:
        permissions = response.data.get("permissions", [])
        groups = response.data.get("groups", [])
        
-       # Store in AppConfig
-       app_config = AppConfig()
-       app_config.username = username
-       app_config.token = token
-       app_config.token_exp = token_exp
-       app_config.nickname = nickname
-       app_config.user_permissions = permissions
-       app_config.user_groups = groups
+       # Store in AppShared
+       app_shared = AppShared()
+       app_shared.username = username
+       app_shared.token = token
+       app_shared.token_exp = token_exp
+       app_shared.nickname = nickname
+       app_shared.user_permissions = permissions
+       app_shared.user_groups = groups
        
        # Navigate to home
        await page.push_route("/home")
@@ -79,14 +79,14 @@ CFMS Client NEXT implements a comprehensive security model including:
 ### Token Management
 
 **Token Storage**:
-- Stored in `AppConfig.token` (singleton, in-memory only)
+- Stored in `AppShared.token` (singleton, in-memory only)
 - Not persisted to disk for security
 - Cleared on logout or application close
 
 **Token Properties**:
 ```python
-app_config.token: Optional[str]         # JWT or opaque token
-app_config.token_exp: Optional[float]   # Unix timestamp expiration
+app_shared.token: Optional[str]         # JWT or opaque token
+app_shared.token_exp: Optional[float]   # Unix timestamp expiration
 ```
 
 **Token Usage**:
@@ -96,7 +96,7 @@ All authenticated requests automatically include the token:
 response = await do_request_2(
     action="some_action",
     data={...}
-    # username and token pulled from AppConfig automatically
+    # username and token pulled from AppShared automatically
 )
 ```
 
@@ -105,10 +105,10 @@ response = await do_request_2(
 import time
 
 def is_token_expired() -> bool:
-    app_config = AppConfig()
-    if not app_config.token_exp:
+    app_shared = AppShared()
+    if not app_shared.token_exp:
         return True
-    return time.time() >= app_config.token_exp
+    return time.time() >= app_shared.token_exp
 
 # Before long operations
 if is_token_expired():
@@ -125,21 +125,21 @@ response = await do_request_2(
 )
 
 if response.code == 200:
-    app_config.token = response.data["token"]
-    app_config.token_exp = response.data["exp"]
+    app_shared.token = response.data["token"]
+    app_shared.token_exp = response.data["exp"]
 ```
 
 ### Logout
 
 **Process**:
 1. Optionally notify server (if server tracks sessions)
-2. Clear authentication data from AppConfig
+2. Clear authentication data from AppShared
 3. Close WebSocket connection
 4. Navigate to login/connect screen
 
 ```python
 async def logout():
-    app_config = AppConfig()
+    app_shared = AppShared()
     
     # Optional: notify server
     try:
@@ -148,17 +148,17 @@ async def logout():
         pass  # Ignore errors
     
     # Clear auth data
-    app_config.username = None
-    app_config.token = None
-    app_config.token_exp = None
-    app_config.nickname = None
-    app_config.user_permissions = []
-    app_config.user_groups = []
+    app_shared.username = None
+    app_shared.token = None
+    app_shared.token_exp = None
+    app_shared.nickname = None
+    app_shared.user_permissions = []
+    app_shared.user_groups = []
     
     # Close connection
-    if app_config.conn:
-        await app_config.conn.close()
-        app_config.conn = None
+    if app_shared.conn:
+        await app_shared.conn.close()
+        app_shared.conn = None
     
     # Navigate to login
     await page.push_route("/login")
@@ -170,8 +170,8 @@ async def logout():
 
 **Permission Storage**:
 ```python
-app_config.user_permissions: list[str]  # e.g., ["file_upload", "file_delete"]
-app_config.user_groups: list[str]       # e.g., ["admins", "editors"]
+app_shared.user_permissions: list[str]  # e.g., ["file_upload", "file_delete"]
+app_shared.user_groups: list[str]       # e.g., ["admins", "editors"]
 ```
 
 **Common Permissions**:
@@ -191,8 +191,8 @@ app_config.user_groups: list[str]       # e.g., ["admins", "editors"]
 **UI Permission Checks**:
 ```python
 def can_upload_files() -> bool:
-    app_config = AppConfig()
-    return "file_upload" in app_config.user_permissions
+    app_shared = AppShared()
+    return "file_upload" in app_shared.user_permissions
 
 # In UI code
 if can_upload_files():
@@ -228,13 +228,13 @@ if response.code == 403:
 Groups can provide permissions:
 ```python
 def is_admin() -> bool:
-    app_config = AppConfig()
-    return "admins" in app_config.user_groups
+    app_shared = AppShared()
+    return "admins" in app_shared.user_groups
 
 def has_permission(permission: str) -> bool:
-    app_config = AppConfig()
+    app_shared = AppShared()
     # Direct permission check
-    if permission in app_config.user_permissions:
+    if permission in app_shared.user_permissions:
         return True
     # Group-based permission (if server provides)
     # This depends on server implementation

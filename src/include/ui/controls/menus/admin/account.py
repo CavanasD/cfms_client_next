@@ -3,7 +3,7 @@ import gettext
 
 import flet as ft
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.constants import LOCALE_PATH
 from include.ui.controls.dialogs.admin.accounts import (
     RenameUserNicknameDialog,
@@ -31,7 +31,7 @@ class UserRightMenuDialog(RightMenuDialog):
         visible: bool = True,
     ):
         self.username = username
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
         self.parent_listview = parent_listview
 
         # Define menu items as a list for better maintainability
@@ -72,8 +72,8 @@ class UserRightMenuDialog(RightMenuDialog):
         response = await do_request(
             action="delete_user",
             data={"username": self.username},
-            username=self.app_config.username,
-            token=self.app_config.token,
+            username=self.app_shared.username,
+            token=self.app_shared.token,
         )
 
         if (code := response["code"]) != 200:

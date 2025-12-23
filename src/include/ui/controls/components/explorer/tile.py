@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional
 
 import flet as ft
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 from include.util.locale import get_translation
 from include.util.userpref import save_user_preference
 
@@ -24,7 +24,7 @@ class FileTile(ft.ListTile):
         ref: ft.Ref | None = None,
     ):
         self.page: ft.Page
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
         self.filename = filename
         self.file_id = file_id
         self.starred = starred
@@ -69,22 +69,22 @@ class FileTile(ft.ListTile):
     async def on_star_click(self, event: ft.Event[ft.IconButton]):
         self.starred = not self.starred
 
-        assert self.app_config.user_perference
+        assert self.app_shared.user_perference
         if self.starred:
             # Add to favourites
-            self.app_config.user_perference.favourites["files"][
+            self.app_shared.user_perference.favourites["files"][
                 self.file_id
             ] = self.filename
         else:
             # Remove from favourites
             try:
-                del self.app_config.user_perference.favourites["files"][self.file_id]
+                del self.app_shared.user_perference.favourites["files"][self.file_id]
             except KeyError:
                 pass
 
         save_user_preference(
-            self.app_config.get_not_none_attribute("username"),
-            self.app_config.user_perference,
+            self.app_shared.get_not_none_attribute("username"),
+            self.app_shared.user_perference,
         )
 
         self.update_state()
@@ -112,7 +112,7 @@ class DirectoryTile(ft.ListTile):
         ref: ft.Ref | None = None,
     ):
         self.page: ft.Page
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
         self.dir_name = dir_name
         self.directory_id = directory_id
         self.starred = starred
@@ -149,24 +149,24 @@ class DirectoryTile(ft.ListTile):
     async def on_star_click(self, event: ft.Event[ft.IconButton]):
         self.starred = not self.starred
 
-        assert self.app_config.user_perference
+        assert self.app_shared.user_perference
         if self.starred:
             # Add to favourites
-            self.app_config.user_perference.favourites["directories"][
+            self.app_shared.user_perference.favourites["directories"][
                 self.directory_id
             ] = self.dir_name
         else:
             # Remove from favourites
             try:
-                del self.app_config.user_perference.favourites["directories"][
+                del self.app_shared.user_perference.favourites["directories"][
                     self.directory_id
                 ]
             except KeyError:
                 pass
 
         save_user_preference(
-            self.app_config.get_not_none_attribute("username"),
-            self.app_config.user_perference,
+            self.app_shared.get_not_none_attribute("username"),
+            self.app_shared.user_perference,
         )
 
         self.update_state()

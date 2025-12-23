@@ -2,7 +2,7 @@
 
 from typing import Generic, TypeVar
 
-from include.classes.config import AppConfig
+from include.classes.config import AppShared
 
 T = TypeVar('T')
 
@@ -17,11 +17,11 @@ class BaseController(Generic[T]):
     
     Attributes:
         control: The UI control instance being managed
-        app_config: Singleton application configuration instance
+        app_shared: Singleton application configuration instance
     """
     
     control: T
-    app_config: AppConfig
+    app_shared: AppShared
 
     def __init__(self, control: T, *args, **kwargs) -> None:
         """
@@ -31,4 +31,4 @@ class BaseController(Generic[T]):
             control: The UI control to manage
         """
         self.control = control
-        self.app_config = AppConfig()
+        self.app_shared = AppShared()
