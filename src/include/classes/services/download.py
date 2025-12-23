@@ -2,7 +2,6 @@
 
 import asyncio
 import json
-import logging
 import os
 import time
 from typing import Dict, List, Optional, Callable, Set
@@ -10,10 +9,9 @@ from websockets.asyncio.client import ClientConnection
 
 from include.classes.config import AppShared
 from include.classes.datacls import DownloadTask, DownloadTaskStatus
-from include.classes.services.base import BaseService, ServiceStatus
+from include.classes.services.base import BaseService
 from include.constants import FLET_APP_STORAGE_DATA
 from include.util.connect import get_connection
-from include.util.requests import do_request_2
 from include.util.transfer import receive_file_from_server
 
 __all__ = ["DownloadManagerService"]
@@ -254,8 +252,6 @@ class DownloadManagerService(BaseService):
             # Save tasks if persistence is enabled
             if self.enable_persistence:
                 await self._save_tasks()
-
-    # (removed duplicate add_task with extended parameters)
 
     def pause_task(self, task_id: str) -> bool:
         """

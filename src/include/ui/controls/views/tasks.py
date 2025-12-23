@@ -458,6 +458,8 @@ class TasksView(ft.Container):
                             ),
                         ],
                         alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                        wrap=True if self.app_shared.is_mobile else False,
+                        run_alignment=ft.MainAxisAlignment.START,
                     ),
                     padding=10,
                 ),

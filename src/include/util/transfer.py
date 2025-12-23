@@ -184,70 +184,96 @@ async def receive_file_from_server(
         return
 
     try:
-
         received_chunks = 0
         iv: bytes = b""
 
-        while received_chunks + 1 <= total_chunks:
-            # Receive encrypted data from the server
+        try:
+            while received_chunks + 1 <= total_chunks:
+                # Receive encrypted data from the server
+                data = await client.recv()
+                if not data:
+                    raise ValueError("Received empty data from server")
 
-            data = await client.recv()
-            if not data:
-                raise ValueError("Received empty data from server")
+                data_json: dict = json.loads(data)
 
-            data_json: dict = json.loads(data)
+                index = data_json["data"].get("index")
+                if index == 0:
+                    iv = base64.b64decode(data_json["data"].get("iv"))
+                chunk_hash = data_json["data"].get("hash")  # provided but unused
+                chunk_data = base64.b64decode(data_json["data"].get("chunk"))
+                chunk_file_path = os.path.join(downloading_path, str(index))
 
-            index = data_json["data"].get("index")
-            if index == 0:
-                iv = base64.b64decode(data_json["data"].get("iv"))
-            chunk_hash = data_json["data"].get("hash")  # provided but unused
-            chunk_data = base64.b64decode(data_json["data"].get("chunk"))
-            chunk_file_path = os.path.join(downloading_path, str(index))
+                async with aiofiles.open(chunk_file_path, "wb") as chunk_file:
+                    await chunk_file.write(chunk_data)
 
-            async with aiofiles.open(chunk_file_path, "wb") as chunk_file:
-                await chunk_file.write(chunk_data)
+                received_chunks += 1
 
-            received_chunks += 1
+                if received_chunks < total_chunks:
+                    received_file_size = chunk_size * received_chunks
+                else:
+                    received_file_size = file_size
 
-            if received_chunks < total_chunks:
-                received_file_size = chunk_size * received_chunks
-            else:
-                received_file_size = file_size
+                yield 0, received_file_size, file_size
 
-            yield 0, received_file_size, file_size
+            # Get decryption information
+            decrypted_data = await client.recv()
+            decrypted_data_json: dict = json.loads(decrypted_data)
 
-        # Get decryption information
-        decrypted_data = await client.recv()
-        decrypted_data_json: dict = json.loads(decrypted_data)
+            aes_key = base64.b64decode(decrypted_data_json["data"].get("key"))
 
-        aes_key = base64.b64decode(decrypted_data_json["data"].get("key"))
+            # Decrypt chunks
+            decrypted_chunks = 1
+            cipher = AES.new(aes_key, AES.MODE_CFB, iv=iv)  # Initialize cipher
 
-        # Decrypt chunks
-        decrypted_chunks = 1
-        cipher = AES.new(aes_key, AES.MODE_CFB, iv=iv)  # Initialize cipher
+            async with aiofiles.open(file_path, "wb") as out_file:
+                while decrypted_chunks <= total_chunks:
+                    yield 1, decrypted_chunks, total_chunks
 
-        async with aiofiles.open(file_path, "wb") as out_file:
-            while decrypted_chunks <= total_chunks:
-                yield 1, decrypted_chunks, total_chunks
+                    chunk_file_path = os.path.join(
+                        downloading_path, str(decrypted_chunks - 1)
+                    )
 
-                chunk_file_path = os.path.join(
-                    downloading_path, str(decrypted_chunks - 1)
-                )
+                    async with aiofiles.open(chunk_file_path, "rb") as chunk_file:
+                        encrypted_chunk = await chunk_file.read()
+                        decrypted_chunk = cipher.decrypt(encrypted_chunk)
+                        await out_file.write(decrypted_chunk)
 
-                async with aiofiles.open(chunk_file_path, "rb") as chunk_file:
-                    encrypted_chunk = await chunk_file.read()
-                    decrypted_chunk = cipher.decrypt(encrypted_chunk)
-                    await out_file.write(decrypted_chunk)
+                    # remove the chunk file as we go
+                    try:
+                        await aiofiles.os.remove(chunk_file_path)
+                    except Exception:
+                        # best-effort cleanup; ignore removal errors here
+                        pass
 
-                # os.remove(chunk_file_path)
-                decrypted_chunks += 1
+                    decrypted_chunks += 1
 
-        # Delete temporary folder
-        yield 2,
+            # Delete temporary folder
+            yield 2,
 
-        await asyncio.get_event_loop().run_in_executor(
-            None, shutil.rmtree, downloading_path
-        )
+            await asyncio.get_event_loop().run_in_executor(
+                None, shutil.rmtree, downloading_path
+            )
+
+        except GeneratorExit:
+            # Clean up partial temp files and partial output file if generator closed early
+            loop = asyncio.get_event_loop()
+
+            def _safe_rmtree(path):
+                try:
+                    if os.path.exists(path):
+                        shutil.rmtree(path)
+                except Exception:
+                    pass
+
+            await loop.run_in_executor(None, _safe_rmtree, downloading_path)
+
+            try:
+                if await aiofiles.os.path.exists(file_path):
+                    await aiofiles.os.remove(file_path)
+            except Exception:
+                pass
+
+            raise
 
     except Exception:
         raise

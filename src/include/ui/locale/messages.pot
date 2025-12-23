@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2025-12-23 12:23+0800\n"
+"POT-Creation-Date: 2025-12-23 20:18+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,6 +14,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 
+
+#: .\include\classes\services\autoupdate.py:153
+msgid "New version {version} is available! Check the About page for details."
+msgstr ""
+
+#: .\include\classes\services\autoupdate.py:157
+msgid "Go to About"
+msgstr ""
 
 #: .\include\controllers\connect.py:39
 msgid "Connection failed because the connection was reset: {strerror}"
@@ -409,6 +417,7 @@ msgstr ""
 #: .\include\ui\controls\dialogs\upgrade.py:41
 #: .\include\ui\controls\menus\admin\group.py:112
 #: .\include\ui\controls\menus\admin\group.py:188
+#: .\include\ui\controls\views\tasks.py:91
 msgid "Cancel"
 msgstr ""
 
@@ -422,6 +431,7 @@ msgid "Add..."
 msgstr ""
 
 #: .\include\ui\controls\components\visualmgr\editor.py:61
+#: .\include\ui\controls\views\tasks.py:364
 msgid "All"
 msgstr ""
 
@@ -830,7 +840,7 @@ msgid "Select User"
 msgstr ""
 
 #: .\include\ui\controls\dialogs\upgrade.py:33
-#: .\include\ui\models\about.py:108
+#: .\include\ui\models\about.py:107
 msgid "Update"
 msgstr ""
 
@@ -1113,67 +1123,181 @@ msgstr ""
 msgid "About"
 msgstr ""
 
-#: .\include\ui\models\about.py:53
+#: .\include\ui\controls\views\tasks.py:55
+msgid "Open file"
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:70
+#: .\include\ui\controls\views\tasks.py:296
+msgid "Pause"
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:72
+#: .\include\ui\controls\views\tasks.py:296
+msgid "Resume"
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:206
+msgid "Pending"
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:207
+msgid "Downloading"
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:208
+#: .\include\ui\controls\views\tasks.py:366
+msgid "Paused"
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:209
+msgid "Decrypting"
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:210
+msgid "Verifying"
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:211
+#: .\include\ui\controls\views\tasks.py:368
+msgid "Completed"
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:212
+#: .\include\ui\controls\views\tasks.py:369
+msgid "Failed"
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:213
+msgid "Cancelled"
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:214
+#: .\include\ui\controls\views\tasks.py:367
+msgid "Scheduled"
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:216
+msgid "Unknown"
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:230
+msgid "Download completed"
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:245
+msgid "Waiting to start..."
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:340
+msgid "Failed to open file: {error}"
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:361
+msgid "Filter"
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:365
+msgid "Active"
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:393
+msgid "No download tasks"
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:412
+msgid "Download Tasks"
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:421
+msgid "More actions"
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:424
+msgid "Pause all active"
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:429
+msgid "Resume all paused"
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:434
+msgid "Cancel all pending"
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:440
+msgid "Clear completed"
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:445
+msgid "Clear failed"
+msgstr ""
+
+#: .\include\ui\controls\views\tasks.py:453
+msgid "Refresh"
+msgstr ""
+
+#: .\include\ui\models\about.py:52
 msgid "Debugging..."
 msgstr ""
 
-#: .\include\ui\models\about.py:69
+#: .\include\ui\models\about.py:68
 msgid "Version: {APP_VERSION}"
 msgstr ""
 
-#: .\include\ui\models\about.py:74
+#: .\include\ui\models\about.py:73
 msgid "Copyright (C) 2025 Creeper Team"
 msgstr ""
 
-#: .\include\ui\models\about.py:79
+#: .\include\ui\models\about.py:78
 msgid "Licensed under Apache License Version 2.0."
 msgstr ""
 
-#: .\include\ui\models\about.py:84
+#: .\include\ui\models\about.py:83
 msgid "View changelogs"
 msgstr ""
 
-#: .\include\ui\models\about.py:100
+#: .\include\ui\models\about.py:99
 msgid "Checking for updates"
 msgstr ""
 
-#: .\include\ui\models\about.py:102
+#: .\include\ui\models\about.py:101
 msgid "Cannot update: Cannot check for updates when running from source code."
 msgstr ""
 
-#: .\include\ui\models\about.py:122
+#: .\include\ui\models\about.py:121
 msgid "Software Update"
 msgstr ""
 
-#: .\include\ui\models\about.py:201
+#: .\include\ui\models\about.py:200
 msgid "Connection failed: {strerror}"
 msgstr ""
 
-#: .\include\ui\models\about.py:206
+#: .\include\ui\models\about.py:205
 msgid "Failed to retrieve version information"
 msgstr ""
 
-#: .\include\ui\models\about.py:214
+#: .\include\ui\models\about.py:213
 msgid "Current version: {APP_VERSION}"
 msgstr ""
 
-#: .\include\ui\models\about.py:219
+#: .\include\ui\models\about.py:218
 msgid "Latest version: {latest_version}"
 msgstr ""
 
-#: .\include\ui\models\about.py:226
+#: .\include\ui\models\about.py:225
 msgid "Update Notes:"
 msgstr ""
 
-#: .\include\ui\models\about.py:239
+#: .\include\ui\models\about.py:238
 msgid "Already on the latest version"
 msgstr ""
 
-#: .\include\ui\models\about.py:253
+#: .\include\ui\models\about.py:252
 msgid "No package found for the corresponding architecture in the latest version"
 msgstr ""
 
-#: .\include\ui\models\about.py:258
+#: .\include\ui\models\about.py:257
 msgid "No update found: Unsupported architecture"
 msgstr ""
 
@@ -1226,23 +1350,27 @@ msgstr ""
 msgid "Members: {members}"
 msgstr ""
 
-#: .\include\ui\util\path.py:139
+#: .\include\ui\util\path.py:138
+msgid "Download added: {filename}"
+msgstr ""
+
+#: .\include\ui\util\path.py:178
 msgid "Decrypting chunk [{decrypted_chunks}/{total_chunks}]"
 msgstr ""
 
-#: .\include\ui\util\path.py:147
+#: .\include\ui\util\path.py:186
 msgid "Deleting temporary files"
 msgstr ""
 
-#: .\include\ui\util\path.py:150
+#: .\include\ui\util\path.py:189
 msgid "Verifying file"
 msgstr ""
 
-#: .\include\ui\util\path.py:154
+#: .\include\ui\util\path.py:193
 msgid "File hash mismatch: {exc}"
 msgstr ""
 
-#: .\include\ui\util\path.py:156
+#: .\include\ui\util\path.py:195
 msgid "File size mismatch: {exc}"
 msgstr ""
 
