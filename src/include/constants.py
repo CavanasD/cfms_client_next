@@ -41,7 +41,7 @@ else:
     APP_VERSION = f"{BUILD_VERSION[1:]}.{MODIFIED}_{CHANNEL.value} NEXT"
 
 # Protocol
-PROTOCOL_VERSION = 4
+PROTOCOL_VERSION = 5
 
 # Integrated CA Certificate for SSL
 INTEGRATED_CA_CERT = """
