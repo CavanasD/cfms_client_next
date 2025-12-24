@@ -15,7 +15,6 @@ from include.ui.controls.dialogs.base import AlertDialog
 
 if TYPE_CHECKING:
     from include.ui.controls.views.admin.account import ManageAccountsView
-    from include.ui.controls.menus.admin.account import UserRightMenuDialog
 
 from include.util.locale import get_translation
 

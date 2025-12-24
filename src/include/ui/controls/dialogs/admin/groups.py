@@ -45,7 +45,7 @@ class AddUserGroupDialog(AlertDialog):
         )
 
         self.submit_button = ft.TextButton(
-            "Create",
+            _("Create"),
             on_click=self.request_create_group,
         )
         self.cancel_button = ft.TextButton(_("Cancel"), on_click=self.cancel_button_click)
