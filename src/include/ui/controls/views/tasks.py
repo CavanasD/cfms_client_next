@@ -166,6 +166,8 @@ class TaskTile(ft.Card):
                     self.progress_info,
                 ],
                 spacing=5,
+                expand=True,
+                expand_loose=True,
             ),
             padding=10,
         )
