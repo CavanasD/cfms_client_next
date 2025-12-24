@@ -160,7 +160,6 @@ async def main(page: ft.Page):
 
     # Register auto-update service
     # Check for updates every 6 hours (21600 seconds)
-    # Don't check immediately on start to avoid slowing down app launch
     autoupdate_service = AutoUpdateService(
         page=page,
         enabled=True,
