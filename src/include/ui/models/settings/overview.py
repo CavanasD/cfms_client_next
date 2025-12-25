@@ -1,11 +1,10 @@
-import gettext
-
 from flet_model import Model, Router, route
 import flet as ft
 
-from include.constants import LOCALE_PATH
+from include.classes.config import AppShared
 from include.ui.util.route import get_parent_route
 from include.util.locale import get_translation
+
 t = get_translation()
 _ = t.gettext
 
@@ -46,12 +45,6 @@ class SettingsModel(Model):
                 subtitle=ft.Text(_("Adjust application connection history policy")),
                 on_click=self.configure_safety_listtile_click,
             ),
-            ft.ListTile(
-                leading=ft.Icon(ft.Icons.LOCK),
-                title=ft.Text(_("Two-Factor Authentication")),
-                subtitle=ft.Text(_("Manage two-factor authentication settings")),
-                on_click=self.configure_twofa_listtile_click,
-            ),
             # ft.ListTile(
             #     leading=ft.Icon(ft.Icons.BROWSER_UPDATED),
             #     title=ft.Text(_("Updates")),
@@ -59,6 +52,17 @@ class SettingsModel(Model):
             #     # on_click=open_change_passwd_dialog,
             # ),
         ]
+
+        # Disabled for mobile devices - see issue #24
+        if AppShared().is_mobile is False:
+            self.listtiles.append(
+                ft.ListTile(
+                    leading=ft.Icon(ft.Icons.LOCK),
+                    title=ft.Text(_("Two-Factor Authentication")),
+                    subtitle=ft.Text(_("Manage two-factor authentication settings")),
+                    on_click=self.configure_twofa_listtile_click,
+                )
+            )
 
         self.listview = ft.ListView(
             expand=True,
@@ -80,6 +84,6 @@ class SettingsModel(Model):
 
     async def configure_safety_listtile_click(self, event: ft.Event[ft.ListTile]):
         await self.page.push_route(self.page.route + "/safety_settings")
-    
+
     async def configure_twofa_listtile_click(self, event: ft.Event[ft.ListTile]):
         await self.page.push_route(self.page.route + "/twofa_settings")
