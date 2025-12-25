@@ -13,6 +13,11 @@ logic, new group management context menus and so on.
 
 A series of fixes has also been introduced.
 
+**Note:** Starting with this version, enabling/disabling two-step verification 
+will be temporarily disabled on mobile devices. This is due to a technical 
+issue that is currently difficult to resolve. However, the application still 
+supports login operations that require two-step verification.
+
 ---
 ## v0.3.4
 **Released on:** 2025-12-24

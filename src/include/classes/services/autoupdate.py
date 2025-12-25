@@ -149,7 +149,7 @@ class AutoUpdateService(BaseService):
                 """Navigate to about page with proper error handling."""
                 try:
                     assert self.page is not None
-                    await self.page.push_route("/connect/about/")
+                    await self.page.push_route(self.page.route + "/about")
                 except Exception as nav_error:
                     self.logger.error(f"Error navigating to about page: {nav_error}")
 
