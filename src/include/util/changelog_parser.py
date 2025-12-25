@@ -47,6 +47,35 @@ from typing import List
 from include.classes.changelog import ChangelogEntry
 
 
+def _format_content_for_markdown(lines: List[str]) -> str:
+    """
+    Format content lines to preserve Markdown paragraph breaks.
+    
+    In Markdown, paragraph breaks require double newlines (blank lines).
+    This function preserves blank lines from the source by joining all lines
+    (including empty ones) with single newlines. When joined, a blank line
+    (empty string) naturally creates a double newline sequence (\n\n).
+    
+    Example:
+        Input: ['Para 1', '', 'Para 2']
+        Output: 'Para 1\n\nPara 2'  (double newline for paragraph break)
+    
+    Args:
+        lines: List of content lines from the changelog (may include blank lines)
+        
+    Returns:
+        Formatted content string with proper Markdown paragraph breaks
+    """
+    if not lines:
+        return ""
+    
+    # Join all lines with single newlines
+    # Blank lines (empty strings) create double newlines: "text\n" + "\n" + "text"
+    content = '\n'.join(lines).strip()
+    
+    return content
+
+
 def parse_changelog(changelog_path: Path) -> List[ChangelogEntry]:
     """
     Parse a CHANGELOG.md file and convert it to a list of ChangelogEntry instances.
@@ -97,7 +126,8 @@ def parse_changelog(changelog_path: Path) -> List[ChangelogEntry]:
                         f"Missing date for version {current_version} in {changelog_path}"
                     )
                 
-                entry_content = '\n'.join(current_content_lines).strip()
+                # Format content with proper Markdown paragraph breaks
+                entry_content = _format_content_for_markdown(current_content_lines)
                 entries.append(
                     ChangelogEntry(
                         version=current_version,
@@ -129,11 +159,7 @@ def parse_changelog(changelog_path: Path) -> List[ChangelogEntry]:
                         ) from e
                     i += 1
                     break
-                elif next_line:
-                    # Skip any other lines until we find the date
-                    i += 1
-                else:
-                    i += 1
+                i += 1
             
             # Look for the title line
             while i < len(lines):
@@ -143,10 +169,7 @@ def parse_changelog(changelog_path: Path) -> List[ChangelogEntry]:
                     current_title = next_line.replace('**Title:**', '').strip()
                     i += 1
                     break
-                elif next_line:
-                    i += 1
-                else:
-                    i += 1
+                i += 1
             
             # Skip empty line after title
             if i < len(lines) and not lines[i].strip():
@@ -164,11 +187,18 @@ def parse_changelog(changelog_path: Path) -> List[ChangelogEntry]:
             i += 1
             continue
         
-        if not line or line.startswith('This document contains'):
+        # Skip intro text only before we find any version
+        if current_version is None and line.startswith('This document contains'):
             i += 1
             continue
         
-        # Collect content lines for current version
+        # Skip blank lines only before we find any version
+        # Once we're in a version, blank lines are significant for paragraph breaks
+        if current_version is None and not line:
+            i += 1
+            continue
+        
+        # Collect content lines for current version (including blank lines)
         if current_version is not None:
             current_content_lines.append(lines[i])
         
@@ -186,7 +216,8 @@ def parse_changelog(changelog_path: Path) -> List[ChangelogEntry]:
                 f"Missing date for version {current_version} in {changelog_path}"
             )
         
-        entry_content = '\n'.join(current_content_lines).strip()
+        # Format content with proper Markdown paragraph breaks
+        entry_content = _format_content_for_markdown(current_content_lines)
         entries.append(
             ChangelogEntry(
                 version=current_version,
