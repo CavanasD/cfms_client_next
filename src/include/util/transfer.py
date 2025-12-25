@@ -21,6 +21,7 @@ from include.classes.exceptions.transmission import (
     FileSizeMismatchError,
 )
 from include.constants import FLET_APP_STORAGE_TEMP
+from include.ui.util.choice import normalize_always_choice
 from include.util.connect import get_connection
 from include.util.requests import do_request_2
 
@@ -324,7 +325,8 @@ async def batch_upload_file_to_server(
         max_retries: Maximum retry attempts per file (default: 3)
         on_conflict_callback: Optional async callback function that receives
             (filename, conflict_type, conflict_id) and returns 'overwrite', 'skip',
-            or None. If None, 409 errors are treated as regular errors.
+            'always_overwrite', 'always_skip', or None. If None, 409 errors are 
+            treated as regular errors.
         
     Yields:
         Tuples of (file_index, filename, bytes_uploaded, total_size, exception)
@@ -334,6 +336,7 @@ async def batch_upload_file_to_server(
         AssertionError: If file path is None
     """
     transfer_conn = None
+    always_choice = None  # Track "always" choice for batch operations
     try:
         for index, file in enumerate(files):  # process tasks sequentially
             filename, file_path = file.name, file.path
@@ -370,10 +373,19 @@ async def batch_upload_file_to_server(
                         # Check if we can handle this conflict
                         # conflict_id must be a non-empty string for overwrite to work
                         if (conflict_type == "document" and conflict_id and on_conflict_callback):
-                            # Ask user what to do
-                            user_choice = await on_conflict_callback(
-                                filename, conflict_type, conflict_id
-                            )
+                            # Use always choice if set, otherwise ask user
+                            if always_choice in ('always_overwrite', 'always_skip'):
+                                user_choice = normalize_always_choice(always_choice)
+                            else:
+                                # Ask user what to do
+                                user_choice = await on_conflict_callback(
+                                    filename, conflict_type, conflict_id
+                                )
+                                
+                                # Store "always" choices for subsequent files
+                                if user_choice in ('always_overwrite', 'always_skip'):
+                                    always_choice = user_choice
+                                    user_choice = normalize_always_choice(user_choice)
                             
                             if user_choice == 'overwrite':
                                 # Upload as a new version of the existing document
@@ -410,7 +422,8 @@ async def batch_upload_file_to_server(
                             elif user_choice == 'skip':
                                 # Skip this file, but still yield a progress update so callers
                                 # can account for this file in their progress tracking.
-                                yield index, filename, 0, 0, None
+                                # Use -1, -1 to distinguish from empty files (0, 0)
+                                yield index, filename, -1, -1, None
                                 break
                             
                             else:

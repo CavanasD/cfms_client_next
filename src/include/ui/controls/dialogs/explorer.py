@@ -1,13 +1,17 @@
 from typing import TYPE_CHECKING
 import asyncio
+from datetime import datetime
+import logging
 
 import flet as ft
 
+from include.classes.config import AppShared
 from include.controllers.dialogs.directory import (
     CreateDirectoryDialogController,
     OpenDirectoryDialogController,
 )
 from include.ui.controls.dialogs.base import AlertDialog
+from include.util.requests import do_request
 
 if TYPE_CHECKING:
     from include.ui.controls.views.explorer import FileManagerView
@@ -16,6 +20,8 @@ from include.util.locale import get_translation
 
 t = get_translation()
 _ = t.gettext
+
+logger = logging.getLogger(__name__)
 
 
 class CreateDirectoryDialog(AlertDialog):
@@ -268,39 +274,85 @@ class OpenDirectoryDialog(AlertDialog):
 
 
 class FileOverwriteConfirmDialog(AlertDialog):
-    """Dialog to confirm overwriting an existing file on the server."""
-    
+    """Dialog to confirm overwriting an existing file on the server.
+
+    Displays detailed information about the existing file including its size
+    and last modified time. Information is loaded asynchronously after the
+    dialog is shown.
+    """
+
     def __init__(
         self,
         filename: str,
         existing_id: str,
+        is_batch: bool = False,
         ref: ft.Ref | None = None,
         visible=True,
     ):
         super().__init__(ref=ref, visible=visible, scrollable=True)
-        
+
         self.modal = True
         self.title = ft.Text(_("File Already Exists"))
-        
+
         self.filename = filename
         self.existing_id = existing_id
-        self.user_choice = None  # Will be 'overwrite', 'skip', or None
+        self.is_batch = is_batch
+        self.user_choice = None  # Will be 'overwrite', 'skip', 'always_overwrite', 'always_skip', or None
         self.choice_event = asyncio.Event()
-        
+        self.app_shared = AppShared()
+
+        # Create UI elements for document details
+        self.progress_ring = ft.ProgressRing(
+            visible=True,
+            width=24,
+            height=24,
+        )
+
+        # Container for document details with fade-in animation
+        self.details_container_content = ft.Column(
+            controls=[],
+            spacing=8,
+        )
+        self.details_container = ft.Container(
+            visible=False,
+            opacity=0,
+            animate_opacity=300,
+            content=self.details_container_content,
+        )
+
+        # Main message
+        self.message_text = ft.Text(
+            _('A file named "{filename}" already exists.').format(filename=filename),
+            width=400,
+            weight=ft.FontWeight.BOLD,
+        )
+
+        # Loading indicator row
+        self.loading_row = ft.Row(
+            controls=[
+                self.progress_ring,
+                ft.Text(_("Loading file details..."), italic=True),
+            ],
+            spacing=10,
+        )
+
         # Dialog content
         self.content = ft.Column(
             controls=[
+                self.message_text,
+                ft.Container(height=10),
+                self.loading_row,
+                self.details_container,
+                ft.Container(height=10),
                 ft.Text(
-                    _('A file named "{filename}" already exists. Do you want to overwrite it?').format(
-                        filename=filename
-                    ),
+                    _("Do you want to overwrite it?"),
                     width=400,
                 ),
             ],
             width=400,
             spacing=10,
         )
-        
+
         # Buttons
         self.overwrite_button = ft.TextButton(
             _("Overwrite"),
@@ -315,27 +367,176 @@ class FileOverwriteConfirmDialog(AlertDialog):
             on_click=self.cancel_button_click,
         )
         
-        self.actions = [
-            self.overwrite_button,
-            self.skip_button,
-            self.cancel_button,
-        ]
-    
+        # Additional buttons for batch uploads
+        self.always_overwrite_button = ft.TextButton(
+            _("Always Overwrite"),
+            on_click=self.always_overwrite_button_click,
+            visible=is_batch,
+        )
+        self.always_skip_button = ft.TextButton(
+            _("Always Skip"),
+            on_click=self.always_skip_button_click,
+            visible=is_batch,
+        )
+
+        # Build actions list based on batch mode
+        if is_batch:
+            self.actions = [
+                self.overwrite_button,
+                self.always_overwrite_button,
+                self.skip_button,
+                self.always_skip_button,
+                self.cancel_button,
+            ]
+        else:
+            self.actions = [
+                self.overwrite_button,
+                self.skip_button,
+                self.cancel_button,
+            ]
+
+    def did_mount(self):
+        """Called when dialog is mounted to the page. Starts lazy loading."""
+        super().did_mount()
+        asyncio.create_task(self._load_document_details_task())
+
+    async def _load_document_details_task(self):
+        """Task wrapper for loading document details."""
+        async for _ in self.load_document_details():
+            pass
+
+    def format_file_size(self, size_bytes: int) -> str:
+        """Format file size in human-readable format."""
+        if size_bytes == 0:
+            return "0 Bytes"
+        elif size_bytes < 1024:
+            return f"{size_bytes} Bytes"
+        elif size_bytes < 1024 * 1024:
+            return f"{size_bytes / 1024:.2f} KB"
+        else:
+            return f"{size_bytes / 1024 / 1024:.2f} MB"
+
+    async def load_document_details(self):
+        """Load document details from server and update the UI."""
+        def _row(icon, text, color=None, italic=False):
+            return ft.Row(
+                controls=[
+                    ft.Icon(icon, size=16, color=color) if icon else ft.Container(),
+                    ft.Text(text, size=14, italic=italic),
+                ],
+                spacing=8,
+            )
+
+        def _show_error(message):
+            self.loading_row.visible = False
+            self.details_container_content.controls = [
+                _row(ft.Icons.ERROR_OUTLINE, message, color=ft.Colors.RED_400, italic=True)
+            ]
+            self.details_container.visible = True
+            self.details_container.opacity = 1.0
+            self.update()
+
+        try:
+            response = await do_request(
+                action="get_document_info",
+                data={"document_id": self.existing_id},
+                username=self.app_shared.username,
+                token=self.app_shared.token,
+            )
+
+            if response.get("code") != 200:
+                _show_error(_("Could not load file details"))
+                yield
+                return
+
+            data = response.get("data", {})
+            doc_size = data.get("size")
+            last_modified = data.get("last_modified")
+            created_time = data.get("created_time")
+
+            details_controls = []
+
+            if doc_size is not None and isinstance(doc_size, (int, float)) and doc_size >= 0:
+                details_controls.append(
+                    _row(
+                        ft.Icons.DESCRIPTION,
+                        _("File size: {size}").format(size=self.format_file_size(int(doc_size))),
+                        color=ft.Colors.BLUE_400,
+                    )
+                )
+
+            def _format_timestamp(ts):
+                if ts is None:
+                    return None
+                try:
+                    ts_float = float(ts)
+                except Exception:
+                    return None
+                return datetime.fromtimestamp(ts_float).strftime("%Y-%m-%d %H:%M:%S")
+
+            if (modified_str := _format_timestamp(last_modified)) is not None:
+                details_controls.append(
+                    _row(
+                        ft.Icons.UPDATE,
+                        _("Last modified: {date}").format(date=modified_str),
+                        color=ft.Colors.ORANGE_400,
+                    )
+                )
+
+            if (created_str := _format_timestamp(created_time)) is not None:
+                details_controls.append(
+                    _row(
+                        ft.Icons.ACCESS_TIME,
+                        _("Created: {date}").format(date=created_str),
+                        color=ft.Colors.GREEN_400,
+                    )
+                )
+
+            if not details_controls:
+                _show_error(_("No details available"))
+                yield
+                return
+
+            # Update UI: hide loader, set details, show container with fade-in
+            self.details_container_content.controls = details_controls
+            self.loading_row.visible = False
+            self.details_container.visible = True
+            yield  # allow UI to render the container visible state
+
+            self.details_container.opacity = 1.0
+            self.update()
+            yield  # allow animation to play
+
+        except Exception as e:
+            logger.exception("Error loading document details for document_id=%s", self.existing_id)
+            _show_error(_("Error loading file details"))
+            yield
+
     async def overwrite_button_click(self, event: ft.Event[ft.TextButton]):
-        self.user_choice = 'overwrite'
+        self.user_choice = "overwrite"
         self.choice_event.set()
         self.close()
-    
+
     async def skip_button_click(self, event: ft.Event[ft.TextButton]):
-        self.user_choice = 'skip'
+        self.user_choice = "skip"
         self.choice_event.set()
         self.close()
     
+    async def always_overwrite_button_click(self, event: ft.Event[ft.TextButton]):
+        self.user_choice = "always_overwrite"
+        self.choice_event.set()
+        self.close()
+    
+    async def always_skip_button_click(self, event: ft.Event[ft.TextButton]):
+        self.user_choice = "always_skip"
+        self.choice_event.set()
+        self.close()
+
     async def cancel_button_click(self, event: ft.Event[ft.TextButton]):
         self.user_choice = None
         self.choice_event.set()
         self.close()
-    
+
     async def wait_for_choice(self) -> str | None:
         """Wait for the user to make a choice and return it."""
         await self.choice_event.wait()

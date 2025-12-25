@@ -13,6 +13,7 @@ from include.ui.controls.dialogs.explorer import (
     UploadDirectoryAlertDialog,
     FileOverwriteConfirmDialog,
 )
+from include.ui.util.choice import normalize_always_choice
 from include.ui.util.path import get_directory
 from include.util.connect import get_connection
 from include.util.create import create_directory
@@ -58,6 +59,7 @@ class FileExplorerController(BaseController["FileManagerView"]):
             confirm_dialog = FileOverwriteConfirmDialog(
                 filename=filename,
                 existing_id=conflict_id,
+                is_batch=len(files) > 1,
             )
             self.control.page.show_dialog(confirm_dialog)
             choice = await confirm_dialog.wait_for_choice()
@@ -76,6 +78,7 @@ class FileExplorerController(BaseController["FileManagerView"]):
         filename = ""
         current_size = 0
         file_size = 0
+        files_processed = False  # Track if any files were actually processed
 
         while True:
             try:
@@ -116,15 +119,33 @@ class FileExplorerController(BaseController["FileManagerView"]):
                 progress_column.controls.append(_new_error_text)
                 return
 
-            # 正常更新进度条
-            progress_bar.value = current_size / file_size
-            progress_info.value = f"[{index+1}/{len(files)}] {current_size / 1024 / 1024:.2f} MB/{file_size / 1024 / 1024:.2f} MB"
+            # Check if file was skipped (indicated by -1, -1)
+            if current_size == -1 and file_size == -1:
+                # File was skipped, mark as processed but don't update progress bar
+                files_processed = True
+                continue
+            
+            # Mark file as processed
+            files_processed = True
+            
+            # Update progress bar
+            # For empty files (size 0), show as complete
+            if file_size == 0:
+                # Empty file uploaded successfully
+                progress_bar.value = 1.0
+                progress_info.value = f"[{index+1}/{len(files)}] 0.00 MB/0.00 MB"
+            else:
+                # Normal file with size
+                progress_bar.value = current_size / file_size
+                progress_info.value = f"[{index+1}/{len(files)}] {current_size / 1024 / 1024:.2f} MB/{file_size / 1024 / 1024:.2f} MB"
+            
             progress_column.update()
 
             if stop_event.is_set():
                 await ait.aclose()
                 break
 
+        # Cleanup: always remove progress UI for single file uploads if any files were processed
         if len(files) > 1:
             if len(progress_column.controls) <= 2:
                 batch_dialog.open = False
@@ -148,9 +169,13 @@ class FileExplorerController(BaseController["FileManagerView"]):
         stop_event = asyncio.Event()
         upload_dialog = UploadDirectoryAlertDialog(stop_event)
         self.control.page.show_dialog(upload_dialog)
+        
+        # Track "always" choice across all files in directory tree
+        always_choice = None
 
         # Temporarily use FTP mode to create directory tree.
         async def create_dirs_from_tree(parent_path, tree, parent_id=None):
+            nonlocal always_choice  # Access the outer variable
 
             # helper to ensure persistent transfer connection is closed and removed
             async def _close_transfer_conn():
@@ -243,13 +268,34 @@ class FileExplorerController(BaseController["FileManagerView"]):
                     
                     # conflict_id must be a non-empty string for overwrite to work
                     if conflict_type == "document" and conflict_id:
-                        # Show overwrite confirmation dialog
-                        confirm_dialog = FileOverwriteConfirmDialog(
-                            filename=filename,
-                            existing_id=conflict_id,
-                        )
-                        self.control.page.show_dialog(confirm_dialog)
-                        user_choice = await confirm_dialog.wait_for_choice()
+                        # Use always choice if set, otherwise ask user
+                        if always_choice in ('always_overwrite', 'always_skip'):
+                            user_choice = normalize_always_choice(always_choice)
+                        else:
+                            # Show overwrite confirmation dialog
+                            # Check if there are multiple files in the tree (including nested directories)
+                            def _count_files(node: dict) -> int:
+                                """Recursively count all files in a directory tree."""
+                                files = node.get("files", [])
+                                total = len(files)
+                                for subtree in node.get("dirs", {}).values():
+                                    if isinstance(subtree, dict):
+                                        total += _count_files(subtree)
+                                return total
+
+                            total_files = _count_files(tree)
+                            confirm_dialog = FileOverwriteConfirmDialog(
+                                filename=filename,
+                                existing_id=conflict_id,
+                                is_batch=total_files > 1,
+                            )
+                            self.control.page.show_dialog(confirm_dialog)
+                            user_choice = await confirm_dialog.wait_for_choice()
+                            
+                            # Store "always" choices for subsequent files
+                            if user_choice in ('always_overwrite', 'always_skip'):
+                                always_choice = user_choice
+                                user_choice = normalize_always_choice(user_choice)
                         
                         if user_choice == 'overwrite':
                             # Upload as a new version of existing document
