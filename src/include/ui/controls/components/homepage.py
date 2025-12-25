@@ -1,11 +1,13 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union, cast
 
 import flet as ft
 
 from include.classes.config import AppShared
+from include.classes.services.favorites_validation import FavoritesValidationService
 from include.ui.controls.components.explorer.tile import DirectoryTile, FileTile
 from include.ui.controls.views.explorer import FileManagerView
 from include.ui.util.file_controls import get_directory
+from include.ui.util.notifications import send_error
 from include.ui.util.path import get_document
 
 
@@ -87,7 +89,7 @@ class HomeNavigationBar(ft.NavigationBar):
 
 class WelcomeInfoCard(ft.Card):
     def __init__(self, ref: ft.Ref | None = None, visible=True):
-        super().__init__(ref=ref, visible=visible, expand=True, expand_loose=True)
+        super().__init__(ref=ref, visible=visible)
         self.content = ft.Container(
             content=ft.Column(
                 [
@@ -104,9 +106,8 @@ class WelcomeInfoCard(ft.Card):
                             )
                         ),
                     ),
-                ]
+                ],
             ),
-            # width=400,
             padding=10,
         )
 
@@ -116,11 +117,32 @@ class HomeFavoritesContainer(ft.Container):
         super().__init__(ref=ref, visible=visible, margin=15)
         self.page: ft.Page
         self.app_shared = AppShared()
+        self.expand = True
+        self.expand_loose = True
 
-        self.listview = ft.ListView(controls=[])
+        self.listview = ft.ListView(controls=[], scroll=ft.ScrollMode.AUTO, expand=True)
         self.content = self.listview
 
-    def update_favorites(self):
+    def _mark_item_invalid(
+        self,
+        control: Union[FileTile, DirectoryTile],
+        item_id: str,
+        item_name: str,
+    ):
+        """Helper method to mark a control as invalid with consistent styling."""
+        cast(ft.Icon, control.leading).color = ft.Colors.GREY_500
+        control.title = ft.Text(
+            item_name,
+            color=ft.Colors.GREY_500,
+            style=ft.TextStyle(decoration=ft.TextDecoration.LINE_THROUGH),
+        )
+        control.subtitle = ft.Text(
+            _("ID: {id} (No longer exists)").format(id=item_id),
+            color=ft.Colors.RED_300,
+        )
+        control.on_click = None
+
+    async def update_favorites(self, from_validation_callback: bool = False):
         # add favorite files and directories
         assert self.app_shared.user_perference
         favorite_files = self.app_shared.user_perference.favourites.get("files", {})
@@ -128,44 +150,157 @@ class HomeFavoritesContainer(ft.Container):
             "directories", {}
         )
 
-        # clear existing controls
+        # Get validation service
+        validation_service = None
+        if self.app_shared.service_manager:
+            validation_service = cast(
+                FavoritesValidationService,
+                self.app_shared.service_manager.get_service("favorites_validation"),
+            )
+
+        # If this is called from validation callback, only update the styling of existing controls
+        # Don't clear and recreate everything
+        if from_validation_callback and validation_service:
+            # Update existing controls to mark invalid items
+            for control in self.listview.controls:
+                if isinstance(control, FileTile):
+                    is_valid = validation_service.is_file_valid(control.file_id)
+                    if not is_valid:
+                        self._mark_item_invalid(
+                            control, control.file_id, control.filename
+                        )
+                elif isinstance(control, DirectoryTile):
+                    is_valid = validation_service.is_directory_valid(
+                        control.directory_id
+                    )
+                    if not is_valid:
+                        self._mark_item_invalid(
+                            control, control.directory_id, control.dir_name
+                        )
+
+            # Update the UI
+            self.update()
+            return
+
+        # Normal rendering: clear existing controls and recreate
         self.listview.controls.clear()
+
+        # Register callback to update UI after validation completes
+        # But only register once
+        if validation_service and not hasattr(self, "_validation_callback_registered"):
+
+            async def on_validation_complete():
+                # Just update styling of existing controls, don't re-render
+                self.page.run_task(self.update_favorites, from_validation_callback=True)
+
+            validation_service.register_on_validation_complete(on_validation_complete)
+            self._validation_callback_registered = True
+
+        # Trigger validation in background (non-blocking) on first view
+        # Only trigger if validation hasn't started yet and not in progress
+        if (
+            validation_service
+            and not validation_service.first_validation_done
+            and not validation_service.validation_in_progress
+        ):
+            validation_service.trigger_validation_async()
 
         async def on_filetile_click(event: ft.Event[ft.ListTile]):
             assert type(event.control) == FileTile
-            await get_document(
-                event.control.file_id,
-                filename=event.control.filename,
-                page=self.page,
-            )
+
+            # Check if file is marked as invalid
+            if validation_service and not validation_service.is_file_valid(
+                event.control.file_id
+            ):
+                send_error(
+                    self.page, _("This document no longer exists on the server.")
+                )
+                return
+
+            try:
+                await get_document(
+                    event.control.file_id,
+                    filename=event.control.filename,
+                    page=self.page,
+                )
+
+            except FileNotFoundError:
+                if validation_service:
+                    validation_service.mark_file_invalid(event.control.file_id)
+                self.page.run_task(self.update_favorites, from_validation_callback=True)
+
+            except Exception as e:
+                # Safely access potential 'response' attribute without relying on Exception having it
+                err_obj = cast(object, e)
+                resp = getattr(err_obj, "response", None)
+                if isinstance(resp, dict):
+                    send_error(
+                        self.page,
+                        _("Failed to download document: ({code}) {message}").format(
+                            code=resp.get("code", "Unknown"),
+                            message=resp.get("message", str(e)),
+                        ),
+                    )
+                else:
+                    send_error(
+                        self.page,
+                        _("Failed to download document: {error}").format(error=str(e)),
+                    )
+
+                self.page.run_task(self.update_favorites, from_validation_callback=True)
 
         async def on_dirtile_click(event: ft.Event[ft.ListTile]):
             pass
 
         for dir_id in favorite_directories:
+            # Check if directory is valid
+            is_valid = True
+            if validation_service:
+                is_valid = validation_service.is_directory_valid(dir_id)
+
             directory = DirectoryTile(
                 dir_name=favorite_directories[dir_id],
                 directory_id=dir_id,
                 starred=True,
                 show_id=True,
-                on_click=on_dirtile_click,
+                on_click=on_dirtile_click if is_valid else None,
             )
+
+            # Apply visual styling for invalid items
+            if not is_valid:
+                self._mark_item_invalid(directory, dir_id, favorite_directories[dir_id])
+
             self.listview.controls.append(directory)
 
         for file_id in favorite_files:
+            # Check if file is valid
+            is_valid = True
+            if validation_service:
+                is_valid = validation_service.is_file_valid(file_id)
+
             file = FileTile(
                 filename=favorite_files[file_id],
                 file_id=file_id,
                 starred=True,
                 show_id=True,
-                on_click=on_filetile_click,
+                on_click=on_filetile_click if is_valid else None,
             )
+
+            # Apply visual styling for invalid items
+            if not is_valid:
+                self._mark_item_invalid(file, file_id, favorite_files[file_id])
+
             self.listview.controls.append(file)
 
         if not self.listview.controls:
             self.listview.controls.append(
                 ft.Text(_("You have not favorited any documents or folders yet."))
             )
+
+        # Update the UI
+        # Why here needs a `self.update()` is because this method is async and called via `run_task`,
+        # not directly called by event hooks, so it won't auto-update UI after completion.
+        self.update()
 
 
 class HomeTabs(ft.Tabs):
@@ -201,12 +336,14 @@ class HomeTabs(ft.Tabs):
 
     def did_mount(self):
         super().did_mount()
-        self.home_favorites_container.update_favorites()
+        # Schedule the async update_favorites as a task
+        assert type(self.page) is ft.Page
+        self.page.run_task(self.home_favorites_container.update_favorites)
 
 
 class HomeView(ft.Container):
     def __init__(self, ref: ft.Ref | None = None, visible=True):
-        super().__init__(ref=ref, visible=visible)
+        super().__init__(ref=ref, visible=visible, expand=True, expand_loose=True)
 
         self.margin = 10
         self.padding = 10
@@ -229,4 +366,6 @@ class HomeView(ft.Container):
 
     def did_mount(self):
         super().did_mount()
-        self.home_tabs.home_favorites_container.update_favorites()
+        # Schedule the async update_favorites as a task
+        assert type(self.page) is ft.Page
+        self.page.run_task(self.home_tabs.home_favorites_container.update_favorites)
