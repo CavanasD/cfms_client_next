@@ -13,7 +13,7 @@ def main(page: Page):
 
 
     def animate_opacity(duration=500, curve=AnimationCurve.EASE_IN_OUT):
-        box.animate_opacity = Animation(duration, curve)
+        # box.animate_opacity = Animation(duration, curve)
         page.update()
 
 

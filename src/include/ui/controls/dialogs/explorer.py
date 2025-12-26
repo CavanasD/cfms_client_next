@@ -316,7 +316,7 @@ class FileOverwriteConfirmDialog(AlertDialog):
         self.details_container = ft.Container(
             visible=False,
             animate_opacity=ft.Animation(500, ft.AnimationCurve.EASE_IN_OUT),
-            opacity=0,
+            opacity=0.0,
             content=self.details_container_content,
         )
 
@@ -401,12 +401,6 @@ class FileOverwriteConfirmDialog(AlertDialog):
         assert type(self.page) is ft.Page
         self.page.run_task(self.load_document_details)
 
-    def animate_opacity(self, duration=500):
-        self.details_container.animate_opacity = ft.Animation(
-            duration, curve=ft.AnimationCurve.EASE_IN_OUT
-        )
-        self.update()
-
     def format_file_size(self, size_bytes: int) -> str:
         """Format file size in human-readable format."""
         if size_bytes == 0:
@@ -444,7 +438,7 @@ class FileOverwriteConfirmDialog(AlertDialog):
             self.update()
 
             self.details_container.opacity = 1.0
-            self.animate_opacity()
+            self.update()
 
         try:
             response = await do_request(
@@ -518,7 +512,7 @@ class FileOverwriteConfirmDialog(AlertDialog):
             self.update()
 
             self.details_container.opacity = 1.0
-            self.animate_opacity()
+            self.update()
 
         except Exception as e:
             logger.exception(
