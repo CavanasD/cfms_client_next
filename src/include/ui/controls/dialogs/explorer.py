@@ -315,8 +315,8 @@ class FileOverwriteConfirmDialog(AlertDialog):
         )
         self.details_container = ft.Container(
             visible=False,
+            animate_opacity=ft.Animation(500, ft.AnimationCurve.EASE_IN_OUT),
             opacity=0,
-            animate_opacity=300,
             content=self.details_container_content,
         )
 
@@ -366,7 +366,7 @@ class FileOverwriteConfirmDialog(AlertDialog):
             _("Cancel"),
             on_click=self.cancel_button_click,
         )
-        
+
         # Additional buttons for batch uploads
         self.always_overwrite_button = ft.TextButton(
             _("Always Overwrite"),
@@ -398,12 +398,14 @@ class FileOverwriteConfirmDialog(AlertDialog):
     def did_mount(self):
         """Called when dialog is mounted to the page. Starts lazy loading."""
         super().did_mount()
-        asyncio.create_task(self._load_document_details_task())
+        assert type(self.page) is ft.Page
+        self.page.run_task(self.load_document_details)
 
-    async def _load_document_details_task(self):
-        """Task wrapper for loading document details."""
-        async for _ in self.load_document_details():
-            pass
+    def animate_opacity(self, duration=500):
+        self.details_container.animate_opacity = ft.Animation(
+            duration, curve=ft.AnimationCurve.EASE_IN_OUT
+        )
+        self.update()
 
     def format_file_size(self, size_bytes: int) -> str:
         """Format file size in human-readable format."""
@@ -418,6 +420,7 @@ class FileOverwriteConfirmDialog(AlertDialog):
 
     async def load_document_details(self):
         """Load document details from server and update the UI."""
+
         def _row(icon, text, color=None, italic=False):
             return ft.Row(
                 controls=[
@@ -430,11 +433,18 @@ class FileOverwriteConfirmDialog(AlertDialog):
         def _show_error(message):
             self.loading_row.visible = False
             self.details_container_content.controls = [
-                _row(ft.Icons.ERROR_OUTLINE, message, color=ft.Colors.RED_400, italic=True)
+                _row(
+                    ft.Icons.ERROR_OUTLINE,
+                    message,
+                    color=ft.Colors.RED_400,
+                    italic=True,
+                )
             ]
             self.details_container.visible = True
-            self.details_container.opacity = 1.0
             self.update()
+
+            self.details_container.opacity = 1.0
+            self.animate_opacity()
 
         try:
             response = await do_request(
@@ -446,7 +456,6 @@ class FileOverwriteConfirmDialog(AlertDialog):
 
             if response.get("code") != 200:
                 _show_error(_("Could not load file details"))
-                yield
                 return
 
             data = response.get("data", {})
@@ -456,11 +465,17 @@ class FileOverwriteConfirmDialog(AlertDialog):
 
             details_controls = []
 
-            if doc_size is not None and isinstance(doc_size, (int, float)) and doc_size >= 0:
+            if (
+                doc_size is not None
+                and isinstance(doc_size, (int, float))
+                and doc_size >= 0
+            ):
                 details_controls.append(
                     _row(
                         ft.Icons.DESCRIPTION,
-                        _("File size: {size}").format(size=self.format_file_size(int(doc_size))),
+                        _("File size: {size}").format(
+                            size=self.format_file_size(int(doc_size))
+                        ),
                         color=ft.Colors.BLUE_400,
                     )
                 )
@@ -494,23 +509,22 @@ class FileOverwriteConfirmDialog(AlertDialog):
 
             if not details_controls:
                 _show_error(_("No details available"))
-                yield
                 return
 
             # Update UI: hide loader, set details, show container with fade-in
             self.details_container_content.controls = details_controls
             self.loading_row.visible = False
             self.details_container.visible = True
-            yield  # allow UI to render the container visible state
+            self.update()
 
             self.details_container.opacity = 1.0
-            self.update()
-            yield  # allow animation to play
+            self.animate_opacity()
 
         except Exception as e:
-            logger.exception("Error loading document details for document_id=%s", self.existing_id)
+            logger.exception(
+                "Error loading document details for document_id=%s", self.existing_id
+            )
             _show_error(_("Error loading file details"))
-            yield
 
     async def overwrite_button_click(self, event: ft.Event[ft.TextButton]):
         self.user_choice = "overwrite"
@@ -521,12 +535,12 @@ class FileOverwriteConfirmDialog(AlertDialog):
         self.user_choice = "skip"
         self.choice_event.set()
         self.close()
-    
+
     async def always_overwrite_button_click(self, event: ft.Event[ft.TextButton]):
         self.user_choice = "always_overwrite"
         self.choice_event.set()
         self.close()
-    
+
     async def always_skip_button_click(self, event: ft.Event[ft.TextButton]):
         self.user_choice = "always_skip"
         self.choice_event.set()
