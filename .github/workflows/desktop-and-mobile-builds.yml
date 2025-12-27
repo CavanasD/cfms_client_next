@@ -197,4 +197,4 @@ jobs:
           build/apk/app-release.apk
           build/apk/app-release.apk.sha1
         # overwrite_files: true
-        generate_release_notes: true
+        # generate_release_notes: true
