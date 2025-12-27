@@ -5,6 +5,7 @@ from include.ui.controls.dialogs.explorer import (
     CreateDirectoryDialog,
     OpenDirectoryDialog,
 )
+from include.ui.controls.dialogs.search import SearchDialog
 from include.ui.util.file_controls import get_directory
 from include.controllers.explorer.bar import FileSortBarController
 from include.util.locale import get_translation
@@ -42,6 +43,11 @@ class ExplorerTopBar(ft.Row):
                             ft.Icons.REFRESH,
                             on_click=self.on_refresh_button_click,
                         ),
+                        ft.IconButton(
+                            ft.Icons.SEARCH,
+                            on_click=self.on_search_button_click,
+                            tooltip=_("Search"),
+                        ),
                     ],
                     alignment=ft.MainAxisAlignment.START,
                     spacing=10,
@@ -52,7 +58,7 @@ class ExplorerTopBar(ft.Row):
                             ft.Icons.FOLDER_OPEN_OUTLINED,
                             on_click=self.on_open_folder_button_click,
                         )
-                    ]
+                    ],
                 ),
             ],
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
@@ -94,6 +100,10 @@ class ExplorerTopBar(ft.Row):
 
     async def on_open_folder_button_click(self, event: ft.Event[ft.IconButton]):
         self.page.show_dialog(OpenDirectoryDialog(self.parent_view))
+
+    async def on_search_button_click(self, event: ft.Event[ft.IconButton]):
+        """Handle search button click."""
+        self.page.show_dialog(SearchDialog(self.parent_view))
 
 
 class FileSortBar(ft.Row):
@@ -140,9 +150,7 @@ class FileSortBar(ft.Row):
             self.order_button,
         ]
 
-    async def sort_dropdown_on_select(
-        self, event: ft.Event[ft.Dropdown]
-    ) -> None:
+    async def sort_dropdown_on_select(self, event: ft.Event[ft.Dropdown]) -> None:
         self.page.run_task(self.controller.apply_sorting)
 
     async def order_button_on_click(self, event: ft.Event[ft.IconButton]) -> None:
