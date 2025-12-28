@@ -90,10 +90,14 @@ class ViewAccessEntriesDialog(AlertDialog):
                     label=ft.Text(_("End Time")),
                     size=fdt.DataColumnSize.M,
                 ),
+                fdt.DataColumn2(
+                    label=ft.Text(_("Actions")),
+                    size=fdt.DataColumnSize.S,
+                ),
             ],
             horizontal_margin=12,
             data_row_height=60,
-            min_width=800,
+            min_width=900,
         )
 
         # Refresh button
@@ -151,6 +155,11 @@ class ViewAccessEntriesDialog(AlertDialog):
         self.close_button.disabled = True
         self.progress_ring.visible = True
         self.modal = True
+        # Disable all delete buttons in the table
+        for row in self.access_entries_table.rows:
+            for cell in row.cells:
+                if cell.content and isinstance(cell.content, ft.IconButton):
+                    cell.content.disabled = True
         self.update()
 
     def enable_interactions(self):
@@ -159,6 +168,11 @@ class ViewAccessEntriesDialog(AlertDialog):
         self.close_button.disabled = False
         self.progress_ring.visible = False
         self.modal = False
+        # Re-enable all delete buttons in the table
+        for row in self.access_entries_table.rows:
+            for cell in row.cells:
+                if cell.content and isinstance(cell.content, ft.IconButton):
+                    cell.content.disabled = False
         self.update()
 
     def update_table(self, entries: list[dict]):
@@ -185,6 +199,16 @@ class ViewAccessEntriesDialog(AlertDialog):
             else:
                 end_time_str = _("No expiry")
 
+            # Create delete button for this entry
+            entry_id = entry.get("id")
+            delete_button = ft.IconButton(
+                icon=ft.Icons.DELETE,
+                icon_color=ft.Colors.RED_400,
+                tooltip=_("Revoke"),
+                data=entry_id,
+                on_click=self.delete_button_click,
+            )
+
             self.access_entries_table.rows.append(
                 fdt.DataRow2(
                     cells=[
@@ -196,6 +220,7 @@ class ViewAccessEntriesDialog(AlertDialog):
                         ft.DataCell(ft.Text(entry.get("access_type", ""))),
                         ft.DataCell(ft.Text(start_time_str)),
                         ft.DataCell(ft.Text(end_time_str)),
+                        ft.DataCell(delete_button),
                     ]
                 )
             )
@@ -206,6 +231,13 @@ class ViewAccessEntriesDialog(AlertDialog):
         """Handle refresh button click."""
         self.disable_interactions()
         self.page.run_task(self.controller.action_fetch_access_entries)
+
+    async def delete_button_click(self, event: ft.Event[ft.IconButton]):
+        """Handle delete button click."""
+        entry_id = event.control.data
+        if entry_id is not None:
+            self.disable_interactions()
+            self.page.run_task(self.controller.action_revoke_access, entry_id)
 
     async def close_button_click(self, event: ft.Event[ft.TextButton]):
         """Handle close button click."""
