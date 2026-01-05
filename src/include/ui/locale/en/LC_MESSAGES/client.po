@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cfms-client-next 0.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-28 18:55+0800\n"
+"POT-Creation-Date: 2026-01-05 12:33+0800\n"
 "PO-Revision-Date: 2025-10-18 14:19\n"
 "Last-Translator: Auto Generated\n"
 "Language-Team: English\n"
@@ -37,15 +37,13 @@ msgid "You are connecting to a server using a higher version protocol"
 msgstr "You are connecting to a server using a higher version protocol"
 
 #: .\include\controllers\connect.py:65
-msgid ""
-"(Protocol version {server_protocol_version}), please update the client."
+msgid "(Protocol version {server_protocol_version}), please update the client."
 msgstr ""
 "(Protocol version {server_protocol_version}), please update the client."
 
 #: .\include\controllers\connect.py:97
 msgid "Authorization failed, you will not be able to download files normally."
-msgstr ""
-"Authorization failed, you will not be able to download files normally."
+msgstr "Authorization failed, you will not be able to download files normally."
 
 #: .\include\controllers\connect.py:101
 msgid "Please allow the app to access your files in settings."
@@ -302,15 +300,15 @@ msgstr "Login failed: ({code}) {message}"
 msgid "Check for Updates"
 msgstr "Check for Updates"
 
-#: .\include\ui\controls\components\about.py:53
+#: .\include\ui\controls\components\about.py:55
 msgid "Alpha Test"
 msgstr "Alpha Test"
 
-#: .\include\ui\controls\components\about.py:54
+#: .\include\ui\controls\components\about.py:56
 msgid "This software is currently in alpha testing phase."
 msgstr "This software is currently in alpha testing phase."
 
-#: .\include\ui\controls\components\about.py:56
+#: .\include\ui\controls\components\about.py:58
 msgid ""
 "Software at this stage may receive intensive updates, but many problems may "
 "also appear and disappear in a short period of time."
@@ -318,7 +316,7 @@ msgstr ""
 "Software at this stage may receive intensive updates, but many problems may "
 "also appear and disappear in a short period of time."
 
-#: .\include\ui\controls\components\about.py:63
+#: .\include\ui\controls\components\about.py:65
 msgid ""
 "Any issues encountered should be reported in time, but may take a long time "
 "to get resolved."
@@ -326,15 +324,15 @@ msgstr ""
 "Any issues encountered should be reported in time, but may take a long time "
 "to get resolved."
 
-#: .\include\ui\controls\components\about.py:97
+#: .\include\ui\controls\components\about.py:99
 msgid "Beta Test"
 msgstr "Beta Test"
 
-#: .\include\ui\controls\components\about.py:98
+#: .\include\ui\controls\components\about.py:100
 msgid "This software is currently in beta testing phase."
 msgstr "This software is currently in beta testing phase."
 
-#: .\include\ui\controls\components\about.py:100
+#: .\include\ui\controls\components\about.py:102
 msgid ""
 "Although the application at this stage is still in testing, it has become "
 "relatively stable and is more suitable for general users to try. After one "
@@ -414,6 +412,7 @@ msgid "More"
 msgstr "More"
 
 #: .\include\ui\controls\components\homepage.py:41
+#: .\include\ui\controls\components\visualmgr\editor.py:611
 #: .\include\ui\controls\dialogs\authorize.py:128
 msgid "Manage"
 msgstr "Manage"
@@ -424,11 +423,11 @@ msgstr "Welcome to Confidential Document Management System (CFMS)"
 
 #: .\include\ui\controls\components\homepage.py:104
 msgid ""
-"The sunset glow and the lone wild duck fly together, autumn water shares the"
-" same color with the vast sky."
+"The sunset glow and the lone wild duck fly together, autumn water shares the "
+"same color with the vast sky."
 msgstr ""
-"The sunset glow and the lone wild duck fly together, autumn water shares the"
-" same color with the vast sky."
+"The sunset glow and the lone wild duck fly together, autumn water shares the "
+"same color with the vast sky."
 
 #: .\include\ui\controls\components\homepage.py:140
 msgid "ID: {id} (No longer exists)"
@@ -460,13 +459,11 @@ msgstr "Rule Content"
 
 #: .\include\ui\controls\components\rulemanager.py:44
 msgid ""
-"For rule format documentation, please refer to [CFMS Server "
-"Documentation](https://cfms-server-doc.readthedocs.io/zh-"
-"cn/latest/access_control.html)."
+"For rule format documentation, please refer to [CFMS Server Documentation]"
+"(https://cfms-server-doc.readthedocs.io/zh-cn/latest/access_control.html)."
 msgstr ""
-"For rule format documentation, please refer to [CFMS Server "
-"Documentation](https://cfms-server-doc.readthedocs.io/zh-"
-"cn/latest/access_control.html)."
+"For rule format documentation, please refer to [CFMS Server Documentation]"
+"(https://cfms-server-doc.readthedocs.io/zh-cn/latest/access_control.html)."
 
 #: .\include\ui\controls\components\rulemanager.py:52
 #: .\include\ui\controls\dialogs\admin\accounts.py:79
@@ -524,88 +521,101 @@ msgstr "Cancel"
 msgid "The submitted rule is not valid JSON"
 msgstr "The submitted rule is not valid JSON"
 
-#: .\include\ui\controls\components\visualmgr\bars.py:95
+#: .\include\ui\controls\components\visualmgr\bars.py:99
 msgid "Add..."
 msgstr "Add..."
 
-#: .\include\ui\controls\components\visualmgr\columns.py:31
+#: .\include\ui\controls\components\visualmgr\columns.py:30
 msgid "Add Rule Group"
 msgstr "Add Rule Group"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:61
+#: .\include\ui\controls\components\visualmgr\editor.py:67
 #: .\include\ui\controls\views\tasks.py:370
 msgid "All"
 msgstr "All"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:66
+#: .\include\ui\controls\components\visualmgr\editor.py:72
 msgid "Any"
 msgstr "Any"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:70
-#: .\include\ui\controls\components\visualmgr\editor.py:155
-#: .\include\ui\controls\components\visualmgr\editor.py:358
+#: .\include\ui\controls\components\visualmgr\editor.py:76
+#: .\include\ui\controls\components\visualmgr\editor.py:162
+#: .\include\ui\controls\components\visualmgr\editor.py:390
 msgid "Match Mode"
 msgstr "Match Mode"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:96
+#: .\include\ui\controls\components\visualmgr\editor.py:102
 #: .\include\ui\models\manage.py:28
 msgid "Groups"
 msgstr "Groups"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:98
+#: .\include\ui\controls\components\visualmgr\editor.py:104
 msgid "Rights"
 msgstr "Rights"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:146
-#: .\include\ui\controls\components\visualmgr\editor.py:258
-#: .\include\ui\controls\components\visualmgr\editor.py:349
-#: .\include\ui\controls\components\visualmgr\editor.py:425
+#: .\include\ui\controls\components\visualmgr\editor.py:153
+#: .\include\ui\controls\components\visualmgr\editor.py:268
+#: .\include\ui\controls\components\visualmgr\editor.py:381
+#: .\include\ui\controls\components\visualmgr\editor.py:457
 msgid "All (AND)"
 msgstr "All (AND)"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:151
-#: .\include\ui\controls\components\visualmgr\editor.py:258
-#: .\include\ui\controls\components\visualmgr\editor.py:354
-#: .\include\ui\controls\components\visualmgr\editor.py:425
+#: .\include\ui\controls\components\visualmgr\editor.py:158
+#: .\include\ui\controls\components\visualmgr\editor.py:268
+#: .\include\ui\controls\components\visualmgr\editor.py:386
+#: .\include\ui\controls\components\visualmgr\editor.py:457
 msgid "Any (OR)"
 msgstr "Any (OR)"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:165
+#: .\include\ui\controls\components\visualmgr\editor.py:172
 msgid "Delete Subgroup"
 msgstr "Delete Subgroup"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:222
+#: .\include\ui\controls\components\visualmgr\editor.py:229
 msgid "Add Rights Section"
 msgstr "Add Rights Section"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:230
+#: .\include\ui\controls\components\visualmgr\editor.py:239
 msgid "Add Groups Section"
 msgstr "Add Groups Section"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:246
-#: .\include\ui\controls\components\visualmgr\editor.py:309
+#: .\include\ui\controls\components\visualmgr\editor.py:256
+#: .\include\ui\controls\components\visualmgr\editor.py:338
 msgid "Subgroup #{index}"
 msgstr "Subgroup #{index}"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:249
-#: .\include\ui\controls\components\visualmgr\editor.py:262
-#: .\include\ui\controls\components\visualmgr\editor.py:413
-#: .\include\ui\controls\components\visualmgr\editor.py:429
+#: .\include\ui\controls\components\visualmgr\editor.py:259
+#: .\include\ui\controls\components\visualmgr\editor.py:272
+#: .\include\ui\controls\components\visualmgr\editor.py:445
+#: .\include\ui\controls\components\visualmgr\editor.py:461
 msgid "Mode: {mode}"
 msgstr "Mode: {mode}"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:368
+#: .\include\ui\controls\components\visualmgr\editor.py:400
 msgid "Delete Rule Group"
 msgstr "Delete Rule Group"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:410
-#: .\include\ui\controls\components\visualmgr\editor.py:445
+#: .\include\ui\controls\components\visualmgr\editor.py:442
+#: .\include\ui\controls\components\visualmgr\editor.py:477
 msgid "Rule Group #{index}"
 msgstr "Rule Group #{index}"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:477
-msgid "No rules defined for this access type."
-msgstr "No rules defined for this access type."
+#: .\include\ui\controls\components\visualmgr\editor.py:596
+#: .\include\ui\controls\dialogs\authorize.py:113
+msgid "Read"
+msgstr "Read"
+
+#: .\include\ui\controls\components\visualmgr\editor.py:601
+#: .\include\ui\controls\dialogs\authorize.py:118
+msgid "Write"
+msgstr "Write"
+
+#: .\include\ui\controls\components\visualmgr\editor.py:606
+#: .\include\ui\controls\contextmenus\explorer.py:74
+#: .\include\ui\controls\contextmenus\explorer.py:182
+#: .\include\ui\controls\dialogs\authorize.py:123
+msgid "Move"
+msgstr "Move"
 
 #: .\include\ui\controls\components\wizards\welcome\intro1.py:14
 msgid "Welcome to the CFMS Client Application"
@@ -634,12 +644,6 @@ msgstr "Delete"
 #: .\include\ui\controls\dialogs\admin\accounts.py:225
 msgid "Rename"
 msgstr "Rename"
-
-#: .\include\ui\controls\contextmenus\explorer.py:74
-#: .\include\ui\controls\contextmenus\explorer.py:182
-#: .\include\ui\controls\dialogs\authorize.py:123
-msgid "Move"
-msgstr "Move"
 
 #: .\include\ui\controls\contextmenus\explorer.py:80
 #: .\include\ui\controls\contextmenus\explorer.py:188
@@ -838,14 +842,6 @@ msgstr "User"
 #: .\include\ui\controls\dialogs\authorize.py:94
 msgid "Group"
 msgstr "Group"
-
-#: .\include\ui\controls\dialogs\authorize.py:113
-msgid "Read"
-msgstr "Read"
-
-#: .\include\ui\controls\dialogs\authorize.py:118
-msgid "Write"
-msgstr "Write"
 
 #: .\include\ui\controls\dialogs\authorize.py:138
 msgid "Date Range"
@@ -1318,8 +1314,7 @@ msgstr "Invalid recovery code"
 msgid "Invalid verification code"
 msgstr "Invalid verification code"
 
-#: .\include\ui\controls\dialogs\upgrade.py:33
-#: .\include\ui\models\about.py:107
+#: .\include\ui\controls\dialogs\upgrade.py:33 .\include\ui\models\about.py:113
 msgid "Update"
 msgstr "Update"
 
@@ -1654,65 +1649,65 @@ msgid "Debugging..."
 msgstr "Debugging..."
 
 #: .\include\ui\models\about.py:68
-msgid "Version: {APP_VERSION}"
+#, fuzzy
+msgid "Version: {BUILD_VERSION}"
 msgstr "Version: {APP_VERSION}"
 
-#: .\include\ui\models\about.py:73
+#: .\include\ui\models\about.py:79
 msgid "Copyright (C) 2025 Creeper Team"
 msgstr "Copyright (C) 2025 Creeper Team"
 
-#: .\include\ui\models\about.py:78
+#: .\include\ui\models\about.py:84
 msgid "Licensed under Apache License Version 2.0."
 msgstr "Licensed under Apache License Version 2.0."
 
-#: .\include\ui\models\about.py:83
+#: .\include\ui\models\about.py:89
 msgid "View changelogs"
 msgstr "View changelogs"
 
-#: .\include\ui\models\about.py:99
+#: .\include\ui\models\about.py:105
 msgid "Checking for updates"
 msgstr "Checking for updates"
 
-#: .\include\ui\models\about.py:101
+#: .\include\ui\models\about.py:107
 msgid "Cannot update: Cannot check for updates when running from source code."
-msgstr ""
-"Cannot update: Cannot check for updates when running from source code."
+msgstr "Cannot update: Cannot check for updates when running from source code."
 
-#: .\include\ui\models\about.py:121
+#: .\include\ui\models\about.py:127
 msgid "Software Update"
 msgstr "Software Update"
 
-#: .\include\ui\models\about.py:200
+#: .\include\ui\models\about.py:206
 msgid "Connection failed: {strerror}"
 msgstr "Connection failed: {strerror}"
 
-#: .\include\ui\models\about.py:205
+#: .\include\ui\models\about.py:211
 msgid "Failed to retrieve version information"
 msgstr "Failed to retrieve version information"
 
-#: .\include\ui\models\about.py:213
+#: .\include\ui\models\about.py:219
 msgid "Current version: {APP_VERSION}"
 msgstr "Current version: {APP_VERSION}"
 
-#: .\include\ui\models\about.py:218
+#: .\include\ui\models\about.py:224
 msgid "Latest version: {latest_version}"
 msgstr "Latest version: {latest_version}"
 
-#: .\include\ui\models\about.py:225
+#: .\include\ui\models\about.py:231
 msgid "Update Notes:"
 msgstr "Update Notes:"
 
-#: .\include\ui\models\about.py:238
+#: .\include\ui\models\about.py:244
 msgid "Already on the latest version"
 msgstr "Already on the latest version"
 
-#: .\include\ui\models\about.py:252
+#: .\include\ui\models\about.py:258
 msgid ""
 "No package found for the corresponding architecture in the latest version"
 msgstr ""
 "No package found for the corresponding architecture in the latest version"
 
-#: .\include\ui\models\about.py:257
+#: .\include\ui\models\about.py:263
 msgid "No update found: Unsupported architecture"
 msgstr "No update found: Unsupported architecture"
 
@@ -1883,81 +1878,3 @@ msgid ""
 "Seeking each other on dream paths, amid flying rain and falling flowers."
 msgstr ""
 "Seeking each other on dream paths, amid flying rain and falling flowers."
-
-#~ msgid "All of the following"
-#~ msgstr "All of the following"
-
-#~ msgid "Any of the following"
-#~ msgstr "Any of the following"
-
-#~ msgid "#{index}"
-#~ msgstr "#{index}"
-
-#~ msgid "ID: {file_id} (No longer exists)"
-#~ msgstr "ID: {file_id} (No longer exists)"
-
-#~ msgid "Delete this user"
-#~ msgstr "Delete this user"
-
-#~ msgid "Change user's nickname"
-#~ msgstr "Change user's nickname"
-
-#~ msgid "Change user's group membership"
-#~ msgstr "Change user's group membership"
-
-#~ msgid "View user details"
-#~ msgstr "View user details"
-
-#~ msgid "Manage Users"
-#~ msgstr "Manage Users"
-
-#~ msgid "Change display name for user group"
-#~ msgstr "Change display name for user group"
-
-#~ msgid "Change permissions for user group"
-#~ msgstr "Change permissions for user group"
-
-#~ msgid "Manage User Groups"
-#~ msgstr "Manage User Groups"
-
-#~ msgid "Manage Documents"
-#~ msgstr "Manage Documents"
-
-#~ msgid "Delete this file"
-#~ msgstr "Delete this file"
-
-#~ msgid "Rename this file"
-#~ msgstr "Rename this file"
-
-#~ msgid "Grant temporary access to this file"
-#~ msgstr "Grant temporary access to this file"
-
-#~ msgid "Manage Directories"
-#~ msgstr "Manage Directories"
-
-#~ msgid "Delete this directory"
-#~ msgstr "Delete this directory"
-
-#~ msgid "Rename this directory"
-#~ msgstr "Rename this directory"
-
-#~ msgid "Grant temporary access to this directory"
-#~ msgstr "Grant temporary access to this directory"
-
-#~ msgid "Change access rules for this directory"
-#~ msgstr "Change access rules for this directory"
-
-#~ msgid "View directory details"
-#~ msgstr "View directory details"
-
-#~ msgid "Uploading file [{current}/{total}]"
-#~ msgstr "Uploading file [{current}/{total}]"
-
-#~ msgid "Created time: {created_time}"
-#~ msgstr "Created time: {created_time}"
-
-#~ msgid "Grant Access"
-#~ msgstr "Grant Access"
-
-#~ msgid "Grant access to other users"
-#~ msgstr "Grant access to other users"

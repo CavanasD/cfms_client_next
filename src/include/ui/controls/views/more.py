@@ -1,12 +1,10 @@
 from typing import TYPE_CHECKING
-import gettext
-
 import flet as ft
 
 from include.classes.config import AppShared
-from include.constants import LOCALE_PATH
+from include.ui.controls.components.account import AccountBadge
 from include.ui.controls.dialogs.admin.accounts import PasswdUserDialog
-from include.ui.util.quotes import get_quote, refresh_quote
+from include.ui.util.quotes import refresh_quote
 
 if TYPE_CHECKING:
     from include.ui.models.home import HomeModel
@@ -30,29 +28,11 @@ class MoreView(ft.Container):
 
         self.app_shared = AppShared()
 
-        self.moreview_avatar = ft.CircleAvatar(
-            content=ft.Text(),
-        )
-        self.moreview_username_display = ft.Text(color=ft.Colors.WHITE)
-
         refresh_quote()
         self.content = ft.Column(
             controls=[
                 # Avatar frame
-                ft.Row(
-                    controls=[
-                        self.moreview_avatar,
-                        ft.Column(
-                            controls=[
-                                self.moreview_username_display,
-                                ft.Text(get_quote()),
-                            ],
-                            spacing=0,
-                            expand=True,
-                            expand_loose=True,
-                        ),
-                    ]
-                ),
+                AccountBadge(),
                 ft.Divider(),
                 # Menu entries below the avatar
                 ft.ListView(
@@ -78,19 +58,7 @@ class MoreView(ft.Container):
             spacing=20,
             alignment=ft.MainAxisAlignment.START,
         )
-
-    def did_mount(self):
-        super().did_mount()
-        if self.app_shared.nickname:
-            self.moreview_username_display.value = self.app_shared.nickname
-        else:
-            self.moreview_username_display.value = (
-                self.app_shared.get_not_none_attribute("username")
-            )
-        self.moreview_avatar.content = ft.Text(
-            self.moreview_username_display.value[0].upper()
-        )
-
+        
     async def passwd_listtile_click(self, event: ft.Event[ft.ListTile]):
         self.page.show_dialog(
             PasswdUserDialog(self.app_shared.get_not_none_attribute("username"))

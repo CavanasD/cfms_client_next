@@ -28,7 +28,9 @@ class VersionTypeBlock(ft.Container):
             ChannelType.STABLE: None,
         }
 
-        self.content = __channel_mappings[CHANNEL]()
+        self.content = (
+            __channel_mappings[CHANNEL]() if CHANNEL != ChannelType.STABLE else None
+        )
 
 
 class AlphaChannelInfoRow(ft.Row):

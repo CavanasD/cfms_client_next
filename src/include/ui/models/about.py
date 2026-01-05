@@ -5,7 +5,7 @@ from flet_model import Model, Router, route
 import flet as ft
 import requests
 
-from include.constants import APP_VERSION, BUILD_VERSION
+from include.constants import APP_VERSION, BUILD_VERSION, MODIFIED
 from include.ui.controls.components.about import VersionTypeBlock
 from include.ui.controls.dialogs.upgrade import UpgradeDialog
 from include.ui.controls.dialogs.whatsnew import ChangelogHistoryDialog
@@ -65,7 +65,15 @@ class AboutModel(Model):
                         text_align=ft.TextAlign.CENTER,
                     ),
                     ft.Text(
-                        _("Version: {APP_VERSION}").format(APP_VERSION=APP_VERSION),
+                        _("Version: {BUILD_VERSION}").format(
+                            BUILD_VERSION=BUILD_VERSION[1:]
+                        ),
+                        spans=[
+                            ft.TextSpan(
+                                " ({MODIFIED})".format(MODIFIED=MODIFIED),
+                                style=ft.TextStyle(color=ft.Colors.GREY),
+                            ),
+                        ],
                         size=16,
                         text_align=ft.TextAlign.LEFT,
                     ),

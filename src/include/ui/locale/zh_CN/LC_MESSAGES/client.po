@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cfms-client-next 0.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-28 18:55+0800\n"
+"POT-Creation-Date: 2026-01-05 12:33+0800\n"
 "PO-Revision-Date: 2025-10-18 14:19\n"
 "Last-Translator: Auto Generated\n"
 "Language-Team: Chinese (Simplified)\n"
@@ -37,8 +37,7 @@ msgid "You are connecting to a server using a higher version protocol"
 msgstr "您正在连接到一个使用更高版本协议的服务器"
 
 #: .\include\controllers\connect.py:65
-msgid ""
-"(Protocol version {server_protocol_version}), please update the client."
+msgid "(Protocol version {server_protocol_version}), please update the client."
 msgstr "（协议版本 {server_protocol_version}），请更新客户端。"
 
 #: .\include\controllers\connect.py:97
@@ -300,40 +299,42 @@ msgstr "登录失败：({code}) {message}"
 msgid "Check for Updates"
 msgstr "检查更新"
 
-#: .\include\ui\controls\components\about.py:53
+#: .\include\ui\controls\components\about.py:55
 msgid "Alpha Test"
 msgstr "内测版本"
 
-#: .\include\ui\controls\components\about.py:54
+#: .\include\ui\controls\components\about.py:56
 msgid "This software is currently in alpha testing phase."
 msgstr "本软件目前处于内测阶段。"
 
-#: .\include\ui\controls\components\about.py:56
+#: .\include\ui\controls\components\about.py:58
 msgid ""
 "Software at this stage may receive intensive updates, but many problems may "
 "also appear and disappear in a short period of time."
 msgstr "此阶段的软件可能会收到密集更新，但许多问题也可能在短时间内出现和消失。"
 
-#: .\include\ui\controls\components\about.py:63
+#: .\include\ui\controls\components\about.py:65
 msgid ""
 "Any issues encountered should be reported in time, but may take a long time "
 "to get resolved."
 msgstr "遇到的任何问题都应及时报告，但可能需要很长时间才能解决。"
 
-#: .\include\ui\controls\components\about.py:97
+#: .\include\ui\controls\components\about.py:99
 msgid "Beta Test"
 msgstr "公测版本"
 
-#: .\include\ui\controls\components\about.py:98
+#: .\include\ui\controls\components\about.py:100
 msgid "This software is currently in beta testing phase."
 msgstr "本软件目前处于公测阶段。"
 
-#: .\include\ui\controls\components\about.py:100
+#: .\include\ui\controls\components\about.py:102
 msgid ""
 "Although the application at this stage is still in testing, it has become "
 "relatively stable and is more suitable for general users to try. After one "
 "or more versions are released, the application may enter a stable version."
-msgstr "虽然此阶段的应用程序仍在测试中，但已经变得相对稳定，更适合普通用户尝试。在发布一个或多个版本后，应用程序可能会进入稳定版本。"
+msgstr ""
+"虽然此阶段的应用程序仍在测试中，但已经变得相对稳定，更适合普通用户尝试。在发"
+"布一个或多个版本后，应用程序可能会进入稳定版本。"
 
 #: .\include\ui\controls\components\explorer\bar.py:49
 #: .\include\ui\controls\dialogs\authorize.py:74
@@ -405,6 +406,7 @@ msgid "More"
 msgstr "更多"
 
 #: .\include\ui\controls\components\homepage.py:41
+#: .\include\ui\controls\components\visualmgr\editor.py:611
 #: .\include\ui\controls\dialogs\authorize.py:128
 msgid "Manage"
 msgstr "管理"
@@ -415,8 +417,8 @@ msgstr "欢迎访问 保密文档管理系统（CFMS）"
 
 #: .\include\ui\controls\components\homepage.py:104
 msgid ""
-"The sunset glow and the lone wild duck fly together, autumn water shares the"
-" same color with the vast sky."
+"The sunset glow and the lone wild duck fly together, autumn water shares the "
+"same color with the vast sky."
 msgstr "落霞与孤鹜齐飞，秋水共长天一色。"
 
 #: .\include\ui\controls\components\homepage.py:140
@@ -449,12 +451,11 @@ msgstr "规则内容"
 
 #: .\include\ui\controls\components\rulemanager.py:44
 msgid ""
-"For rule format documentation, please refer to [CFMS Server "
-"Documentation](https://cfms-server-doc.readthedocs.io/zh-"
-"cn/latest/access_control.html)."
+"For rule format documentation, please refer to [CFMS Server Documentation]"
+"(https://cfms-server-doc.readthedocs.io/zh-cn/latest/access_control.html)."
 msgstr ""
-"有关规则格式文档，请参阅 [CFMS 服务器文档](https://cfms-server-doc.readthedocs.io/zh-"
-"cn/latest/access_control.html)。"
+"有关规则格式文档，请参阅 [CFMS 服务器文档](https://cfms-server-"
+"doc.readthedocs.io/zh-cn/latest/access_control.html)。"
 
 #: .\include\ui\controls\components\rulemanager.py:52
 #: .\include\ui\controls\dialogs\admin\accounts.py:79
@@ -512,88 +513,101 @@ msgstr "取消"
 msgid "The submitted rule is not valid JSON"
 msgstr "提交的规则不是有效的JSON"
 
-#: .\include\ui\controls\components\visualmgr\bars.py:95
+#: .\include\ui\controls\components\visualmgr\bars.py:99
 msgid "Add..."
 msgstr "添加..."
 
-#: .\include\ui\controls\components\visualmgr\columns.py:31
+#: .\include\ui\controls\components\visualmgr\columns.py:30
 msgid "Add Rule Group"
 msgstr "添加规则组"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:61
+#: .\include\ui\controls\components\visualmgr\editor.py:67
 #: .\include\ui\controls\views\tasks.py:370
 msgid "All"
 msgstr "全部"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:66
+#: .\include\ui\controls\components\visualmgr\editor.py:72
 msgid "Any"
 msgstr "任意"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:70
-#: .\include\ui\controls\components\visualmgr\editor.py:155
-#: .\include\ui\controls\components\visualmgr\editor.py:358
+#: .\include\ui\controls\components\visualmgr\editor.py:76
+#: .\include\ui\controls\components\visualmgr\editor.py:162
+#: .\include\ui\controls\components\visualmgr\editor.py:390
 msgid "Match Mode"
 msgstr "匹配模式"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:96
+#: .\include\ui\controls\components\visualmgr\editor.py:102
 #: .\include\ui\models\manage.py:28
 msgid "Groups"
 msgstr "用户组"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:98
+#: .\include\ui\controls\components\visualmgr\editor.py:104
 msgid "Rights"
 msgstr "权限"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:146
-#: .\include\ui\controls\components\visualmgr\editor.py:258
-#: .\include\ui\controls\components\visualmgr\editor.py:349
-#: .\include\ui\controls\components\visualmgr\editor.py:425
+#: .\include\ui\controls\components\visualmgr\editor.py:153
+#: .\include\ui\controls\components\visualmgr\editor.py:268
+#: .\include\ui\controls\components\visualmgr\editor.py:381
+#: .\include\ui\controls\components\visualmgr\editor.py:457
 msgid "All (AND)"
 msgstr "全部（与）"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:151
-#: .\include\ui\controls\components\visualmgr\editor.py:258
-#: .\include\ui\controls\components\visualmgr\editor.py:354
-#: .\include\ui\controls\components\visualmgr\editor.py:425
+#: .\include\ui\controls\components\visualmgr\editor.py:158
+#: .\include\ui\controls\components\visualmgr\editor.py:268
+#: .\include\ui\controls\components\visualmgr\editor.py:386
+#: .\include\ui\controls\components\visualmgr\editor.py:457
 msgid "Any (OR)"
 msgstr "任意（或）"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:165
+#: .\include\ui\controls\components\visualmgr\editor.py:172
 msgid "Delete Subgroup"
 msgstr "删除子组"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:222
+#: .\include\ui\controls\components\visualmgr\editor.py:229
 msgid "Add Rights Section"
 msgstr "添加权限部分"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:230
+#: .\include\ui\controls\components\visualmgr\editor.py:239
 msgid "Add Groups Section"
 msgstr "添加组部分"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:246
-#: .\include\ui\controls\components\visualmgr\editor.py:309
+#: .\include\ui\controls\components\visualmgr\editor.py:256
+#: .\include\ui\controls\components\visualmgr\editor.py:338
 msgid "Subgroup #{index}"
 msgstr "子组 #{index}"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:249
-#: .\include\ui\controls\components\visualmgr\editor.py:262
-#: .\include\ui\controls\components\visualmgr\editor.py:413
-#: .\include\ui\controls\components\visualmgr\editor.py:429
+#: .\include\ui\controls\components\visualmgr\editor.py:259
+#: .\include\ui\controls\components\visualmgr\editor.py:272
+#: .\include\ui\controls\components\visualmgr\editor.py:445
+#: .\include\ui\controls\components\visualmgr\editor.py:461
 msgid "Mode: {mode}"
 msgstr "模式：{mode}"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:368
+#: .\include\ui\controls\components\visualmgr\editor.py:400
 msgid "Delete Rule Group"
 msgstr "删除规则组"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:410
-#: .\include\ui\controls\components\visualmgr\editor.py:445
+#: .\include\ui\controls\components\visualmgr\editor.py:442
+#: .\include\ui\controls\components\visualmgr\editor.py:477
 msgid "Rule Group #{index}"
 msgstr "规则组 #{index}"
 
-#: .\include\ui\controls\components\visualmgr\editor.py:477
-msgid "No rules defined for this access type."
-msgstr "此访问类型未定义规则。"
+#: .\include\ui\controls\components\visualmgr\editor.py:596
+#: .\include\ui\controls\dialogs\authorize.py:113
+msgid "Read"
+msgstr "读取"
+
+#: .\include\ui\controls\components\visualmgr\editor.py:601
+#: .\include\ui\controls\dialogs\authorize.py:118
+msgid "Write"
+msgstr "写入"
+
+#: .\include\ui\controls\components\visualmgr\editor.py:606
+#: .\include\ui\controls\contextmenus\explorer.py:74
+#: .\include\ui\controls\contextmenus\explorer.py:182
+#: .\include\ui\controls\dialogs\authorize.py:123
+msgid "Move"
+msgstr "移动"
 
 #: .\include\ui\controls\components\wizards\welcome\intro1.py:14
 msgid "Welcome to the CFMS Client Application"
@@ -604,7 +618,9 @@ msgid ""
 "This is a management system specifically designed for the secure "
 "transmission and confidentiality of confidential information over the "
 "internet, aiming to ensure process compliance through a procedural approach."
-msgstr "这是一个专为互联网上机密信息的安全传输和保密而设计的管理系统，旨在通过程序化方法确保流程合规性。"
+msgstr ""
+"这是一个专为互联网上机密信息的安全传输和保密而设计的管理系统，旨在通过程序化"
+"方法确保流程合规性。"
 
 #: .\include\ui\controls\contextmenus\explorer.py:64
 #: .\include\ui\controls\contextmenus\explorer.py:172
@@ -619,12 +635,6 @@ msgstr "删除"
 #: .\include\ui\controls\dialogs\admin\accounts.py:225
 msgid "Rename"
 msgstr "重命名"
-
-#: .\include\ui\controls\contextmenus\explorer.py:74
-#: .\include\ui\controls\contextmenus\explorer.py:182
-#: .\include\ui\controls\dialogs\authorize.py:123
-msgid "Move"
-msgstr "移动"
 
 #: .\include\ui\controls\contextmenus\explorer.py:80
 #: .\include\ui\controls\contextmenus\explorer.py:188
@@ -824,14 +834,6 @@ msgstr "用户"
 msgid "Group"
 msgstr "组"
 
-#: .\include\ui\controls\dialogs\authorize.py:113
-msgid "Read"
-msgstr "读取"
-
-#: .\include\ui\controls\dialogs\authorize.py:118
-msgid "Write"
-msgstr "写入"
-
 #: .\include\ui\controls\dialogs\authorize.py:138
 msgid "Date Range"
 msgstr "日期范围"
@@ -902,7 +904,9 @@ msgstr "双因素认证已成功启用！"
 msgid ""
 "Save these backup codes in a secure location. You can use them to access "
 "your account if you lose access to your authenticator app."
-msgstr "请将这些备份代码保存在安全的位置。如果您无法访问验证器应用，可以使用这些代码访问您的账户。"
+msgstr ""
+"请将这些备份代码保存在安全的位置。如果您无法访问验证器应用，可以使用这些代码"
+"访问您的账户。"
 
 #: .\include\ui\controls\dialogs\backup_codes.py:74
 msgid "Each code can only be used once."
@@ -1231,7 +1235,8 @@ msgid ""
 "Scan this QR code with your authenticator app (e.g., Google Authenticator, "
 "Authy, Microsoft Authenticator)"
 msgstr ""
-"使用您的验证器应用扫描此二维码（例如：Google Authenticator、Authy、Microsoft Authenticator）"
+"使用您的验证器应用扫描此二维码（例如：Google Authenticator、Authy、Microsoft "
+"Authenticator）"
 
 #: .\include\ui\controls\dialogs\twofa_setup.py:110
 msgid "Or enter this key manually:"
@@ -1300,8 +1305,7 @@ msgstr "无效的恢复代码"
 msgid "Invalid verification code"
 msgstr "验证码无效"
 
-#: .\include\ui\controls\dialogs\upgrade.py:33
-#: .\include\ui\models\about.py:107
+#: .\include\ui\controls\dialogs\upgrade.py:33 .\include\ui\models\about.py:113
 msgid "Update"
 msgstr "更新"
 
@@ -1634,63 +1638,63 @@ msgid "Debugging..."
 msgstr "调试中..."
 
 #: .\include\ui\models\about.py:68
-msgid "Version: {APP_VERSION}"
-msgstr "版本：{APP_VERSION}"
+msgid "Version: {BUILD_VERSION}"
+msgstr "版本：{BUILD_VERSION}"
 
-#: .\include\ui\models\about.py:73
+#: .\include\ui\models\about.py:79
 msgid "Copyright (C) 2025 Creeper Team"
 msgstr "版权所有 (C) 2025 Creeper Team"
 
-#: .\include\ui\models\about.py:78
+#: .\include\ui\models\about.py:84
 msgid "Licensed under Apache License Version 2.0."
 msgstr "使用 Apache License 2.0 版本授权。"
 
-#: .\include\ui\models\about.py:83
+#: .\include\ui\models\about.py:89
 msgid "View changelogs"
 msgstr "查看更新日志"
 
-#: .\include\ui\models\about.py:99
+#: .\include\ui\models\about.py:105
 msgid "Checking for updates"
 msgstr "正在检查更新"
 
-#: .\include\ui\models\about.py:101
+#: .\include\ui\models\about.py:107
 msgid "Cannot update: Cannot check for updates when running from source code."
 msgstr "无法更新：源代码运行时不能检查更新。"
 
-#: .\include\ui\models\about.py:121
+#: .\include\ui\models\about.py:127
 msgid "Software Update"
 msgstr "软件更新"
 
-#: .\include\ui\models\about.py:200
+#: .\include\ui\models\about.py:206
 msgid "Connection failed: {strerror}"
 msgstr "连接失败：{strerror}"
 
-#: .\include\ui\models\about.py:205
+#: .\include\ui\models\about.py:211
 msgid "Failed to retrieve version information"
 msgstr "未获取到版本信息"
 
-#: .\include\ui\models\about.py:213
+#: .\include\ui\models\about.py:219
 msgid "Current version: {APP_VERSION}"
 msgstr "当前版本：{APP_VERSION}"
 
-#: .\include\ui\models\about.py:218
+#: .\include\ui\models\about.py:224
 msgid "Latest version: {latest_version}"
 msgstr "最新版本：{latest_version}"
 
-#: .\include\ui\models\about.py:225
+#: .\include\ui\models\about.py:231
 msgid "Update Notes:"
 msgstr "更新说明："
 
-#: .\include\ui\models\about.py:238
+#: .\include\ui\models\about.py:244
 msgid "Already on the latest version"
 msgstr "已是最新版本"
 
-#: .\include\ui\models\about.py:252
+#: .\include\ui\models\about.py:258
 msgid ""
 "No package found for the corresponding architecture in the latest version"
 msgstr "未在最新版本中找到对应架构的包"
 
-#: .\include\ui\models\about.py:257
+#: .\include\ui\models\about.py:263
 msgid "No update found: Unsupported architecture"
 msgstr "没有找到更新：不支持的架构"
 
@@ -1763,7 +1767,9 @@ msgid ""
 "Two-factor authentication adds an extra layer of security to your account. "
 "You'll need to enter a code from your authenticator app in addition to your "
 "password when logging in."
-msgstr "双因素认证为您的账户增加了额外的安全层。登录时，除了密码外，您还需要输入验证器应用中的代码。"
+msgstr ""
+"双因素认证为您的账户增加了额外的安全层。登录时，除了密码外，您还需要输入验证"
+"器应用中的代码。"
 
 #: .\include\ui\models\settings\twofa.py:58
 msgid "Enable Two-Factor Authentication"
@@ -1852,81 +1858,3 @@ msgstr "身无彩凤双飞翼，心有灵犀一点通。"
 msgid ""
 "Seeking each other on dream paths, amid flying rain and falling flowers."
 msgstr "相寻梦里路，飞雨落花中。"
-
-#~ msgid "All of the following"
-#~ msgstr "满足以下全部条件"
-
-#~ msgid "Any of the following"
-#~ msgstr "满足以下任一条件"
-
-#~ msgid "#{index}"
-#~ msgstr "#{index}"
-
-#~ msgid "ID: {file_id} (No longer exists)"
-#~ msgstr "ID：{file_id}（不再存在）"
-
-#~ msgid "Delete this user"
-#~ msgstr "删除此用户"
-
-#~ msgid "Change user's nickname"
-#~ msgstr "为用户更改昵称"
-
-#~ msgid "Change user's group membership"
-#~ msgstr "为用户更改所属的用户组"
-
-#~ msgid "View user details"
-#~ msgstr "查看该用户的详细信息"
-
-#~ msgid "Manage Users"
-#~ msgstr "操作用户"
-
-#~ msgid "Change display name for user group"
-#~ msgstr "为用户组更改展示的名称"
-
-#~ msgid "Change permissions for user group"
-#~ msgstr "为用户组更改拥有的权限"
-
-#~ msgid "Manage User Groups"
-#~ msgstr "操作用户组"
-
-#~ msgid "Manage Documents"
-#~ msgstr "操作文档"
-
-#~ msgid "Delete this file"
-#~ msgstr "删除此文件"
-
-#~ msgid "Rename this file"
-#~ msgstr "重命名此文件"
-
-#~ msgid "Grant temporary access to this file"
-#~ msgstr "授予对此文件的临时访问权限"
-
-#~ msgid "Manage Directories"
-#~ msgstr "操作目录"
-
-#~ msgid "Delete this directory"
-#~ msgstr "删除此目录"
-
-#~ msgid "Rename this directory"
-#~ msgstr "重命名此目录"
-
-#~ msgid "Grant temporary access to this directory"
-#~ msgstr "授予对此目录的临时访问权限"
-
-#~ msgid "Change access rules for this directory"
-#~ msgstr "对此目录的访问规则进行变更"
-
-#~ msgid "View directory details"
-#~ msgstr "查看此目录的详细信息"
-
-#~ msgid "Uploading file [{current}/{total}]"
-#~ msgstr "正在上传文件 [{current}/{total}]"
-
-#~ msgid "Created time: {created_time}"
-#~ msgstr "创建时间：{created_time}"
-
-#~ msgid "Grant Access"
-#~ msgstr "授予访问权限"
-
-#~ msgid "Grant access to other users"
-#~ msgstr "授予其他用户访问权限"
