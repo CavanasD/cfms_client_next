@@ -15,6 +15,7 @@ __all__ = [
     "DEFAULT_WINDOW_TITLE",
     "GITHUB_REPO",
     "INTEGRATED_CA_CERT",
+    "DEFAULT_UPDATE_CHANNEL",
 ]
 
 # Path Configuration
@@ -32,8 +33,11 @@ GITHUB_REPO = "Creeper19472/cfms_client_next"
 
 # Version Information
 CHANNEL = ChannelType.ALPHA
-BUILD_VERSION = "v0.4.9"
+BUILD_VERSION = "v0.4.10"
 MODIFIED = "20260108"
+
+# Default update channel for user preferences
+DEFAULT_UPDATE_CHANNEL = ChannelType.ALPHA
 
 if CHANNEL == ChannelType.STABLE:
     APP_VERSION = f"{BUILD_VERSION[1:]}.{MODIFIED} NEXT"

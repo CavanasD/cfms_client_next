@@ -11,7 +11,7 @@ from websockets.asyncio.client import ClientConnection
 
 from include.classes.preferences import UserPreference
 from include.classes.twofa import TwoFactorConfig, TwoFactorStatus, TwoFactorMethod
-from include.constants import FLET_APP_STORAGE_DATA
+from include.constants import FLET_APP_STORAGE_DATA, DEFAULT_UPDATE_CHANNEL
 
 if TYPE_CHECKING:
     from include.classes.services.manager import ServiceManager
@@ -147,6 +147,7 @@ class AppShared:
                 "custom_proxy": "",
                 "enable_conn_history_logging": False,
                 "force_ipv4": False,
+                "update_channel": DEFAULT_UPDATE_CHANNEL.value,  # Channel for checking updates
             }
         }
 
