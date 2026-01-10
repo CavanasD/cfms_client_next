@@ -3,6 +3,18 @@
 This document contains the release history and changelog for CFMS Client NEXT.
 
 ---
+## v0.4.11
+**Released on:** 2026-01-10
+
+**Title:** Enhanced UI
+
+This version makes minor adjustments to some UI elements and corrects an issue 
+with the "Open" button displaying completed tasks. The file download location 
+has also been changed; on mobile devices, it has now been moved back to the 
+app's internal storage. To access downloaded files, please use the button 
+within the app.
+
+---
 ## v0.4.10
 **Released on:** 2026-01-08
 
