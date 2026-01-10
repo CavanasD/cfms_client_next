@@ -419,7 +419,7 @@ class DownloadManagerService(BaseService):
             return
 
         try:
-            # Only save non-completed tasks
+            # Save all tasks (including completed ones)
             tasks_to_save = {
                 task_id: {
                     "task_id": task.task_id,
@@ -444,7 +444,6 @@ class DownloadManagerService(BaseService):
                     "supports_resume": task.supports_resume,
                 }
                 for task_id, task in self.tasks.items()
-                if task.status not in [DownloadTaskStatus.COMPLETED]
             }
 
             # Ensure directory exists
@@ -614,6 +613,70 @@ class DownloadManagerService(BaseService):
 
         return count
 
+    async def delete_task_with_file(self, task_id: str) -> tuple[bool, str | None]:
+        """
+        Delete a completed task and its associated file.
+        Also deletes all other tasks pointing to the same file path.
+
+        Args:
+            task_id: ID of the task to delete
+
+        Returns:
+            Tuple of (success: bool, error_message: str | None)
+            - (True, None) if task and file were deleted successfully
+            - (False, error_msg) if deletion failed
+        """
+        task = self.tasks.get(task_id)
+        if not task:
+            self.logger.warning(f"Cannot delete task {task_id}: task not found")
+            return False, "Task not found"
+
+        if task.status != DownloadTaskStatus.COMPLETED:
+            self.logger.warning(
+                f"Cannot delete task {task_id}: task not completed (status: {task.status})"
+            )
+            return False, "Task is not completed"
+
+        file_path = task.file_path
+
+        # Find all tasks pointing to the same file path
+        tasks_with_same_file = [
+            t for t in self.tasks.values() if t.file_path == file_path
+        ]
+
+        # Delete the file if it exists
+        if os.path.exists(file_path):
+            try:
+                os.remove(file_path)
+                self.logger.info(f"Deleted file: {file_path}")
+            except Exception as e:
+                error_msg = f"Failed to delete file: {str(e)}"
+                self.logger.error(
+                    f"Failed to delete file {file_path}: {e}", exc_info=True
+                )
+                # Do not delete any tasks if file deletion fails
+                return False, error_msg
+
+        # Remove all tasks with the same file path
+        deleted_count = 0
+        for t in tasks_with_same_file:
+            if t.task_id in self.tasks:
+                # Notify listeners before removing
+                self._notify_task_update(t)
+                del self.tasks[t.task_id]
+                deleted_count += 1
+                self.logger.info(f"Deleted task: {t.filename} (task_id: {t.task_id})")
+
+        self.logger.info(
+            f"Deleted {deleted_count} task(s) associated with file: {file_path}"
+        )
+
+        # Save tasks after deletion
+        if self.enable_persistence:
+            await self._save_tasks()
+
+        return True, None
+
     def _notify_task_update(self, task: DownloadTask):
         """
         Notify listeners about task updates.
@@ -665,6 +728,9 @@ class DownloadManagerService(BaseService):
     ) -> DownloadTask:
         """
         Add a new download task to the queue.
+        
+        If a completed task already exists with the same file_path, it will be removed
+        since the file will be overwritten by this new download.
 
         Args:
             task_id: Server task ID for the download
@@ -680,6 +746,25 @@ class DownloadManagerService(BaseService):
         Returns:
             The created DownloadTask instance
         """
+        # Check for existing completed tasks with the same file_path
+        # These will be overwritten, so remove them to avoid confusion
+        tasks_to_remove = []
+        for existing_task_id, existing_task in self.tasks.items():
+            if (existing_task.file_path == file_path and 
+                existing_task.status == DownloadTaskStatus.COMPLETED):
+                tasks_to_remove.append(existing_task_id)
+                self.logger.info(
+                    f"Removing old completed task {existing_task_id} for {existing_task.filename} "
+                    f"as new task will overwrite the file at {file_path}"
+                )
+        
+        # Remove old completed tasks
+        for task_id_to_remove in tasks_to_remove:
+            # Notify before removing
+            old_task = self.tasks[task_id_to_remove]
+            self._notify_task_update(old_task)
+            del self.tasks[task_id_to_remove]
+        
         # Determine initial status
         if scheduled_time and scheduled_time > time.time():
             status = DownloadTaskStatus.SCHEDULED
