@@ -101,9 +101,4 @@ class ConnectFormController(BaseController["ConnectForm"]):
                     + _("Please allow the app to access your files in settings.")
                 )
 
-        if self.control.page.platform.value == "windows" and os.environ.get(
-            "FLET_APP_CONSOLE"
-        ):
-            os.startfile(os.getcwd())
-
         await self.control.page.push_route("/login")

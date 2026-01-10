@@ -55,7 +55,7 @@ class TaskTile(ft.Card):
             tooltip=_("Open file"),
             on_click=self._on_open_file,
             visible=task.status == DownloadTaskStatus.COMPLETED,
-            disabled=not AppShared().is_mobile,
+            # disabled=not AppShared().is_mobile,
         )
 
         # Pause/Resume button (only if server supports resume)
@@ -279,7 +279,7 @@ class TaskTile(ft.Card):
 
         # Update open file button visibility
         self.open_file_button.visible = task.status == DownloadTaskStatus.COMPLETED
-        self.open_file_button.disabled = not AppShared().is_mobile
+        # self.open_file_button.disabled = not AppShared().is_mobile
 
         # Update pause/resume button visibility and icons (only if supports_resume)
         self.pause_resume_button.visible = task.supports_resume and task.status in [
@@ -325,13 +325,26 @@ class TaskTile(ft.Card):
 
     async def _on_open_file(self, e):
         """Handle open file button click."""
+        assert type(self.page) == ft.Page
+        assert self.page.platform
+        
         try:
-            # Import OpenFile service
-            from flet_open_file import OpenFile
+            if AppShared().is_mobile:
+                # Import OpenFile service
+                from flet_open_file import OpenFile
 
-            # Open the downloaded file
-            open_file_service = OpenFile()
-            await open_file_service.open(self.task.file_path, 3)
+                # Open the downloaded file
+                open_file_service = OpenFile()
+                await open_file_service.open(self.task.file_path, 3)
+
+            elif self.page.platform.value == "windows":
+                import os
+
+                os.startfile(self.task.file_path)
+
+            else:
+                raise NotImplementedError("Open file not supported on this platform")
+
         except Exception as exc:
             # Show error if file can't be opened
             from include.ui.util.notifications import send_error
