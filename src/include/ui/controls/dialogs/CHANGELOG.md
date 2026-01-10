@@ -3,6 +3,14 @@
 This document contains the release history and changelog for CFMS Client NEXT.
 
 ---
+## v0.4.14
+**Released on:** 2026-01-10
+
+**Title:** Enhanced Upgrade Check
+
+This version includes patch updates and improvements.
+
+---
 ## v0.4.13
 **Released on:** 2026-01-10
 
