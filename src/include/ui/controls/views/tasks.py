@@ -55,7 +55,7 @@ class TaskTile(ft.Card):
             tooltip=_("Open file"),
             on_click=self._on_open_file,
             visible=task.status == DownloadTaskStatus.COMPLETED,
-            disabled=AppShared().is_mobile,
+            disabled=not AppShared().is_mobile,
         )
 
         # Pause/Resume button (only if server supports resume)
@@ -278,9 +278,8 @@ class TaskTile(ft.Card):
         )
 
         # Update open file button visibility
-        self.open_file_button.visible = (
-            task.status == DownloadTaskStatus.COMPLETED and AppShared().is_mobile
-        )
+        self.open_file_button.visible = task.status == DownloadTaskStatus.COMPLETED
+        self.open_file_button.disabled = not AppShared().is_mobile
 
         # Update pause/resume button visibility and icons (only if supports_resume)
         self.pause_resume_button.visible = task.supports_resume and task.status in [

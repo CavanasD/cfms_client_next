@@ -34,7 +34,7 @@ class LoginForm(ft.Container):
         # Form style definitions
         self.width = const.FORM_WIDTH
         self.bgcolor = const.FIELD_BG
-        self.border_radius = const.BUTTON_RADIUS
+        self.border_radius = const.FORM_BORDER_RADIUS
         self.padding = 20
 
         # Form variable definitions
@@ -60,12 +60,12 @@ class LoginForm(ft.Container):
         )
 
         self.login_button = ft.IconButton(
-            icon=ft.Icons.LOGIN_OUTLINED, on_click=self.request_login, tooltip="Login"
+            icon=ft.Icons.LOGIN_OUTLINED, on_click=self.request_login, tooltip=_("Login")
         )
         self.disconnect_button = ft.IconButton(
             icon=ft.Icons.CHEVRON_LEFT,
             on_click=self.disconnect_button_click,
-            tooltip="Disconnect",
+            tooltip=_("Disconnect"),
         )
         self.loading_animation = ft.ProgressRing(visible=False)
 

@@ -11,6 +11,7 @@ from include.controllers.connect import ConnectFormController
 from include.ui import constants as const
 from include.ui.util.notifications import send_error
 from include.util.locale import get_translation
+
 t = get_translation()
 _ = t.gettext
 
@@ -26,7 +27,7 @@ class ConnectForm(ft.Container):
         # Form style definitions
         self.width = const.FORM_WIDTH
         self.bgcolor = const.FIELD_BG
-        self.border_radius = const.BUTTON_RADIUS
+        self.border_radius = const.FORM_BORDER_RADIUS
         self.padding = 20
 
         # Form variable definitions
@@ -52,7 +53,10 @@ class ConnectForm(ft.Container):
             expand=True,
         )
         self.disable_ssl_enforcement_switch = ft.Switch(
-            label=_("Disable SSL verification (Insecure)"), value=False, scale=1
+            label=_("Disable SSL verification (Insecure)"),
+            value=False,
+            scale=1,
+            label_text_style=ft.TextStyle(overflow=ft.TextOverflow.CLIP),  # no use?
         )
 
         self.connect_button = ft.Button(
@@ -61,7 +65,7 @@ class ConnectForm(ft.Container):
             color=const.TEXT_COLOR,
             on_click=self.connect_button_click,
             style=ft.ButtonStyle(
-                shape=ft.RoundedRectangleBorder(radius=const.BUTTON_RADIUS)
+                shape=ft.RoundedRectangleBorder(radius=const.BUTTON_RADIUS),
             ),
         )
         self.loading_animation = ft.ProgressRing(visible=False)

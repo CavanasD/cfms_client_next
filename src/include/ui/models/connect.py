@@ -29,12 +29,12 @@ class ConnectToServerModel(Model):
                     on_click=self.conn_settings_button_click,
                 ),
             ],
-            actions_padding=10
+            actions_padding=10,
         )
 
         self.floating_action_button = FloatingUpgradeButton()
         self.floating_action_button_location = ft.FloatingActionButtonLocation.END_FLOAT
-        
+
         # Register the button with AppShared so AutoUpdateService can access it
         app_shared = AppShared()
         app_shared.floating_upgrade_button = self.floating_action_button

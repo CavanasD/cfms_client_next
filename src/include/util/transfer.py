@@ -178,6 +178,7 @@ async def receive_file_from_server(
 
     downloading_path = FLET_APP_STORAGE_TEMP + "/downloading/" + task_id
     await aiofiles.os.makedirs(downloading_path, exist_ok=True)
+    await aiofiles.os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
     if not file_size:
         async with aiofiles.open(file_path, "wb") as f:

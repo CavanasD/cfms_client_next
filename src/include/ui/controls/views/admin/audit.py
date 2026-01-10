@@ -172,6 +172,7 @@ class AuditLogView(ft.Container):
 
     async def refresh_audit_logs(self):
         def update_audit_logs_controls(entries: list[dict]):
+            ft.context.disable_auto_update()
             self.audit_logs_datatable.rows.clear()
 
             for entry in entries:
@@ -197,6 +198,8 @@ class AuditLogView(ft.Container):
                         ]
                     )
                 )
+
+            ft.context.enable_auto_update()
 
         self.disable_interactions()
         self.update()

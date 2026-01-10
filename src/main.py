@@ -154,6 +154,7 @@ async def main(page: ft.Page):
     # compiled runtime (where RUNTIME_PATH / PYTHONHOME is set), as opposed to
     # a development environment running from source.
     app_shared.is_production = bool(RUNTIME_PATH)
+    page.window.resizable = not app_shared.is_production
 
     # Register Flet services
     ph_service = fph.PermissionHandler()

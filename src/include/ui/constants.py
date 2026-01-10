@@ -8,6 +8,7 @@ __all__ = [
     "TEXT_COLOR",
     "ERROR_COLOR",
     "SUCCESS_COLOR",
+    "FORM_BORDER_RADIUS",
     "BUTTON_RADIUS",
     "FORM_WIDTH",
     "REMOTE_ADDRESS_PLACEHOLDER",
@@ -24,7 +25,8 @@ ERROR_COLOR = "#f87171"  # Softer red for errors
 SUCCESS_COLOR = "#34d399"  # Minty green for success
 
 # UI Dimensions
-BUTTON_RADIUS = 12  # Border radius for buttons
+FORM_BORDER_RADIUS = 12  # Border radius for forms
+BUTTON_RADIUS = 20  # Border radius for buttons
 FORM_WIDTH = 380  # Standard form width in pixels
 
 # Placeholder Texts
