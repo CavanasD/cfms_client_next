@@ -21,7 +21,7 @@ class SettingsModel(Model):
         super().__init__(page, router)
 
         self.appbar = ft.AppBar(
-            title=ft.Text("Settings"),
+            title=ft.Text(_("Settings")),
             # center_title=True,
             leading=ft.IconButton(icon=ft.Icons.ARROW_BACK, on_click=self._go_back),
         )

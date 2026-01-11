@@ -48,7 +48,7 @@ class AboutModel(Model):
         super().__init__(page, router)
 
         self.appbar = ft.AppBar(
-            title=ft.Text("About"),
+            title=ft.Text(_("About")),
             leading=ft.IconButton(
                 icon=ft.Icons.ARROW_BACK,
                 on_click=self.back_button_click,

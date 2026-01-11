@@ -10,6 +10,7 @@ from include.constants import LOCALE_PATH
 from include.ui.util.notifications import send_error
 from include.util.locale import get_translation
 from include.util.requests import do_request
+
 t = get_translation()
 _ = t.gettext
 
@@ -27,29 +28,29 @@ class AuditLogDatatable(fdt.DataTable2):
         super().__init__(
             columns=[
                 fdt.DataColumn2(
-                    label=ft.Text("ID"),
+                    label=ft.Text(_("ID")),
                     size=fdt.DataColumnSize.L,
                     heading_row_alignment=ft.MainAxisAlignment.START,
                     on_sort=self.sort_column,
                 ),
-                fdt.DataColumn2(label=ft.Text("Action")),
-                fdt.DataColumn2(label=ft.Text("Username")),
+                fdt.DataColumn2(label=ft.Text(_("Action"))),
+                fdt.DataColumn2(label=ft.Text(_("Username"))),
                 fdt.DataColumn2(
-                    label=ft.Text("Target"),
+                    label=ft.Text(_("Target")),
                     size=fdt.DataColumnSize.L,
                 ),
                 fdt.DataColumn2(
-                    label=ft.Text("Data"),
+                    label=ft.Text(_("Data")),
                     size=fdt.DataColumnSize.M,
                 ),
                 fdt.DataColumn2(
-                    label=ft.Text("Result"), size=fdt.DataColumnSize.S, numeric=True
+                    label=ft.Text(_("Result")), size=fdt.DataColumnSize.S, numeric=True
                 ),
                 fdt.DataColumn2(
-                    label=ft.Text("Remote Address"), size=fdt.DataColumnSize.M
+                    label=ft.Text(_("Remote Address")), size=fdt.DataColumnSize.M
                 ),
                 fdt.DataColumn2(
-                    label=ft.Text("Time"), numeric=True, size=fdt.DataColumnSize.M
+                    label=ft.Text(_("Time")), numeric=True, size=fdt.DataColumnSize.M
                 ),
             ],
             ref=ref,
@@ -215,7 +216,9 @@ class AuditLogView(ft.Container):
             if (code := response["code"]) != 200:
                 send_error(
                     self.page,
-                    _("Load failed: ({code}) {errmsg}").format(code=code, errmsg=response.get('message', 'Unknown error')),
+                    _("Load failed: ({code}) {errmsg}").format(
+                        code=code, errmsg=response.get("message", "Unknown error")
+                    ),
                 )
             else:
                 data: dict = response.get("data", {})
@@ -226,9 +229,9 @@ class AuditLogView(ft.Container):
                 view_end = self.audit_view_offset + len(entries)
 
                 # Fix string formatting issue
-                self.audit_info_text.value = (
-                    _("{view_start} - {view_end} of {total} items").format(view_start=view_start, view_end=view_end, total=total)
-                )
+                self.audit_info_text.value = _(
+                    "{view_start} - {view_end} of {total} items"
+                ).format(view_start=view_start, view_end=view_end, total=total)
 
                 self.navigate_before_button.disabled = self.audit_view_offset <= 0
                 self.navigate_next_button.disabled = (

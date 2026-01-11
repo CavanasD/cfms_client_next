@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cfms-client-next 0.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-10 13:15+0800\n"
+"POT-Creation-Date: 2026-01-11 14:41+0800\n"
 "PO-Revision-Date: 2025-10-18 14:19\n"
 "Last-Translator: Auto Generated\n"
 "Language-Team: Chinese (Simplified)\n"
@@ -732,6 +732,7 @@ msgid "Nickname"
 msgstr "昵称"
 
 #: .\include\ui\controls\dialogs\admin\accounts.py:152
+#: .\include\ui\controls\views\admin\audit.py:37
 #: .\include\ui\controls\views\login.py:54
 msgid "Username"
 msgstr "用户名"
@@ -1019,6 +1020,7 @@ msgid "Request Data"
 msgstr "请求数据"
 
 #: .\include\ui\controls\dialogs\dev.py:29
+#: .\include\ui\controls\views\admin\audit.py:47
 msgid "Result"
 msgstr "结果"
 
@@ -1369,6 +1371,7 @@ msgid "View Access Entries for {display_name}"
 msgstr "查看 {display_name} 的访问条目"
 
 #: .\include\ui\controls\dialogs\view_access_entries.py:62
+#: .\include\ui\controls\views\admin\audit.py:31
 msgid "ID"
 msgstr "ID"
 
@@ -1463,19 +1466,39 @@ msgstr "用户列表"
 msgid "Load failed: ({code}) {message}"
 msgstr "加载失败：({code}) {message}"
 
-#: .\include\ui\controls\views\admin\audit.py:125
+#: .\include\ui\controls\views\admin\audit.py:36
+msgid "Action"
+msgstr "操作"
+
+#: .\include\ui\controls\views\admin\audit.py:39
+msgid "Target"
+msgstr "目标"
+
+#: .\include\ui\controls\views\admin\audit.py:43
+msgid "Data"
+msgstr "数据"
+
+#: .\include\ui\controls\views\admin\audit.py:50
+msgid "Remote Address"
+msgstr "远程地址"
+
+#: .\include\ui\controls\views\admin\audit.py:53
+msgid "Time"
+msgstr "时间"
+
+#: .\include\ui\controls\views\admin\audit.py:126
 msgid "Audit Logs"
 msgstr "审计日志"
 
-#: .\include\ui\controls\views\admin\audit.py:218
+#: .\include\ui\controls\views\admin\audit.py:219
 msgid "Load failed: ({code}) {errmsg}"
 msgstr "加载失败：({code}) {errmsg}"
 
-#: .\include\ui\controls\views\admin\audit.py:230
+#: .\include\ui\controls\views\admin\audit.py:232
 msgid "{view_start} - {view_end} of {total} items"
 msgstr "{view_start} - {view_end} 条，共 {total} 条"
 
-#: .\include\ui\controls\views\admin\audit.py:251
+#: .\include\ui\controls\views\admin\audit.py:254
 msgid "Load failed: {errstr}"
 msgstr "加载失败：{errstr}"
 
@@ -1522,10 +1545,11 @@ msgid "Change Password"
 msgstr "修改密码"
 
 #: .\include\ui\controls\views\more.py:47
+#: .\include\ui\models\settings\overview.py:24
 msgid "Settings"
 msgstr "设置"
 
-#: .\include\ui\controls\views\more.py:52
+#: .\include\ui\controls\views\more.py:52 .\include\ui\models\about.py:51
 msgid "About"
 msgstr "关于"
 
@@ -1653,7 +1677,7 @@ msgstr "清除失败"
 
 #: .\include\ui\models\about.py:59
 msgid "Debugging..."
-msgstr "调试中..."
+msgstr "调试..."
 
 #: .\include\ui\models\about.py:64
 msgid "Updates Settings"
@@ -1724,6 +1748,26 @@ msgstr "未在最新版本中找到对应架构的包"
 msgid "No update found: Unsupported architecture"
 msgstr "没有找到更新：不支持的架构"
 
+#: .\include\ui\models\connect.py:27
+msgid "Connect To Server"
+msgstr "连接到服务器"
+
+#: .\include\ui\models\connect.py:32
+msgid "Connection Settings"
+msgstr "连接设置"
+
+#: .\include\ui\models\debugging.py:32
+msgid "Debugging"
+msgstr "调试"
+
+#: .\include\ui\models\debugging.py:40
+msgid "General Information"
+msgstr "基本信息"
+
+#: .\include\ui\models\debugging.py:54
+msgid "Environment Variables"
+msgstr "环境变量"
+
 #: .\include\ui\models\manage.py:24
 msgid "Accounts"
 msgstr "账户"
@@ -1757,17 +1801,33 @@ msgid "Force IPv4"
 msgstr "强制使用 IPv4"
 
 #: .\include\ui\models\settings\connection.py:85
+#: .\include\ui\models\settings\safety.py:66
 #: .\include\ui\models\settings\updates.py:86
 msgid "Settings Saved."
 msgstr "设置已保存。"
 
+#: .\include\ui\models\settings\language.py:25
+#: .\include\ui\models\settings\language.py:36
 #: .\include\ui\models\settings\overview.py:32
 msgid "Language"
 msgstr "语言"
 
+#: .\include\ui\models\settings\language.py:37
 #: .\include\ui\models\settings\overview.py:33
 msgid "Select your preferred language"
 msgstr "选择您偏好的语言"
+
+#: .\include\ui\models\settings\language.py:48
+msgid ""
+"Select your preferred language for the application interface. You may need "
+"to restart the application for changes to take full effect."
+msgstr "选择您偏好的应用界面语言。您可能需要重启应用来令更改彻底生效。"
+
+#: .\include\ui\models\settings\language.py:74
+msgid ""
+"Language setting saved. Please restart the application for changes to take "
+"effect."
+msgstr "语言设置已保存。请重新启动应用，以使更改生效。"
 
 #: .\include\ui\models\settings\overview.py:39
 msgid "Change application proxy settings"
@@ -1794,6 +1854,23 @@ msgstr "配置更新频道偏好"
 msgid "Manage two-factor authentication settings"
 msgstr "管理双因素认证设置"
 
+#: .\include\ui\models\settings\safety.py:25
+msgid "Safety"
+msgstr "安全"
+
+#: .\include\ui\models\settings\safety.py:36
+msgid "Enable connection history logging"
+msgstr "启用连接历史记录"
+
+#: .\include\ui\models\settings\safety.py:42
+msgid ""
+"Decide whether the app should log the server address of the last connection. "
+"While this feature increases convenience, it may also increase the risk of "
+"exposing the server address."
+msgstr ""
+"决定应用程序是否应记录上次连接的服务器地址。虽然此功能提高了便利性，但也可能"
+"增加服务器地址泄露的风险。"
+
 #: .\include\ui\models\settings\twofa.py:44
 msgid "Two-Factor Authentication Status: Checking..."
 msgstr "双因素认证状态：检查中..."
@@ -1807,35 +1884,63 @@ msgstr ""
 "双因素认证为您的账户增加了额外的安全层。登录时，除了密码外，您还需要输入验证"
 "器应用中的代码。"
 
-#: .\include\ui\models\settings\twofa.py:58
+#: .\include\ui\models\settings\twofa.py:60
 msgid "Enable Two-Factor Authentication"
 msgstr "启用双因素认证"
 
-#: .\include\ui\models\settings\twofa.py:66
-#: .\include\ui\models\settings\twofa.py:244
+#: .\include\ui\models\settings\twofa.py:68
+#: .\include\ui\models\settings\twofa.py:264
 msgid "Disable Two-Factor Authentication"
 msgstr "禁用双因素认证"
 
-#: .\include\ui\models\settings\twofa.py:122
+#: .\include\ui\models\settings\twofa.py:114
+msgid "Failed to load 2FA status: {resp_msg}"
+msgstr "加载双因素身份验证状态失败：{resp_msg}"
+
+#: .\include\ui\models\settings\twofa.py:121
+msgid "Error loading 2FA status: {strerr}"
+msgstr "加载双因素身份验证状态时出错：{strerr}"
+
+#: .\include\ui\models\settings\twofa.py:131
 msgid "Two-Factor Authentication Status: Enabled"
 msgstr "双因素认证状态：已启用"
 
-#: .\include\ui\models\settings\twofa.py:127
+#: .\include\ui\models\settings\twofa.py:136
 msgid "Two-Factor Authentication Status: Disabled"
 msgstr "双因素认证状态：已禁用"
 
-#: .\include\ui\models\settings\twofa.py:207
-#: .\include\ui\models\settings\twofa.py:222
+#: .\include\ui\models\settings\twofa.py:178
+msgid "Invalid setup data received from server"
+msgstr "从服务器接收到的配置数据无效"
+
+#: .\include\ui\models\settings\twofa.py:182
+msgid "Failed to initiate 2FA setup: {resp_msg}"
+msgstr "初始化双因素身份验证设置失败：{resp_msg}"
+
+#: .\include\ui\models\settings\twofa.py:189
+msgid "Error setting up 2FA: {strerror}"
+msgstr "设置双因素身份验证时出错：{strerror}"
+
+#: .\include\ui\models\settings\twofa.py:224
+#: .\include\ui\models\settings\twofa.py:242
 msgid "Two-Factor Authentication enabled successfully!"
 msgstr "双因素认证已成功启用！"
 
-#: .\include\ui\models\settings\twofa.py:245
+#: .\include\ui\models\settings\twofa.py:265
 msgid "Please enter your password to disable two-factor authentication."
 msgstr "请输入您的密码以禁用双因素认证。"
 
-#: .\include\ui\models\settings\twofa.py:268
+#: .\include\ui\models\settings\twofa.py:290
 msgid "Two-Factor Authentication disabled"
 msgstr "双因素认证已禁用"
+
+#: .\include\ui\models\settings\twofa.py:296
+msgid "Failed to disable 2FA: {resp_msg}"
+msgstr "禁用双因素身份验证失败：{resp_msg}"
+
+#: .\include\ui\models\settings\twofa.py:304
+msgid "Error disabling 2FA: {strerr}"
+msgstr "禁用双因素身份验证时出错：{strerr}"
 
 #: .\include\ui\models\settings\updates.py:37
 msgid "Update Channel"

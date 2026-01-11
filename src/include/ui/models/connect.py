@@ -6,6 +6,10 @@ from include.constants import APP_VERSION
 from include.ui.constants import PLACEHOLDER_COLOR
 from include.ui.controls.buttons.upgrade import FloatingUpgradeButton
 from include.ui.controls.views.connect import ConnectForm
+from include.util.locale import get_translation
+
+t = get_translation()
+_ = t.gettext
 
 
 @route("connect")
@@ -20,12 +24,12 @@ class ConnectToServerModel(Model):
         super().__init__(page, router)
 
         self.appbar = ft.AppBar(
-            title=ft.Text("Connect to Server"),
+            title=ft.Text(_("Connect To Server")),
             center_title=True,
             actions=[
                 ft.IconButton(
                     ft.Icons.SETTINGS_OUTLINED,
-                    tooltip="Connection Settings",
+                    tooltip=_("Connection Settings"),
                     on_click=self.conn_settings_button_click,
                 ),
             ],

@@ -4,7 +4,10 @@ import flet as ft
 from include.classes.config import AppShared
 from include.ui.util.notifications import send_success
 from include.ui.util.route import get_parent_route
-from include.util.locale import set_translation
+from include.util.locale import set_translation, get_translation
+
+t = get_translation()
+_ = t.gettext
 
 
 @route("language_settings")
@@ -19,7 +22,7 @@ class LanguageSettingsModel(Model):
         super().__init__(page, router)
 
         self.appbar = ft.AppBar(
-            title=ft.Text("Language"),
+            title=ft.Text(_("Language")),
             leading=ft.IconButton(icon=ft.Icons.ARROW_BACK, on_click=self._go_back),
             actions=[
                 ft.IconButton(ft.Icons.SAVE_OUTLINED, on_click=self.save_button_click)
@@ -30,8 +33,8 @@ class LanguageSettingsModel(Model):
 
         # Language selection dropdown
         self.language_dropdown = ft.Dropdown(
-            label="Language",
-            hint_text="Select your preferred language",
+            label=_("Language"),
+            hint_text=_("Select your preferred language"),
             options=[
                 ft.DropdownOption(key="zh_CN", text="中文 (Chinese Simplified)"),
                 ft.DropdownOption(key="en", text="English"),
@@ -42,8 +45,10 @@ class LanguageSettingsModel(Model):
         )
 
         self.language_hint_text = ft.Text(
-            "Select your preferred language for the application interface. "
-            "You may need to restart the application for changes to take full effect.",
+            _(
+                "Select your preferred language for the application interface. "
+                "You may need to restart the application for changes to take full effect."
+            ),
             size=12,
         )
 
@@ -58,16 +63,22 @@ class LanguageSettingsModel(Model):
 
     async def save_button_click(self, event: ft.Event[ft.IconButton]):
         selected_language = self.language_dropdown.value
-        
+
         if selected_language:
             self.app_shared.preferences["settings"]["language"] = selected_language
             self.app_shared.dump_preferences()
             set_translation(selected_language)
             self._router.clear_cache()
-            send_success(self.page, "Language setting saved. Please restart the application for changes to take effect.")
-
+            send_success(
+                self.page,
+                _(
+                    "Language setting saved. Please restart the application for changes to take effect."
+                ),
+            )
 
     async def load_language_setting(self):
-        current_language = self.app_shared.preferences["settings"].get("language", "zh_CN")
+        current_language = self.app_shared.preferences["settings"].get(
+            "language", "zh_CN"
+        )
         self.language_dropdown.value = current_language
         self.update()

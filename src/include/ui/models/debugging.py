@@ -11,6 +11,10 @@ from include.constants import (
     FLET_APP_STORAGE_TEMP,
     FLET_APP_STORAGE_DATA,
 )
+from include.util.locale import get_translation
+
+t = get_translation()
+_ = t.gettext
 
 
 @route("debugging")
@@ -25,7 +29,7 @@ class DebuggingViewModel(Model):
     def __init__(self, page: ft.Page, router: Router):
         super().__init__(page, router)
         self.appbar = ft.AppBar(
-            title=ft.Text("Debugging"),
+            title=ft.Text(_("Debugging")),
             leading=ft.IconButton(
                 icon=ft.Icons.ARROW_BACK,
                 on_click=self.back_button_click,
@@ -33,7 +37,7 @@ class DebuggingViewModel(Model):
         )
 
         self.controls = [
-            ft.Text(f"General Information", size=16, weight=ft.FontWeight.BOLD),
+            ft.Text(_("General Information"), size=16, weight=ft.FontWeight.BOLD),
             ft.Text(
                 f"Platform: {platform.system()} {platform.release()} ({platform.version()})"
             ),
@@ -47,7 +51,7 @@ class DebuggingViewModel(Model):
                 f"Flet build platform: {getattr(self.page.platform, "value", "(Not provided)")}",
             ),
             ft.Divider(),
-            ft.Text(f"Environment Variables", size=16, weight=ft.FontWeight.BOLD),
+            ft.Text(_("Environment Variables"), size=16, weight=ft.FontWeight.BOLD),
             ft.Text(f"CONSTANT_FILE_ABSPATH: {CONSTANT_FILE_ABSPATH}"),
             ft.Text(f"ROOT_PATH: {ROOT_PATH}"),
             ft.Text(f"LOCALE_PATH: {LOCALE_PATH}"),

@@ -4,6 +4,10 @@ import flet as ft
 from include.classes.config import AppShared
 from include.ui.util.notifications import send_success
 from include.ui.util.route import get_parent_route
+from include.util.locale import get_translation
+
+t = get_translation()
+_ = t.gettext
 
 
 @route("safety_settings")
@@ -18,7 +22,7 @@ class SafetySettingsModel(Model):
         super().__init__(page, router)
 
         self.appbar = ft.AppBar(
-            title=ft.Text("Safety"),
+            title=ft.Text(_("Safety")),
             leading=ft.IconButton(icon=ft.Icons.ARROW_BACK, on_click=self._go_back),
             actions=[
                 ft.IconButton(ft.Icons.SAVE_OUTLINED, on_click=self.save_button_click)
@@ -29,17 +33,19 @@ class SafetySettingsModel(Model):
 
         self.enable_logging_switch = ft.Switch(
             label=ft.Text(
-                "Enable connection history logging",
+                _("Enable connection history logging"),
             ),
             on_change=self.switch_click,
             disabled=True,
         )
         self.logging_hint_text = ft.Text(
-            "Decide whether the app should log the "
-            "server address of the last connection. "
-            "While this feature increases convenience, "
-            "it may also increase the risk of exposing "
-            "the server address."
+            _(
+                "Decide whether the app should log the "
+                "server address of the last connection. "
+                "While this feature increases convenience, "
+                "it may also increase the risk of exposing "
+                "the server address."
+            )
         )
 
         self.controls = [self.enable_logging_switch, self.logging_hint_text]
@@ -57,7 +63,7 @@ class SafetySettingsModel(Model):
         ] = self.enable_logging_switch.value
 
         self.app_shared.dump_preferences()
-        send_success(self.page, "Settings Saved.")
+        send_success(self.page, _("Settings Saved."))
 
     async def switch_click(self, event: ft.Event[ft.Switch]):
         await self.flush_switch()

@@ -3,6 +3,14 @@
 This document contains the release history and changelog for CFMS Client NEXT.
 
 ---
+## v0.4.15
+**Released on:** 2026-01-11
+
+**Title:** Update Translations
+
+This version translates some previously untranslated strings.
+
+---
 ## v0.4.14
 **Released on:** 2026-01-10
 

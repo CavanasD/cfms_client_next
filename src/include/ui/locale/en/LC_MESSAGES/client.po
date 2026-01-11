@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cfms-client-next 0.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-10 13:15+0800\n"
+"POT-Creation-Date: 2026-01-11 14:41+0800\n"
 "PO-Revision-Date: 2025-10-18 14:19\n"
 "Last-Translator: Auto Generated\n"
 "Language-Team: English\n"
@@ -741,6 +741,7 @@ msgid "Nickname"
 msgstr "Nickname"
 
 #: .\include\ui\controls\dialogs\admin\accounts.py:152
+#: .\include\ui\controls\views\admin\audit.py:37
 #: .\include\ui\controls\views\login.py:54
 msgid "Username"
 msgstr "Username"
@@ -1028,6 +1029,7 @@ msgid "Request Data"
 msgstr "Request Data"
 
 #: .\include\ui\controls\dialogs\dev.py:29
+#: .\include\ui\controls\views\admin\audit.py:47
 msgid "Result"
 msgstr "Result"
 
@@ -1380,6 +1382,7 @@ msgid "View Access Entries for {display_name}"
 msgstr "View Access Entries for {display_name}"
 
 #: .\include\ui\controls\dialogs\view_access_entries.py:62
+#: .\include\ui\controls\views\admin\audit.py:31
 msgid "ID"
 msgstr "ID"
 
@@ -1474,19 +1477,39 @@ msgstr "User List"
 msgid "Load failed: ({code}) {message}"
 msgstr "Load failed: ({code}) {message}"
 
-#: .\include\ui\controls\views\admin\audit.py:125
+#: .\include\ui\controls\views\admin\audit.py:36
+msgid "Action"
+msgstr "Action"
+
+#: .\include\ui\controls\views\admin\audit.py:39
+msgid "Target"
+msgstr "Target"
+
+#: .\include\ui\controls\views\admin\audit.py:43
+msgid "Data"
+msgstr "Data"
+
+#: .\include\ui\controls\views\admin\audit.py:50
+msgid "Remote Address"
+msgstr "Remote Address"
+
+#: .\include\ui\controls\views\admin\audit.py:53
+msgid "Time"
+msgstr "Time"
+
+#: .\include\ui\controls\views\admin\audit.py:126
 msgid "Audit Logs"
 msgstr "Audit Logs"
 
-#: .\include\ui\controls\views\admin\audit.py:218
+#: .\include\ui\controls\views\admin\audit.py:219
 msgid "Load failed: ({code}) {errmsg}"
 msgstr "Load failed: ({code}) {errmsg}"
 
-#: .\include\ui\controls\views\admin\audit.py:230
+#: .\include\ui\controls\views\admin\audit.py:232
 msgid "{view_start} - {view_end} of {total} items"
 msgstr "{view_start} - {view_end} of {total} items"
 
-#: .\include\ui\controls\views\admin\audit.py:251
+#: .\include\ui\controls\views\admin\audit.py:254
 msgid "Load failed: {errstr}"
 msgstr "Load failed: {errstr}"
 
@@ -1533,10 +1556,11 @@ msgid "Change Password"
 msgstr "Change Password"
 
 #: .\include\ui\controls\views\more.py:47
+#: .\include\ui\models\settings\overview.py:24
 msgid "Settings"
 msgstr "Settings"
 
-#: .\include\ui\controls\views\more.py:52
+#: .\include\ui\controls\views\more.py:52 .\include\ui\models\about.py:51
 msgid "About"
 msgstr "About"
 
@@ -1736,6 +1760,26 @@ msgstr ""
 msgid "No update found: Unsupported architecture"
 msgstr "No update found: Unsupported architecture"
 
+#: .\include\ui\models\connect.py:27
+msgid "Connect To Server"
+msgstr ""
+
+#: .\include\ui\models\connect.py:32
+msgid "Connection Settings"
+msgstr "Connection Settings"
+
+#: .\include\ui\models\debugging.py:32
+msgid "Debugging"
+msgstr "Debugging"
+
+#: .\include\ui\models\debugging.py:40
+msgid "General Information"
+msgstr ""
+
+#: .\include\ui\models\debugging.py:54
+msgid "Environment Variables"
+msgstr ""
+
 #: .\include\ui\models\manage.py:24
 msgid "Accounts"
 msgstr "Accounts"
@@ -1769,17 +1813,33 @@ msgid "Force IPv4"
 msgstr "Force IPv4"
 
 #: .\include\ui\models\settings\connection.py:85
+#: .\include\ui\models\settings\safety.py:66
 #: .\include\ui\models\settings\updates.py:86
 msgid "Settings Saved."
 msgstr "Settings Saved."
 
+#: .\include\ui\models\settings\language.py:25
+#: .\include\ui\models\settings\language.py:36
 #: .\include\ui\models\settings\overview.py:32
 msgid "Language"
 msgstr "Language"
 
+#: .\include\ui\models\settings\language.py:37
 #: .\include\ui\models\settings\overview.py:33
 msgid "Select your preferred language"
 msgstr "Select your preferred language"
+
+#: .\include\ui\models\settings\language.py:48
+msgid ""
+"Select your preferred language for the application interface. You may need "
+"to restart the application for changes to take full effect."
+msgstr ""
+
+#: .\include\ui\models\settings\language.py:74
+msgid ""
+"Language setting saved. Please restart the application for changes to take "
+"effect."
+msgstr ""
 
 #: .\include\ui\models\settings\overview.py:39
 msgid "Change application proxy settings"
@@ -1806,6 +1866,21 @@ msgstr ""
 msgid "Manage two-factor authentication settings"
 msgstr "Manage two-factor authentication settings"
 
+#: .\include\ui\models\settings\safety.py:25
+msgid "Safety"
+msgstr ""
+
+#: .\include\ui\models\settings\safety.py:36
+msgid "Enable connection history logging"
+msgstr "Enable connection history logging"
+
+#: .\include\ui\models\settings\safety.py:42
+msgid ""
+"Decide whether the app should log the server address of the last connection. "
+"While this feature increases convenience, it may also increase the risk of "
+"exposing the server address."
+msgstr ""
+
 #: .\include\ui\models\settings\twofa.py:44
 msgid "Two-Factor Authentication Status: Checking..."
 msgstr "Two-Factor Authentication Status: Checking..."
@@ -1820,35 +1895,63 @@ msgstr ""
 "You'll need to enter a code from your authenticator app in addition to your "
 "password when logging in."
 
-#: .\include\ui\models\settings\twofa.py:58
+#: .\include\ui\models\settings\twofa.py:60
 msgid "Enable Two-Factor Authentication"
 msgstr "Enable Two-Factor Authentication"
 
-#: .\include\ui\models\settings\twofa.py:66
-#: .\include\ui\models\settings\twofa.py:244
+#: .\include\ui\models\settings\twofa.py:68
+#: .\include\ui\models\settings\twofa.py:264
 msgid "Disable Two-Factor Authentication"
 msgstr "Disable Two-Factor Authentication"
 
-#: .\include\ui\models\settings\twofa.py:122
+#: .\include\ui\models\settings\twofa.py:114
+msgid "Failed to load 2FA status: {resp_msg}"
+msgstr ""
+
+#: .\include\ui\models\settings\twofa.py:121
+msgid "Error loading 2FA status: {strerr}"
+msgstr "Error loading 2FA status: {strerr}"
+
+#: .\include\ui\models\settings\twofa.py:131
 msgid "Two-Factor Authentication Status: Enabled"
 msgstr "Two-Factor Authentication Status: Enabled"
 
-#: .\include\ui\models\settings\twofa.py:127
+#: .\include\ui\models\settings\twofa.py:136
 msgid "Two-Factor Authentication Status: Disabled"
 msgstr "Two-Factor Authentication Status: Disabled"
 
-#: .\include\ui\models\settings\twofa.py:207
-#: .\include\ui\models\settings\twofa.py:222
+#: .\include\ui\models\settings\twofa.py:178
+msgid "Invalid setup data received from server"
+msgstr ""
+
+#: .\include\ui\models\settings\twofa.py:182
+msgid "Failed to initiate 2FA setup: {resp_msg}"
+msgstr ""
+
+#: .\include\ui\models\settings\twofa.py:189
+msgid "Error setting up 2FA: {strerror}"
+msgstr ""
+
+#: .\include\ui\models\settings\twofa.py:224
+#: .\include\ui\models\settings\twofa.py:242
 msgid "Two-Factor Authentication enabled successfully!"
 msgstr "Two-Factor Authentication enabled successfully!"
 
-#: .\include\ui\models\settings\twofa.py:245
+#: .\include\ui\models\settings\twofa.py:265
 msgid "Please enter your password to disable two-factor authentication."
 msgstr "Please enter your password to disable two-factor authentication."
 
-#: .\include\ui\models\settings\twofa.py:268
+#: .\include\ui\models\settings\twofa.py:290
 msgid "Two-Factor Authentication disabled"
 msgstr "Two-Factor Authentication disabled"
+
+#: .\include\ui\models\settings\twofa.py:296
+msgid "Failed to disable 2FA: {resp_msg}"
+msgstr "Failed to disable 2FA: {resp_msg}"
+
+#: .\include\ui\models\settings\twofa.py:304
+msgid "Error disabling 2FA: {strerr}"
+msgstr "Error disabling 2FA: {strerr}"
 
 #: .\include\ui\models\settings\updates.py:37
 msgid "Update Channel"
