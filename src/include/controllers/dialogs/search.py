@@ -24,24 +24,24 @@ class SearchDialogController(BaseController["SearchDialog"]):
         """Execute search with specified parameters."""
         # Get search parameters from the dialog
         query = self.control.search_textfield.value
-        
+
         if not query or not query.strip():
             self.control.search_textfield.error = _("Search query cannot be empty")
             self.control.update()
             return
-        
+
         search_documents = self.control.search_documents_checkbox.value
         search_directories = self.control.search_directories_checkbox.value
-        
+
         if not search_documents and not search_directories:
             self.control.send_error(_("At least one search type must be selected"))
             return
-        
+
         # Get sort parameters
         # Dropdown values are expected to be internal sort keys (e.g. "name", "created_time", "asc", "desc")
         sort_by = self.control.sort_by_dropdown.value or "name"
         sort_order = self.control.sort_order_dropdown.value or "asc"
-        
+
         try:
             limit = int(self.control.limit_textfield.value)
             if limit < 1:
@@ -50,13 +50,13 @@ class SearchDialogController(BaseController["SearchDialog"]):
                 limit = 1000
         except (ValueError, TypeError):
             limit = 100
-        
+
         # Clear any previous error before starting a valid search
         self.control.search_textfield.error = None
-        
+
         # Show loading state
         self.control.show_loading()
-        
+
         try:
             # Make the search request
             response = await do_request_2(
@@ -72,7 +72,7 @@ class SearchDialogController(BaseController["SearchDialog"]):
                 username=self.app_shared.username,
                 token=self.app_shared.token,
             )
-            
+
             if response.code == 200:
                 # Update results
                 self.control.display_results(response.data, query.strip())

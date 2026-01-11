@@ -54,7 +54,9 @@ class FileExplorerController(BaseController["FileManagerView"]):
             self.control.page.update()
 
         # Callback for handling file conflicts
-        async def on_conflict(filename: str, conflict_type: str, conflict_id: str) -> str | None:
+        async def on_conflict(
+            filename: str, conflict_type: str, conflict_id: str
+        ) -> str | None:
             """Handle file conflict by showing a dialog to the user."""
             confirm_dialog = FileOverwriteConfirmDialog(
                 filename=filename,
@@ -124,10 +126,10 @@ class FileExplorerController(BaseController["FileManagerView"]):
                 # File was skipped, mark as processed but don't update progress bar
                 files_processed = True
                 continue
-            
+
             # Mark file as processed
             files_processed = True
-            
+
             # Update progress bar
             # For empty files (size 0), show as complete
             if file_size == 0:
@@ -138,7 +140,7 @@ class FileExplorerController(BaseController["FileManagerView"]):
                 # Normal file with size
                 progress_bar.value = current_size / file_size
                 progress_info.value = f"[{index+1}/{len(files)}] {current_size / 1024 / 1024:.2f} MB/{file_size / 1024 / 1024:.2f} MB"
-            
+
             progress_column.update()
 
             if stop_event.is_set():
@@ -169,7 +171,7 @@ class FileExplorerController(BaseController["FileManagerView"]):
         stop_event = asyncio.Event()
         upload_dialog = UploadDirectoryAlertDialog(stop_event)
         self.control.page.show_dialog(upload_dialog)
-        
+
         # Track "always" choice across all files in directory tree
         always_choice = None
 
@@ -260,16 +262,16 @@ class FileExplorerController(BaseController["FileManagerView"]):
                 )
 
                 task_id = None
-                
+
                 if create_document_response.get("code") == 409:
                     # Handle conflict (file already exists)
                     conflict_type = create_document_response.get("data", {}).get("type")
                     conflict_id = create_document_response.get("data", {}).get("id")
-                    
+
                     # conflict_id must be a non-empty string for overwrite to work
                     if conflict_type == "document" and conflict_id:
                         # Use always choice if set, otherwise ask user
-                        if always_choice in ('always_overwrite', 'always_skip'):
+                        if always_choice in ("always_overwrite", "always_skip"):
                             user_choice = normalize_always_choice(always_choice)
                         else:
                             # Show overwrite confirmation dialog
@@ -291,13 +293,13 @@ class FileExplorerController(BaseController["FileManagerView"]):
                             )
                             self.control.page.show_dialog(confirm_dialog)
                             user_choice = await confirm_dialog.wait_for_choice()
-                            
+
                             # Store "always" choices for subsequent files
-                            if user_choice in ('always_overwrite', 'always_skip'):
+                            if user_choice in ("always_overwrite", "always_skip"):
                                 always_choice = user_choice
                                 user_choice = normalize_always_choice(user_choice)
-                        
-                        if user_choice == 'overwrite':
+
+                        if user_choice == "overwrite":
                             # Upload as a new version of existing document
                             upload_response = await do_request(
                                 action="upload_document",
@@ -307,17 +309,19 @@ class FileExplorerController(BaseController["FileManagerView"]):
                                 username=self.app_shared.username,
                                 token=self.app_shared.token,
                             )
-                            
+
                             if upload_response.get("code") == 200:
                                 # Get task_id with defensive checks
-                                task_data = upload_response.get("data", {}).get("task_data", {})
+                                task_data = upload_response.get("data", {}).get(
+                                    "task_data", {}
+                                )
                                 task_id = task_data.get("task_id")
                                 if not task_id:
                                     upload_dialog.error_column.controls.append(
                                         ft.Text(
-                                            _('Internal error: Missing task_id for file "{filename}"').format(
-                                                filename=filename
-                                            )
+                                            _(
+                                                'Internal error: Missing task_id for file "{filename}"'
+                                            ).format(filename=filename)
                                         )
                                     )
                                     upload_dialog.error_column.update()
@@ -325,7 +329,9 @@ class FileExplorerController(BaseController["FileManagerView"]):
                             else:
                                 upload_dialog.error_column.controls.append(
                                     ft.Text(
-                                        _('Upload file "{filename}" failed: {errmsg}').format(
+                                        _(
+                                            'Upload file "{filename}" failed: {errmsg}'
+                                        ).format(
                                             filename=filename,
                                             errmsg=upload_response.get(
                                                 "message", "Unknown error"
@@ -335,11 +341,11 @@ class FileExplorerController(BaseController["FileManagerView"]):
                                 )
                                 upload_dialog.error_column.update()
                                 continue
-                        
-                        elif user_choice == 'skip':
+
+                        elif user_choice == "skip":
                             # Skip this file
                             continue
-                        
+
                         else:
                             # User cancelled, stop upload
                             await _close_transfer_conn()
@@ -358,7 +364,7 @@ class FileExplorerController(BaseController["FileManagerView"]):
                         )
                         upload_dialog.error_column.update()
                         continue
-                
+
                 elif create_document_response.get("code") != 200:
                     upload_dialog.error_column.controls.append(
                         ft.Text(
@@ -372,20 +378,22 @@ class FileExplorerController(BaseController["FileManagerView"]):
                     )
                     upload_dialog.error_column.update()
                     continue
-                
+
                 else:
                     # Success - get task_id with defensive checks
-                    task_data = create_document_response.get("data", {}).get("task_data", {})
+                    task_data = create_document_response.get("data", {}).get(
+                        "task_data", {}
+                    )
                     task_id = task_data.get("task_id")
-                
+
                 # Verify we have a valid task_id before proceeding
                 if not task_id:
                     # This should not happen in normal operation
                     upload_dialog.error_column.controls.append(
                         ft.Text(
-                            _('Internal error: Missing task_id for file "{filename}"').format(
-                                filename=filename
-                            )
+                            _(
+                                'Internal error: Missing task_id for file "{filename}"'
+                            ).format(filename=filename)
                         )
                     )
                     upload_dialog.error_column.update()
@@ -410,7 +418,9 @@ class FileExplorerController(BaseController["FileManagerView"]):
                                     "proxy_settings"
                                 ],
                                 max_size=1024**2 * 4,
-                                force_ipv4=self.app_shared.preferences["settings"].get("force_ipv4", False),
+                                force_ipv4=self.app_shared.preferences["settings"].get(
+                                    "force_ipv4", False
+                                ),
                             )
                             setattr(
                                 create_dirs_from_tree, "_transfer_conn", transfer_conn

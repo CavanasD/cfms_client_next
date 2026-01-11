@@ -1,10 +1,8 @@
-import gettext
 import json
 
 import flet as ft
 
 from include.classes.config import AppShared
-from include.constants import LOCALE_PATH
 from include.ui.util.notifications import send_error
 from include.util.locale import get_translation
 from include.util.requests import do_request

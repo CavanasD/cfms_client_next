@@ -249,22 +249,21 @@ class AuthorizeDialog(AlertDialog):
     def _has_permission_for_current_type(self) -> bool:
         """Check if user has permission for the currently selected entity type."""
         current_type = self.entity_type.value
-        return (
-            (current_type == "user" and self.has_list_users) or
-            (current_type == "group" and self.has_list_groups)
+        return (current_type == "user" and self.has_list_users) or (
+            current_type == "group" and self.has_list_groups
         )
 
     def _update_ui_for_permissions(self):
         """Update UI visibility based on user permissions and selected entity type."""
         has_permission = self._has_permission_for_current_type()
-        
+
         # Update search button and dropdown visibility
         self.search_button.visible = has_permission
         self.entity_dropdown.visible = has_permission
-        
+
         # Update search field submit handler
         self.entity_search.on_submit = self.search_entity if has_permission else None
-        
+
         # Update hint text based on permission
         if has_permission:
             self.entity_search.hint_text = _("Enter username or group name to search")
@@ -333,7 +332,7 @@ class AuthorizeDialog(AlertDialog):
         if not self._has_permission_for_current_type():
             # User doesn't have permission to search, ignore this request
             return
-        
+
         if not self.entity_search.value:
             self.entity_search.error = _("Please enter a search term")
             self.update()
@@ -354,10 +353,10 @@ class AuthorizeDialog(AlertDialog):
         self.entity_dropdown.options = []
         self.entity_dropdown.value = None
         self.entity_dropdown.disabled = True
-        
+
         # Update UI based on permissions for the new type
         self._update_ui_for_permissions()
-        
+
         self.update()
 
     async def on_date_range_change(self, event: ft.Event[ft.DateRangePicker]):
@@ -388,7 +387,7 @@ class AuthorizeDialog(AlertDialog):
         # Determine which source to use for entity name
         current_type = cast(Literal["user", "group"], self.entity_type.value)
         has_permission = self._has_permission_for_current_type()
-        
+
         # Validate target selection
         if has_permission:
             # When user has permission, they must select from dropdown

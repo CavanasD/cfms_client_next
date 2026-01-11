@@ -1,11 +1,9 @@
 from typing import TYPE_CHECKING, Optional
 import asyncio
-import gettext
 
 import flet as ft
 
 from include.classes.config import AppShared
-from include.constants import LOCALE_PATH
 from include.ui.controls.dialogs.base import AlertDialog
 from include.ui.util.notifications import send_error
 from include.util.locale import get_translation
@@ -290,7 +288,7 @@ class EditGroupPermissionDialog(AlertDialog):
         to_submit_list = []
         for checkbox in self.permission_listview.controls:
             assert isinstance(checkbox, ft.Checkbox)
-            if checkbox.value == True:
+            if checkbox.value is True:
                 to_submit_list.append(checkbox.data)
 
         response = await do_request(

@@ -20,7 +20,7 @@ _ = t.gettext
 
 class SearchResultDirectoryTile(ft.ListTile):
     """Custom directory tile for search results that navigates to the directory."""
-    
+
     def __init__(
         self,
         directory_id: str,
@@ -33,27 +33,28 @@ class SearchResultDirectoryTile(ft.ListTile):
         self.directory_name = directory_name
         self.parent_manager = parent_manager
         self.dialog = dialog
-        
+
         # Format subtitle with creation time
         subtitle_text = _("Created: {created_time}").format(
             created_time=datetime.fromtimestamp(created_time).strftime(
                 "%Y-%m-%d %H:%M:%S"
             )
         )
-        
+
         super().__init__(
             leading=ft.Icon(ft.Icons.FOLDER),
             title=ft.Text(directory_name),
             subtitle=ft.Text(subtitle_text),
             on_click=self.handle_click,
         )
-    
+
     async def handle_click(self, e):
         """Navigate to this directory."""
         # Close the search dialog
         self.dialog.close()
         # Navigate to the directory
         from include.ui.util.file_controls import get_directory
+
         await get_directory(
             id=self.directory_id,
             view=self.parent_manager.file_listview,
@@ -62,7 +63,7 @@ class SearchResultDirectoryTile(ft.ListTile):
 
 class SearchResultFileTile(ft.ListTile):
     """Custom file tile for search results that navigates to the parent directory."""
-    
+
     def __init__(
         self,
         file_id: str,
@@ -78,27 +79,28 @@ class SearchResultFileTile(ft.ListTile):
         self.parent_id = parent_id
         self.parent_manager = parent_manager
         self.dialog = dialog
-        
+
         # Format subtitle with size and last modified
         size_text = "0 Byte" if size == 0 else f"{size / 1024 / 1024:.3f} MB"
         modified_text = datetime.fromtimestamp(last_modified).strftime(
             "%Y-%m-%d %H:%M:%S"
         )
         subtitle_text = f"{size_text} | {_('Last modified')}: {modified_text}"
-        
+
         super().__init__(
             leading=ft.Icon(ft.Icons.INSERT_DRIVE_FILE),
             title=ft.Text(filename),
             subtitle=ft.Text(subtitle_text),
             on_click=self.handle_click,
         )
-    
+
     async def handle_click(self, e):
         """Navigate to the parent directory of this file."""
         # Close the search dialog
         self.dialog.close()
         # Navigate to the parent directory (or root if parent_id is None)
         from include.ui.util.file_controls import get_directory
+
         await get_directory(
             id=self.parent_id,
             view=self.parent_manager.file_listview,
@@ -182,7 +184,7 @@ class SearchDialog(AlertDialog):
             size=16,
             weight=ft.FontWeight.BOLD,
             visible=False,
-            align=ft.Alignment.CENTER
+            align=ft.Alignment.CENTER,
         )
         self.results_listview = ft.ListView(
             controls=[],
@@ -214,21 +216,27 @@ class SearchDialog(AlertDialog):
                 ft.Divider(),
                 # Options section
                 ft.Text(_("Search Options"), weight=ft.FontWeight.BOLD),
-                ft.Row([
-                    self.search_documents_checkbox,
-                    self.search_directories_checkbox,
-                ]),
-                ft.Row([
-                    self.sort_by_dropdown,
-                    self.sort_order_dropdown,
-                    self.limit_textfield,
-                ]),
+                ft.Row(
+                    [
+                        self.search_documents_checkbox,
+                        self.search_directories_checkbox,
+                    ]
+                ),
+                ft.Row(
+                    [
+                        self.sort_by_dropdown,
+                        self.sort_order_dropdown,
+                        self.limit_textfield,
+                    ]
+                ),
                 ft.Divider(),
                 # Progress indicators
-                ft.Row([
-                    self.progress_ring,
-                    self.progress_text,
-                ]),
+                ft.Row(
+                    [
+                        self.progress_ring,
+                        self.progress_text,
+                    ]
+                ),
                 # Results section
                 self.results_title,
                 self.results_listview,
@@ -271,16 +279,20 @@ class SearchDialog(AlertDialog):
     def display_results(self, data: dict, query: str):
         """Display search results."""
         self.hide_loading()
-        
+
         documents = data.get("documents", [])
         directories = data.get("directories", [])
         total_count = data.get("total_count", 0)
 
         # Update title
         if total_count == 0:
-            self.results_title.value = _("No results found for \"{query}\"").format(query=query)
+            self.results_title.value = _('No results found for "{query}"').format(
+                query=query
+            )
         else:
-            self.results_title.value = _("Found {count} result(s) for \"{query}\"").format(
+            self.results_title.value = _(
+                'Found {count} result(s) for "{query}"'
+            ).format(
                 count=total_count,
                 query=query,
             )

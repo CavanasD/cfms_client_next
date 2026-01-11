@@ -59,7 +59,6 @@ class ContextMenu2(ft.ContextMenu):
             ref=ref,
         )
 
-
     @property
     def menu_items(self):
         return self._menu_items

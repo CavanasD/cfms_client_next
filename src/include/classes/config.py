@@ -10,7 +10,6 @@ from flet_permission_handler import PermissionHandler
 from websockets.asyncio.client import ClientConnection
 
 from include.classes.preferences import UserPreference
-from include.classes.twofa import TwoFactorConfig, TwoFactorStatus, TwoFactorMethod
 from include.constants import FLET_APP_STORAGE_DATA, DEFAULT_UPDATE_CHANNEL
 
 if TYPE_CHECKING:
@@ -69,7 +68,7 @@ class AppShared:
     def __init__(self):
         if getattr(self, "_initialized", False):
             return
-        
+
         # Runtime constants
         self.is_mobile: bool = False
         self.is_production: bool = False

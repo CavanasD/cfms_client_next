@@ -15,17 +15,17 @@ async def create_directory(
 ) -> str:
     """
     Create a directory on the server.
-    
+
     Args:
         parent_id: ID of the parent directory, or None for root level
         name: Name of the directory to create
         username: Username for authentication
         token: Authentication token
         exists_ok: If True, don't raise an error if directory already exists
-        
+
     Returns:
         ID of the created (or existing) directory
-        
+
     Raises:
         CreateDirectoryFailureError: If directory creation fails
     """
@@ -44,5 +44,5 @@ async def create_directory(
         raise CreateDirectoryFailureError(
             name, mkdir_resp.get("message", "Unknown error")
         )
-    
+
     return mkdir_resp["data"]["id"]

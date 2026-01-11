@@ -16,10 +16,10 @@ __all__ = ["create_translation", "set_translation", "get_translation"]
 class DelegatingTranslation(gettext.NullTranslations):
     """
     Singleton translation proxy that delegates calls to an internal real translation.
-    
+
     This class allows for runtime switching of translations by replacing the
     internal translation object. Subsequent constructions return the same instance.
-    
+
     Thread-safe singleton implementation ensures consistent translation behavior
     across the application.
     """
@@ -37,7 +37,7 @@ class DelegatingTranslation(gettext.NullTranslations):
     def __init__(self, real=None):
         """
         Initialize or update the translation proxy.
-        
+
         Args:
             real: Optional translation object to use. If provided on re-initialization,
                   replaces the current translation.
@@ -56,7 +56,7 @@ class DelegatingTranslation(gettext.NullTranslations):
     def set_real(self, real):
         """
         Replace the internal real translation object.
-        
+
         Args:
             real: New translation object to use
         """
@@ -66,7 +66,7 @@ class DelegatingTranslation(gettext.NullTranslations):
     def get_real(self):
         """
         Return the current internal real translation object.
-        
+
         Returns:
             The current translation object
         """
@@ -127,10 +127,10 @@ def create_translation(language: str = "en", fallback: bool = True):
 def set_translation(language: str = "en", fallback: bool = True):
     """
     Set the global translation to a specific language.
-    
+
     This updates the singleton DelegatingTranslation instance with a new
     language translation.
-    
+
     Args:
         language: Language code (e.g., 'en', 'zh_CN'). Defaults to 'en'.
         fallback: Whether to fallback to NullTranslations if language not found.
@@ -144,7 +144,7 @@ def set_translation(language: str = "en", fallback: bool = True):
 def get_translation():
     """
     Get the singleton translation instance.
-    
+
     Returns:
         The global DelegatingTranslation singleton instance.
     """

@@ -9,6 +9,7 @@ from include.ui.util.notifications import send_error
 from include.ui.util.user_controls import update_user_controls
 from include.util.locale import get_translation
 from include.util.requests import do_request
+
 t = get_translation()
 _ = t.gettext
 
@@ -82,7 +83,7 @@ class ManageAccountsView(ft.Container):
     def disable_interactions(self):
         self.progress_ring.visible = True
         self.user_listview.visible = False
-    
+
     def enable_interactions(self):
         self.progress_ring.visible = False
         self.user_listview.visible = True
@@ -106,11 +107,16 @@ class ManageAccountsView(ft.Container):
         )
 
         if (code := response["code"]) != 200:
-            send_error(self.page, _("Load failed: ({code}) {message}").format(code=code, message=response['message']))
+            send_error(
+                self.page,
+                _("Load failed: ({code}) {message}").format(
+                    code=code, message=response["message"]
+                ),
+            )
         else:
             update_user_controls(
                 self.user_listview, response["data"]["users"], _update_page
             )
-        
+
         self.enable_interactions()
         self.update()

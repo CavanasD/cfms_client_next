@@ -68,12 +68,16 @@ class FileContextMenuController(BaseController["FileContextMenu"]):
 
     async def action_authorize(self):
         self.control.page.show_dialog(
-            AuthorizeDialog("document", self.control.file_id, self.control.parent_listview)
+            AuthorizeDialog(
+                "document", self.control.file_id, self.control.parent_listview
+            )
         )
 
     async def action_view_access_entries(self):
         self.control.page.show_dialog(
-            ViewAccessEntriesDialog("document", self.control.file_id, self.control.parent_listview)
+            ViewAccessEntriesDialog(
+                "document", self.control.file_id, self.control.parent_listview
+            )
         )
 
     async def action_set_access_rules(self):

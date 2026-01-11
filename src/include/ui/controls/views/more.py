@@ -58,7 +58,7 @@ class MoreView(ft.Container):
             spacing=20,
             alignment=ft.MainAxisAlignment.START,
         )
-        
+
     async def passwd_listtile_click(self, event: ft.Event[ft.ListTile]):
         self.page.show_dialog(
             PasswdUserDialog(self.app_shared.get_not_none_attribute("username"))

@@ -4,7 +4,7 @@ from typing import Generic, TypeVar
 
 from include.classes.config import AppShared
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 __all__ = ["BaseController"]
 
@@ -12,21 +12,21 @@ __all__ = ["BaseController"]
 class BaseController(Generic[T]):
     """
     Base controller class for managing UI control interactions.
-    
+
     Generic type T represents the type of control being managed.
-    
+
     Attributes:
         control: The UI control instance being managed
         app_shared: Singleton application configuration instance
     """
-    
+
     control: T
     app_shared: AppShared
 
     def __init__(self, control: T, *args, **kwargs) -> None:
         """
         Initialize the controller with a control instance.
-        
+
         Args:
             control: The UI control to manage
         """

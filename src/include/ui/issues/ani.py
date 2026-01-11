@@ -1,21 +1,36 @@
-from flet import AnimationCurve, Page, Container, Button, Row, Column, Slider, Text, Animation
+from flet import (
+    AnimationCurve,
+    Page,
+    Container,
+    Button,
+    Row,
+    Column,
+    Slider,
+    Text,
+    Animation,
+)
 import flet as ft
 
 
 def main(page: Page):
     page.title = "Flet Animation Demo"
 
-    box = Container(width=120, height=120, bgcolor="#2196F3", border_radius=8, opacity=1.0, animate_opacity=Animation(500, AnimationCurve.EASE_IN_OUT))
+    box = Container(
+        width=120,
+        height=120,
+        bgcolor="#2196F3",
+        border_radius=8,
+        opacity=1.0,
+        animate_opacity=Animation(500, AnimationCurve.EASE_IN_OUT),
+    )
 
     def animate(duration=500, curve=AnimationCurve.EASE_IN_OUT):
         box.animate = Animation(duration, curve)
         page.update()
 
-
     def animate_opacity(duration=500, curve=AnimationCurve.EASE_IN_OUT):
         # box.animate_opacity = Animation(duration, curve)
         page.update()
-
 
     def toggle_size(e):
         if box.width == 120:
@@ -56,6 +71,7 @@ def main(page: Page):
     )
 
     page.add(controls)
+
 
 if __name__ == "__main__":
     ft.run(main=main)

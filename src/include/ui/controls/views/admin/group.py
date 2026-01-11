@@ -1,11 +1,9 @@
 from typing import TYPE_CHECKING
 import asyncio
-import gettext
 
 import flet as ft
 
 from include.classes.config import AppShared
-from include.constants import LOCALE_PATH
 from include.ui.controls.dialogs.admin.groups import AddUserGroupDialog
 from include.ui.util.group_controls import update_group_controls
 from include.ui.util.notifications import send_error

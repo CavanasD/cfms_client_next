@@ -1,10 +1,11 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 
 
 class DownloadTaskStatus(Enum):
     """Status enum for download tasks."""
+
     PENDING = "pending"
     DOWNLOADING = "downloading"
     PAUSED = "paused"
@@ -19,6 +20,7 @@ class DownloadTaskStatus(Enum):
 @dataclass
 class DownloadTask:
     """Represents a download task."""
+
     task_id: str
     file_id: str
     filename: str
@@ -38,7 +40,9 @@ class DownloadTask:
     scheduled_time: Optional[float] = None  # Unix timestamp for scheduled downloads
     bandwidth_limit: Optional[int] = None  # Bytes per second limit (None = unlimited)
     pause_position: Optional[int] = None  # Bytes downloaded before pause
-    supports_resume: bool = False  # Whether server supports resume/pause (from server metadata)
+    supports_resume: bool = (
+        False  # Whether server supports resume/pause (from server metadata)
+    )
 
 
 @dataclass

@@ -159,7 +159,9 @@ class DownloadManagerService(BaseService):
                 disable_ssl_enforcement=self.app_shared.disable_ssl_enforcement,
                 proxy=self.app_shared.preferences["settings"]["proxy_settings"],
                 max_size=1024**2 * 4,
-                force_ipv4=self.app_shared.preferences["settings"].get("force_ipv4", False),
+                force_ipv4=self.app_shared.preferences["settings"].get(
+                    "force_ipv4", False
+                ),
             )
 
             # Start file transfer
@@ -271,7 +273,7 @@ class DownloadManagerService(BaseService):
         if not task:
             self.logger.warning(f"Cannot pause task {task_id}: task not found")
             return False
-        
+
         # Check if task supports resume
         if not task.supports_resume:
             self.logger.warning(
@@ -419,13 +421,13 @@ class DownloadManagerService(BaseService):
     def _get_persistence_file_path(self) -> str:
         """
         Get the user-specific persistence file path.
-        
+
         Uses the same pattern as user_preferences: {server_address_hash}_{username}.json
         This ensures task lists are separated by both server and user.
-        
+
         Returns:
             Path to the user-specific persistence file. If no user is logged in or
-            server address is not set, returns the legacy shared file path for 
+            server address is not set, returns the legacy shared file path for
             backward compatibility.
         """
         username = self.app_shared.username
@@ -483,7 +485,9 @@ class DownloadManagerService(BaseService):
             with open(persistence_file, "w") as f:
                 json.dump(tasks_to_save, f, indent=2)
 
-            self.logger.debug(f"Saved {len(tasks_to_save)} tasks to disk (file: {os.path.basename(persistence_file)})")
+            self.logger.debug(
+                f"Saved {len(tasks_to_save)} tasks to disk (file: {os.path.basename(persistence_file)})"
+            )
 
         except Exception as e:
             self.logger.error(f"Failed to save tasks: {e}", exc_info=True)
@@ -495,7 +499,7 @@ class DownloadManagerService(BaseService):
 
         # Get user-specific persistence file path
         persistence_file = self._get_persistence_file_path()
-        
+
         if not os.path.exists(persistence_file):
             return
 
@@ -534,12 +538,16 @@ class DownloadManagerService(BaseService):
                     scheduled_time=task_dict["scheduled_time"],
                     bandwidth_limit=task_dict["bandwidth_limit"],
                     pause_position=task_dict["pause_position"],
-                    supports_resume=task_dict.get("supports_resume", False),  # Default to False for backward compatibility
+                    supports_resume=task_dict.get(
+                        "supports_resume", False
+                    ),  # Default to False for backward compatibility
                 )
 
                 self.tasks[task_id] = task
 
-            self.logger.info(f"Loaded {len(self.tasks)} tasks from disk (file: {os.path.basename(persistence_file)})")
+            self.logger.info(
+                f"Loaded {len(self.tasks)} tasks from disk (file: {os.path.basename(persistence_file)})"
+            )
 
         except Exception as e:
             self.logger.error(f"Failed to load tasks: {e}", exc_info=True)
@@ -614,7 +622,9 @@ class DownloadManagerService(BaseService):
             been updated, and tasks are saved periodically through auto-save mechanisms.
         """
 
-        self.logger.info(f"Reloading tasks for user '{self.app_shared.username or 'anonymous'}'")
+        self.logger.info(
+            f"Reloading tasks for user '{self.app_shared.username or 'anonymous'}'"
+        )
 
         if self.active_downloads:
             self.logger.warning(
@@ -802,7 +812,7 @@ class DownloadManagerService(BaseService):
     ) -> DownloadTask:
         """
         Add a new download task to the queue.
-        
+
         If a completed task already exists with the same file_path, it will be removed
         since the file will be overwritten by this new download.
 
@@ -824,28 +834,30 @@ class DownloadManagerService(BaseService):
         # These will be overwritten, so remove them to avoid confusion
         tasks_to_remove = []
         for existing_task_id, existing_task in self.tasks.items():
-            if (existing_task.file_path == file_path and 
-                existing_task.status == DownloadTaskStatus.COMPLETED):
+            if (
+                existing_task.file_path == file_path
+                and existing_task.status == DownloadTaskStatus.COMPLETED
+            ):
                 tasks_to_remove.append(existing_task_id)
                 self.logger.info(
                     f"Removing old completed task {existing_task_id} for {existing_task.filename} "
                     f"as new task will overwrite the file at {file_path}"
                 )
-        
+
         # Remove old completed tasks
         for task_id_to_remove in tasks_to_remove:
             # Notify before removing
             old_task = self.tasks[task_id_to_remove]
             self._notify_task_update(old_task)
             del self.tasks[task_id_to_remove]
-        
+
         # Determine initial status
         if scheduled_time and scheduled_time > time.time():
             status = DownloadTaskStatus.SCHEDULED
         else:
             status = DownloadTaskStatus.PENDING
             scheduled_time = None
-        
+
         task = DownloadTask(
             task_id=task_id,
             file_id=file_id,
@@ -865,7 +877,7 @@ class DownloadManagerService(BaseService):
             f"Added download task: {filename} (task_id: {task_id}, priority: {priority}, supports_resume: {supports_resume})"
         )
         self._notify_task_update(task)
-        
+
         # Save tasks if persistence is enabled
         if self.enable_persistence:
             asyncio.create_task(self._save_tasks())

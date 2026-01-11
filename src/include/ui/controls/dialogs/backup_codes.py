@@ -12,15 +12,15 @@ _ = t.gettext
 class BackupCodesDialog(AlertDialog):
     """
     Dialog for displaying 2FA backup codes.
-    
+
     Shows backup codes after 2FA is successfully enabled,
     prompting the user to save them securely.
     """
-    
+
     def __init__(self, backup_codes: list[str], on_close_callback=None):
         """
         Initialize the backup codes dialog.
-        
+
         Args:
             backup_codes: List of backup recovery codes
             on_close_callback: Async function to call when user closes the dialog
@@ -30,13 +30,13 @@ class BackupCodesDialog(AlertDialog):
             scrollable=True,
             title=ft.Text(_("Save Your Backup Codes")),
         )
-        
+
         self.backup_codes = backup_codes
         self.on_close_callback = on_close_callback
-        
+
         # Create backup codes display
         codes_text = "\n".join(backup_codes)
-        
+
         self.codes_field = ft.TextField(
             value=codes_text,
             multiline=True,
@@ -48,13 +48,13 @@ class BackupCodesDialog(AlertDialog):
             expand=True,
             expand_loose=True,
         )
-        
+
         # Close button
         self.close_button = ft.TextButton(
             _("I Have Saved My Codes"),
             on_click=self._on_close_click,
         )
-        
+
         # Dialog content
         self.content = ft.Column(
             [
@@ -66,8 +66,10 @@ class BackupCodesDialog(AlertDialog):
                 ),
                 ft.Divider(),
                 ft.Text(
-                    _("Save these backup codes in a secure location. "
-                      "You can use them to access your account if you lose access to your authenticator app."),
+                    _(
+                        "Save these backup codes in a secure location. "
+                        "You can use them to access your account if you lose access to your authenticator app."
+                    ),
                     size=14,
                 ),
                 ft.Text(
@@ -81,7 +83,9 @@ class BackupCodesDialog(AlertDialog):
                 ft.Container(height=10),
                 ft.Row(
                     [
-                        ft.Icon(ft.Icons.WARNING_AMBER, color=ft.Colors.ORANGE, size=20),
+                        ft.Icon(
+                            ft.Icons.WARNING_AMBER, color=ft.Colors.ORANGE, size=20
+                        ),
                         ft.Text(
                             _("Store these codes safely - they won't be shown again!"),
                             size=12,
@@ -96,13 +100,13 @@ class BackupCodesDialog(AlertDialog):
             spacing=10,
             scroll=ft.ScrollMode.AUTO,
         )
-        
+
         self.actions = [
             self.close_button,
         ]
-        
+
         self.actions_alignment = ft.MainAxisAlignment.CENTER
-    
+
     async def _on_close_click(self, e):
         """Handle close button click."""
         if self.on_close_callback:

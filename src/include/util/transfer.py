@@ -29,12 +29,12 @@ from include.util.requests import do_request_2
 async def calculate_sha256(file_path: str) -> str:
     """
     Calculate SHA256 hash of a file using memory-mapped I/O for efficiency.
-    
+
     Uses memory-mapped files for faster hash calculation of large files.
-    
+
     Args:
         file_path: Path to the file to hash
-        
+
     Returns:
         Hexadecimal SHA256 hash string
     """
@@ -44,22 +44,20 @@ async def calculate_sha256(file_path: str) -> str:
         return hashlib.sha256(mmapped_file).hexdigest()
 
 
-async def upload_file_to_server(
-    client: ClientConnection, task_id: str, file_path: str
-):
+async def upload_file_to_server(client: ClientConnection, task_id: str, file_path: str):
     """
     Upload a file to the server over WebSocket connection.
-    
+
     Yields progress updates as (current_bytes, total_bytes) tuples.
-    
+
     Args:
         client: Active WebSocket connection
         task_id: Server task ID for this upload
         file_path: Local path to the file to upload
-        
+
     Yields:
         Tuples of (bytes_uploaded, total_file_size) for progress tracking
-        
+
     Raises:
         ValueError: If server response is invalid
         RuntimeError: If upload is rejected by server
@@ -309,15 +307,17 @@ async def batch_upload_file_to_server(
     files: list[FilePickerFile],
     max_size: int = 1024**2 * 4,
     max_retries: int = 3,
-    on_conflict_callback: Optional[Callable[[str, str, str], Awaitable[Optional[str]]]] = None,
+    on_conflict_callback: Optional[
+        Callable[[str, str, str], Awaitable[Optional[str]]]
+    ] = None,
 ):
     """
     Upload multiple files to the server with progress tracking and retry logic.
-    
+
     Processes files sequentially, creating a document for each file and uploading
     its contents. Yields progress information for each file. Handles file conflicts
     (409 responses) by calling the optional callback function.
-    
+
     Args:
         app_shared: Application configuration containing auth and connection info
         directory_id: Target directory ID on server, or None for root
@@ -326,13 +326,13 @@ async def batch_upload_file_to_server(
         max_retries: Maximum retry attempts per file (default: 3)
         on_conflict_callback: Optional async callback function that receives
             (filename, conflict_type, conflict_id) and returns 'overwrite', 'skip',
-            'always_overwrite', 'always_skip', or None. If None, 409 errors are 
+            'always_overwrite', 'always_skip', or None. If None, 409 errors are
             treated as regular errors.
-        
+
     Yields:
         Tuples of (file_index, filename, bytes_uploaded, total_size, exception)
         where exception is None on success or an Exception object on error
-        
+
     Raises:
         AssertionError: If file path is None
     """
@@ -348,11 +348,15 @@ async def batch_upload_file_to_server(
                     # check whether transfer_conn exists
                     if not transfer_conn:
                         transfer_conn = await get_connection(
-                            server_address=app_shared.get_not_none_attribute("server_address"),
+                            server_address=app_shared.get_not_none_attribute(
+                                "server_address"
+                            ),
                             disable_ssl_enforcement=app_shared.disable_ssl_enforcement,
                             proxy=app_shared.preferences["settings"]["proxy_settings"],
                             max_size=max_size,
-                            force_ipv4=app_shared.preferences["settings"].get("force_ipv4", False),
+                            force_ipv4=app_shared.preferences["settings"].get(
+                                "force_ipv4", False
+                            ),
                         )
 
                     # create a new task on the server
@@ -371,25 +375,29 @@ async def batch_upload_file_to_server(
                         # Handle conflict (file already exists)
                         conflict_type = response.data.get("type")
                         conflict_id = response.data.get("id")
-                        
+
                         # Check if we can handle this conflict
                         # conflict_id must be a non-empty string for overwrite to work
-                        if (conflict_type == "document" and conflict_id and on_conflict_callback):
+                        if (
+                            conflict_type == "document"
+                            and conflict_id
+                            and on_conflict_callback
+                        ):
                             # Use always choice if set, otherwise ask user
-                            if always_choice in ('always_overwrite', 'always_skip'):
+                            if always_choice in ("always_overwrite", "always_skip"):
                                 user_choice = normalize_always_choice(always_choice)
                             else:
                                 # Ask user what to do
                                 user_choice = await on_conflict_callback(
                                     filename, conflict_type, conflict_id
                                 )
-                                
+
                                 # Store "always" choices for subsequent files
-                                if user_choice in ('always_overwrite', 'always_skip'):
+                                if user_choice in ("always_overwrite", "always_skip"):
                                     always_choice = user_choice
                                     user_choice = normalize_always_choice(user_choice)
-                            
-                            if user_choice == 'overwrite':
+
+                            if user_choice == "overwrite":
                                 # Upload as a new version of the existing document
                                 upload_response = await do_request_2(
                                     action="upload_document",
@@ -399,40 +407,45 @@ async def batch_upload_file_to_server(
                                     username=app_shared.username,
                                     token=app_shared.token,
                                 )
-                                
+
                                 if upload_response.code != 200:
                                     raise InvalidResponseError(
                                         upload_response,
                                         f"Failed to upload document '{filename}': {upload_response.message}",
                                     )
-                                
+
                                 # Get task_id with defensive checks
-                                task_id = upload_response.data.get("task_data", {}).get("task_id")
+                                task_id = upload_response.data.get("task_data", {}).get(
+                                    "task_id"
+                                )
                                 if not task_id:
                                     raise InvalidResponseError(
                                         upload_response,
                                         f"Server response missing task_id for '{filename}'",
                                     )
-                                
-                                async for current_size, total_size in upload_file_to_server(
+
+                                async for (
+                                    current_size,
+                                    total_size,
+                                ) in upload_file_to_server(
                                     transfer_conn, task_id, file_path
                                 ):
                                     yield index, filename, current_size, total_size, None
-                                
+
                                 break  # break the retry loop if successful
-                            
-                            elif user_choice == 'skip':
+
+                            elif user_choice == "skip":
                                 # Skip this file, but still yield a progress update so callers
                                 # can account for this file in their progress tracking.
                                 # Use -1, -1 to distinguish from empty files (0, 0)
                                 yield index, filename, -1, -1, None
                                 break
-                            
+
                             else:
                                 # User cancelled, stop all uploads
                                 raise InvalidResponseError(
                                     response,
-                                    f"Upload cancelled by user",
+                                    "Upload cancelled by user",
                                 )
                         else:
                             # Can't handle this conflict (no ID, wrong type, or no callback)
@@ -440,13 +453,13 @@ async def batch_upload_file_to_server(
                                 response,
                                 f"Failed to create document '{filename}': {response.message}",
                             )
-                    
+
                     elif response.code != 200:
                         raise InvalidResponseError(
                             response,
                             f"Failed to create document '{filename}': {response.message}",
                         )
-                    
+
                     else:
                         # Success - normal flow
                         task_id = response.data.get("task_data", {}).get("task_id")

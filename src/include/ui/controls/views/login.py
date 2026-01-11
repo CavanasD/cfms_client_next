@@ -5,6 +5,7 @@ from include.controllers.login import LoginFormController
 from include.ui.util.notifications import send_error
 from include.util.locale import get_translation
 import include.ui.constants as const
+
 t = get_translation()
 _ = t.gettext
 
@@ -60,7 +61,9 @@ class LoginForm(ft.Container):
         )
 
         self.login_button = ft.IconButton(
-            icon=ft.Icons.LOGIN_OUTLINED, on_click=self.request_login, tooltip=_("Login")
+            icon=ft.Icons.LOGIN_OUTLINED,
+            on_click=self.request_login,
+            tooltip=_("Login"),
         )
         self.disconnect_button = ft.IconButton(
             icon=ft.Icons.CHEVRON_LEFT,
@@ -143,5 +146,3 @@ class LoginForm(ft.Container):
             return
 
         self.page.run_task(self.controller.action_login)
-
-        

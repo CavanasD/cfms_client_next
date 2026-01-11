@@ -85,10 +85,7 @@ class LoginFormController(BaseController["LoginForm"]):
                 self.app_shared.service_manager.get_service("download_manager"),
             )
 
-        if (
-            self.app_shared.username
-            and self.app_shared.username != username
-        ):
+        if self.app_shared.username and self.app_shared.username != username:
             if download_service:
                 await download_service._save_tasks()
 

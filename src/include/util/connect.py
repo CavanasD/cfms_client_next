@@ -18,10 +18,10 @@ async def get_connection(
 ) -> ClientConnection:
     """
     Establish a WebSocket connection to the server.
-    
+
     Creates a secure WebSocket connection with configurable SSL settings
     and proxy support.
-    
+
     Args:
         server_address: WebSocket server address (e.g., "wss://example.com")
         disable_ssl_enforcement: If True, disable SSL certificate verification
@@ -29,15 +29,15 @@ async def get_connection(
         proxy: Proxy configuration - True for system proxy, string for custom proxy,
                None to disable proxy
         force_ipv4: If True, force the use of IPv4 addresses only
-        
+
     Returns:
         Established WebSocket client connection
-        
+
     Raises:
         Various connection errors from websockets library
     """
     ssl_context = ssl.create_default_context()
-    
+
     if not disable_ssl_enforcement:
         # Use integrated CA certificate for verification
         ssl_context.load_verify_locations(cadata=INTEGRATED_CA_CERT)

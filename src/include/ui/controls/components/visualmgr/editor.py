@@ -40,7 +40,7 @@ class EntryListTile(ft.ListTile):
     async def on_remove_clicked(self, event: ft.Event[ft.IconButton]):
         self.parent_entries_area.require.remove(self.entry_name)
         self.parent_entries_area.require_listview.controls.remove(self)
-        
+
         # Sync data to parent editor immediately
         self.parent_entries_area.parent_edit_area.parent_collection_area.parent_edit_section.sync_data_to_parent()
 
@@ -233,7 +233,7 @@ class SubRuleGroupEditArea(ft.ExpansionTile):
             add_buttons.append(self.add_rights_button)
         else:
             self.add_rights_button = None
-            
+
         if not self.match_groups:
             self.add_groups_button = ft.OutlinedButton(
                 content=_("Add Groups Section"),
@@ -271,7 +271,7 @@ class SubRuleGroupEditArea(ft.ExpansionTile):
         self.match_mode = event.data
         self.subtitle = _("Mode: {mode}").format(mode=self._get_display_mode())
         self.update()
-        
+
         # Sync data to parent editor immediately
         self.parent_collection_area.parent_edit_section.sync_data_to_parent()
 
@@ -296,7 +296,7 @@ class SubRuleGroupEditArea(ft.ExpansionTile):
                 self.controls.remove(self.add_buttons_row)
                 self.add_buttons_row = None
             self.update()
-            
+
             # Sync data to parent editor immediately
             self.parent_collection_area.parent_edit_section.sync_data_to_parent()
 
@@ -321,7 +321,7 @@ class SubRuleGroupEditArea(ft.ExpansionTile):
                 self.controls.remove(self.add_buttons_row)
                 self.add_buttons_row = None
             self.update()
-            
+
             # Sync data to parent editor immediately
             self.parent_collection_area.parent_edit_section.sync_data_to_parent()
 
@@ -339,7 +339,7 @@ class SubRuleGroupEditArea(ft.ExpansionTile):
                 subgroup_index += 1
 
         self.parent_collection_area.update()
-        
+
         # Sync data to parent editor immediately
         self.parent_collection_area.parent_edit_section.sync_data_to_parent()
 
@@ -460,7 +460,7 @@ class SubRuleGroupCollectionArea(ft.ExpansionTile):
         self.match_mode = event.data
         self.subtitle = _("Mode: {mode}").format(mode=self._get_display_mode())
         self.update()
-        
+
         # Sync data to parent editor immediately
         self.parent_edit_section.sync_data_to_parent()
 
@@ -474,11 +474,13 @@ class SubRuleGroupCollectionArea(ft.ExpansionTile):
         for control in parent_column.controls:
             if isinstance(control, SubRuleGroupCollectionArea):
                 control.index = rule_group_index
-                control.title = _("Rule Group #{index}").format(index=rule_group_index + 1)
+                control.title = _("Rule Group #{index}").format(
+                    index=rule_group_index + 1
+                )
                 rule_group_index += 1
 
         parent_column.update()
-        
+
         # Sync data to parent editor immediately
         self.parent_edit_section.sync_data_to_parent()
 

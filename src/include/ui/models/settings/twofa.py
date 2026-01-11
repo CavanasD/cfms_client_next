@@ -5,7 +5,6 @@ import flet as ft
 
 from include.classes.config import AppShared
 from include.ui.controls.dialogs.twofa_setup import TwoFactorSetupDialog
-from include.ui.controls.dialogs.twofa_verify import TwoFactorVerifyDialog
 from include.ui.controls.dialogs.password_confirm import PasswordConfirmDialog
 from include.ui.controls.dialogs.backup_codes import BackupCodesDialog
 from include.ui.util.notifications import send_success, send_error

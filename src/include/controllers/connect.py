@@ -1,5 +1,4 @@
 from typing import TYPE_CHECKING
-import os
 
 import flet_permission_handler as fph
 
@@ -12,6 +11,7 @@ if TYPE_CHECKING:
     from include.ui.controls.views.connect import ConnectForm
 
 from include.util.locale import get_translation
+
 t = get_translation()
 _ = t.gettext
 
@@ -30,7 +30,9 @@ class ConnectFormController(BaseController["ConnectForm"]):
                 server_address,
                 self.control.disable_ssl_enforcement_switch.value,
                 proxy=self.app_shared.preferences["settings"]["proxy_settings"],
-                force_ipv4=self.app_shared.preferences["settings"].get("force_ipv4", False),
+                force_ipv4=self.app_shared.preferences["settings"].get(
+                    "force_ipv4", False
+                ),
             )
         except ConnectionResetError as e:
             self.control.enable_interactions()
@@ -85,9 +87,7 @@ class ConnectFormController(BaseController["ConnectForm"]):
         assert self.app_shared.ph_service
         assert self.control.page.platform
         if (
-            await ph_service.request(
-                fph.Permission.MANAGE_EXTERNAL_STORAGE
-            )
+            await ph_service.request(fph.Permission.MANAGE_EXTERNAL_STORAGE)
             == fph.PermissionStatus.DENIED
         ):
             if self.control.page.platform.value not in ["ios", "android"]:

@@ -239,6 +239,7 @@ class TaskTile(ft.Card):
             return ft.Colors.GREY
 
         return status_colors.get(self.task.status, ft.Colors.WHITE)
+
     def _get_status_text(self) -> str:
         """Get status text based on task status."""
         status_texts = {
@@ -415,7 +416,9 @@ class TaskTile(ft.Card):
             return
 
         # Delete the task and file without confirmation
-        success, error_msg = await download_service.delete_task_with_file(self.task.task_id)
+        success, error_msg = await download_service.delete_task_with_file(
+            self.task.task_id
+        )
 
         if success:
             # Refresh the task list to remove the deleted task

@@ -33,7 +33,7 @@ class FloatingUpgradeButton(ft.FloatingActionButton):
                 self.update()
 
     async def button_click(self, event: ft.Event[ft.FloatingActionButton]):
-        assert type(self.page) == ft.Page
+        assert type(self.page) is ft.Page
         # Hide badge when user clicks to check updates
         self.hide_update_badge()
         await self.page.push_route("/connect/about/")

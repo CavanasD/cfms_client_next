@@ -147,17 +147,19 @@ class MoveDialog(AlertDialog):
 
     def update_button_visibility(self):
         """Update button visibility based on current state.
-        
+
         - Move Here button: visible when current directory differs from original
         - Go to Root button: visible when not in root directory
         """
-        
+
         # Move Here button: visible if current location differs from original
-        self.move_here_button.visible = (self.current_directory_id != self.original_parent_id)
-        
+        self.move_here_button.visible = (
+            self.current_directory_id != self.original_parent_id
+        )
+
         # Go to Root button: visible if not at root
         self.go_to_root_button.visible = self.current_directory_id not in (None, "/")
-        
+
         self.update()
 
     def update_location_text(self, path: str = "/"):
@@ -295,7 +297,7 @@ class MoveDialog(AlertDialog):
     async def move_here_button_click(self, event: ft.Event[ft.Button]):
         """Move the object to the current directory."""
         yield self.disable_interactions()
-        
+
         # Perform the move operation
         try:
             if self.object_type == "document":

@@ -54,13 +54,14 @@ class SubRuleGroupControlBar(ft.Row):
         assert type(self.parent_collection_area.controls) == list
 
         self.disable_interactions()
-        
+
         # Count existing subgroups to determine the correct index
         existing_subgroups = sum(
-            1 for control in self.parent_collection_area.controls
+            1
+            for control in self.parent_collection_area.controls
             if isinstance(control, SubRuleGroupEditArea)
         )
-        
+
         new_subgroup = SubRuleGroupEditArea(
             self.parent_collection_area,
             index=existing_subgroups + 1,  # Start from 1
@@ -70,10 +71,10 @@ class SubRuleGroupControlBar(ft.Row):
         )
         self.parent_collection_area.controls.append(new_subgroup)
         self.parent_collection_area.update()
-        
+
         # Sync data to parent editor immediately
         self.parent_collection_area.parent_edit_section.sync_data_to_parent()
-        
+
         self.enable_interactions()
 
 
@@ -130,6 +131,7 @@ class EntryListTileControlBar(ft.Row):
 
     async def action_submit(self):
         from include.ui.controls.components.visualmgr.editor import EntryListTile
+
         current_textfield_value = self.name_textfield.value.strip()
         if not current_textfield_value:
             return  # Ignore empty input
@@ -141,8 +143,8 @@ class EntryListTileControlBar(ft.Row):
         )
         self.parent_area.require_listview.update()
         self.name_textfield.value = ""
-        
+
         # Sync data to parent editor immediately
         self.parent_area.parent_edit_area.parent_collection_area.parent_edit_section.sync_data_to_parent()
-        
+
         self.enable_interactions()

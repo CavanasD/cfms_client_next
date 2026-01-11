@@ -16,17 +16,17 @@ DEFAULT_REFRESH_THRESHOLD = 300.0  # Refresh when token expires in 5 minutes
 class TokenRefreshService(BaseService):
     """
     Service that periodically checks token expiration and refreshes it.
-    
+
     This service monitors the authentication token's expiration time and
     automatically requests a new token from the server before it expires.
     The refresh is triggered when the remaining time until expiration falls
     below the configured threshold.
-    
+
     Attributes:
         app_shared: Application shared state singleton
         refresh_threshold: Seconds before expiration to trigger refresh
     """
-    
+
     def __init__(
         self,
         enabled: bool = True,
@@ -35,7 +35,7 @@ class TokenRefreshService(BaseService):
     ):
         """
         Initialize the token refresh service.
-        
+
         Args:
             enabled: Whether service is enabled
             interval: Check interval in seconds (default: 60)
@@ -44,18 +44,18 @@ class TokenRefreshService(BaseService):
         super().__init__(name="token_refresh", enabled=enabled, interval=interval)
         self.app_shared = AppShared()
         self.refresh_threshold = refresh_threshold
-    
+
     async def on_start(self):
         """Initialize service on start."""
         self.logger.info(
             f"Token refresh service starting with interval: {self.interval}s, "
             f"refresh_threshold: {self.refresh_threshold}s"
         )
-    
+
     async def execute(self):
         """
         Execute token expiration check and refresh if necessary.
-        
+
         This method is called periodically based on the interval setting.
         It checks if the token is about to expire and requests a new one.
         """
@@ -63,21 +63,23 @@ class TokenRefreshService(BaseService):
         if not self.app_shared.token or not self.app_shared.username:
             self.logger.debug("No active session, skipping token refresh check")
             return
-        
+
         # Check if token expiration time is set
         if not self.app_shared.token_exp:
-            self.logger.warning("Token expiration time not set, cannot check expiration")
+            self.logger.warning(
+                "Token expiration time not set, cannot check expiration"
+            )
             return
-        
+
         # Calculate remaining time until expiration
         current_time = time.time()
         time_until_expiry = self.app_shared.token_exp - current_time
-        
+
         self.logger.debug(
             f"Token expires in {time_until_expiry:.1f} seconds "
             f"(threshold: {self.refresh_threshold}s)"
         )
-        
+
         # Check if token needs refresh or is already expired
         if time_until_expiry <= 0:
             self.logger.warning(
@@ -98,11 +100,11 @@ class TokenRefreshService(BaseService):
             self.logger.debug(
                 f"Token still valid for {time_until_expiry:.1f}s, no refresh needed"
             )
-    
+
     async def _refresh_token(self):
         """
         Request a new token from the server.
-        
+
         Sends a refresh_token request to the server with the current
         username and token. Updates the app_shared state with the new
         token and expiration time.
@@ -116,17 +118,17 @@ class TokenRefreshService(BaseService):
                 username=self.app_shared.username,
                 token=self.app_shared.token,
             )
-            
+
             if response.code == 200:
                 # Extract new token and expiration from response
                 new_token = response.data.get("token")
                 new_exp = response.data.get("exp")
-                
+
                 if new_token and new_exp:
                     # Update app_shared with new credentials
                     self.app_shared.token = new_token
                     self.app_shared.token_exp = new_exp
-                    
+
                     self.logger.info(
                         f"Token refreshed successfully. "
                         f"New expiration: {new_exp} "
@@ -154,18 +156,17 @@ class TokenRefreshService(BaseService):
                     self.app_shared.token = None
                     self.app_shared.token_exp = None
                     self.app_shared.username = None
-                
+
         except Exception as e:
             self.logger.error(f"Error refreshing token: {e}", exc_info=True)
-    
+
     async def on_error(self, error: Exception):
         """
         Handle errors during execution.
-        
+
         Args:
             error: The exception that occurred
         """
         self.logger.error(
-            f"Token refresh service encountered an error: {error}",
-            exc_info=True
+            f"Token refresh service encountered an error: {error}", exc_info=True
         )
