@@ -58,7 +58,12 @@ class FileContextMenuController(BaseController["FileContextMenu"]):
 
     async def action_rename_file(self):
         self.control.page.show_dialog(
-            RenameDialog("document", self.control.file_id, self.control.parent_listview)
+            RenameDialog(
+                "document",
+                self.control.file_id,
+                self.control.parent_listview,
+                object_name=self.control.filename,
+            )
         )
 
     async def action_move_file(self):
@@ -121,7 +126,10 @@ class DirectoryContextMenuController(BaseController["DirectoryContextMenu"]):
     async def action_rename_directory(self):
         self.control.page.show_dialog(
             RenameDialog(
-                "directory", self.control.directory_id, self.control.parent_listview
+                "directory",
+                self.control.directory_id,
+                self.control.parent_listview,
+                object_name=self.control.dir_name,
             )
         )
 

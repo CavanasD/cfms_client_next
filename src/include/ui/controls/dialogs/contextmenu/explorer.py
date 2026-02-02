@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 import asyncio
 
 import flet as ft
@@ -17,6 +17,7 @@ if TYPE_CHECKING:
     from include.ui.controls.views.explorer import FileListView
 
 from include.util.locale import get_translation
+
 t = get_translation()
 _ = t.gettext
 
@@ -27,6 +28,7 @@ class RenameDialog(AlertDialog):
         object_type: str,
         object_id: str,
         file_listview: "FileListView",
+        object_name: Optional[str] = None,
         ref: ft.Ref | None = None,
         visible=True,
     ):
@@ -55,8 +57,10 @@ class RenameDialog(AlertDialog):
             label=_("New {display_name} name").format(
                 display_name=self.object_display_name
             ),
+            value=object_name or "",
             on_submit=self.ok_button_click,
             expand=True,
+            autofocus=True,
         )
 
         self.submit_button = ft.TextButton(
@@ -110,6 +114,12 @@ class RenameDialog(AlertDialog):
     async def cancel_button_click(self, event: ft.Event[ft.TextButton]):
         self.open = False
         self.update()
+
+    def did_mount(self):
+        super().did_mount()
+        if value_length := len(self.name_textfield.value):
+            self.page.run_task(self.name_textfield.focus)
+            self.name_textfield.selection = ft.TextSelection(0, value_length)
 
 
 class GetDocumentInfoDialog(AlertDialog):

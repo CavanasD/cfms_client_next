@@ -3,6 +3,14 @@
 This document contains the release history and changelog for CFMS Client NEXT.
 
 ---
+## v0.4.16
+**Released on:** 2026-02-02
+
+**Title:** Renaming Interface Improvement
+
+This version introduces a minor optimization to the renaming interface, so that the original name of the object now appears in the text box and can be selected in full, making it easier for users to make changes.
+
+---
 ## v0.4.15
 **Released on:** 2026-01-11
 
