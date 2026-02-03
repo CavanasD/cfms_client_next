@@ -1,4 +1,6 @@
 from typing import TYPE_CHECKING
+
+from flet import FilePickerFile
 from include.controllers.base import BaseController
 from include.ui.controls.dialogs.wait import wait
 from include.ui.controls.dialogs.contextmenu.explorer import (
@@ -11,8 +13,8 @@ from include.ui.controls.dialogs.authorize import AuthorizeDialog
 from include.ui.controls.dialogs.view_access_entries import ViewAccessEntriesDialog
 from include.ui.controls.components.rulemanager import RuleManager
 from include.ui.util.path import get_directory, get_document
-from include.util.requests import do_request
-from include.ui.util.notifications import send_error
+from include.util.requests import do_request, do_request_2
+from include.ui.util.notifications import send_error, send_info
 from include.util.locale import get_translation
 
 if TYPE_CHECKING:
@@ -87,6 +89,55 @@ class FileContextMenuController(BaseController["FileContextMenu"]):
 
     async def action_set_access_rules(self):
         self.control.page.show_dialog(RuleManager(self.control.file_id, "document"))
+
+    @wait("upload_new_revision")
+    async def action_upload_new_revision(self, picked_file: FilePickerFile):
+        """Upload a new revision for the document."""
+        if not picked_file or not picked_file.path:
+            send_error(self.control.page, _("No file selected"))
+            return
+        
+        try:
+            from include.util.transfer import upload_new_revision
+            
+            # Upload the file as a new revision
+            async for current, total in upload_new_revision(
+                self.app_shared,
+                self.control.file_id,
+                picked_file.path,
+            ):
+                # Progress updates are handled by the @wait decorator
+                pass
+            
+            send_info(
+                self.control.page,
+                _("New revision uploaded successfully for {filename}").format(
+                    filename=self.control.filename
+                ),
+            )
+            
+            # Refresh the directory to show updated file
+            await get_directory(
+                self.control.parent_listview.parent_manager.current_directory_id,
+                self.control.parent_listview,
+            )
+                    
+        except Exception as e:
+            send_error(
+                self.control.page,
+                _("Failed to upload new revision: {error}").format(error=str(e)),
+            )
+
+    async def action_view_revisions(self):
+        from include.ui.controls.dialogs.revision import RevisionDialog
+        
+        self.control.page.show_dialog(
+            RevisionDialog(
+                document_id=self.control.file_id,
+                filename=self.control.filename,
+                parent_listview=self.control.parent_listview,
+            )
+        )
 
     async def action_open_document_info(self):
         self.control.page.show_dialog(GetDocumentInfoDialog(self.control.file_id))

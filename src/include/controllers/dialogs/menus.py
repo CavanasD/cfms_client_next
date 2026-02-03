@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 import flet as ft
 
-from include.classes.config import AppShared
+from include.classes.shared import AppShared
 from include.controllers.base import BaseController
 from include.ui.util.path import get_directory
 from include.util.requests import do_request
@@ -24,6 +24,11 @@ class RenameDialogController(BaseController["RenameDialog"]):
         super().__init__(control)
 
     async def action_rename_object(self, new_title: str):
+
+        if self.control.object_display_name == new_title:
+            self.control.close()
+            return
+
         if self.control.object_type == "document":
             response = await do_request(
                 "rename_document",
