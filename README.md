@@ -113,3 +113,8 @@ flet build windows -v
 ```
 
 For more details on building Windows package, refer to the [Windows Packaging Guide](https://docs.flet.dev/publish/windows/).
+
+## Screenshots
+![Jump To](./images/quick_jump.png)
+![Permission Denied Notice 1](./images/pm_1.png)
+![Permission Denied Notice 2](./images/pm_2.png)
