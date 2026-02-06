@@ -7,7 +7,7 @@ import flet as ft
 from websockets import ConnectionClosed
 
 from include.classes.exceptions.request import InvalidResponseError
-from include.controllers.base import BaseController
+from include.controllers.base import Controller
 from include.ui.controls.dialogs.explorer import (
     BatchUploadFileAlertDialog,
     UploadDirectoryAlertDialog,
@@ -34,7 +34,7 @@ t = get_translation()
 _ = t.gettext
 
 
-class FileExplorerController(BaseController["FileManagerView"]):
+class FileExplorerController(Controller["FileManagerView"]):
     def __init__(self, control: "FileManagerView"):
         super().__init__(control)
 
@@ -95,9 +95,14 @@ class FileExplorerController(BaseController["FileManagerView"]):
 
             if isinstance(exc, InvalidResponseError):
                 if (code := exc.response.code) == 403:
-                    self.control.send_error(
-                        _("Upload failed: No permission to upload files")
+                    # Show access denied dialog for 403 errors
+                    from include.ui.controls.dialogs.explorer import AccessDeniedDialog
+                    
+                    dialog = AccessDeniedDialog(
+                        reason=exc.response.message,
+                        operation=_("upload"),
                     )
+                    self.control.page.show_dialog(dialog)
                 else:
                     errmsg = _("Upload failed: ({code}) {message}").format(
                         code=code, message=exc.response.message
