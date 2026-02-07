@@ -1,3 +1,5 @@
+import base64
+import os
 from typing import TYPE_CHECKING, cast
 
 from include.classes.services.download import DownloadManagerService
@@ -99,11 +101,50 @@ class LoginFormController(Controller["LoginForm"]):
         self.app_shared.pending_2fa_verification = False
         self.app_shared.user_perference = load_user_preference(username)
 
-        # Reload download tasks for the logged-in user
-        if download_service:
-            await download_service.reload_tasks_for_user()
+        # Store parent_view reference for cleaner code
+        parent_view = self.control.parent_view
 
-        self.control.clear_fields()
+        try:
+            # Hide login form and show loading view
+            self.control.visible = False
+            parent_view.data_loading_view.visible = True
+            parent_view.avatar_preview.visible = True
+            parent_view.update()
+
+            # Get and download avatar if available
+            parent_view.data_loading_view.set_status(_("Downloading avatar"))
+            from include.util.avatar import get_user_avatar, download_avatar_file
+
+            # Get avatar task data from server
+            task_data = await get_user_avatar(username)
+            if task_data:
+                # Download avatar using task_data (force download on login to ensure up-to-date)
+                avatar_path = await download_avatar_file(
+                    task_data, username, force_download=True
+                )
+                self.app_shared.avatar_path = avatar_path
+                if avatar_path and os.path.exists(avatar_path):
+                    # Update the avatar preview with the downloaded avatar
+                    with open(avatar_path, "rb") as f:
+                        avatar_base64 = base64.b64encode(f.read()).decode("utf-8")
+                        parent_view.avatar_preview.preview_avatar.foreground_image_src = (
+                            f"data:image;base64,{avatar_base64}"
+                        )
+                    parent_view.avatar_preview.preview_avatar.content = None
+                    parent_view.avatar_preview.update()
+
+            # Reload download tasks for the logged-in user
+            if download_service:
+                parent_view.data_loading_view.set_status(_("Loading tasks"))
+                await download_service.reload_tasks_for_user()
+
+            self.control.clear_fields()
+        finally:
+            # Reset visibility for next login
+            self.control.visible = True
+            parent_view.data_loading_view.visible = False
+            parent_view.data_loading_view.clear_status()
+
         self.control.page.run_task(self.control.page.push_route, "/home")
 
     async def _verify_2fa_code(self, code: str, is_recovery_code: bool = False) -> bool:
@@ -131,7 +172,9 @@ class LoginFormController(Controller["LoginForm"]):
             response = await do_request("login", request_data)
 
             if response["code"] == 200:
-                await self._complete_login(username, response["data"])
+                self.control.page.run_task(
+                    self._complete_login, username, response["data"]
+                )
                 return True
             else:
                 return False
