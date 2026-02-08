@@ -52,6 +52,8 @@ class LoginView(ft.Row):
             ),
             alignment=ft.Alignment.CENTER,
             margin=10,
+            expand=AppShared().is_mobile,
+            expand_loose=AppShared().is_mobile,
         )
 
         if not AppShared().is_mobile:
