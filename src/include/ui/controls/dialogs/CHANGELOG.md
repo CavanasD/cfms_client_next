@@ -3,6 +3,15 @@
 This document contains the release history and changelog for CFMS Client NEXT.
 
 ---
+## v0.5.8
+**Released on:** 2026-02-11
+
+**Title:** Adaptation to Protocol Version 8
+
+This version introduces minor changes to the request logic to accommodate protocol 
+version 8, which involves breaking changes to prevent replay attacks.
+
+---
 ## v0.5.7
 **Released on:** 2026-02-11
 

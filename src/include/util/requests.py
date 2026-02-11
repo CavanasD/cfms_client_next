@@ -3,6 +3,7 @@
 import asyncio
 import json
 import time
+import uuid
 import weakref
 from typing import Any, Optional
 
@@ -174,6 +175,7 @@ async def _request(
         "username": username,
         "token": token,
         "timestamp": time.time(),
+        "nonce": str(uuid.uuid4()),
     }
 
     request_json = json.dumps(request, ensure_ascii=False)
