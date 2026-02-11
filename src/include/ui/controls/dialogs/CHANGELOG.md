@@ -3,6 +3,16 @@
 This document contains the release history and changelog for CFMS Client NEXT.
 
 ---
+## v0.5.7
+**Released on:** 2026-02-11
+
+**Title:** Fixed Avatar Selection Function
+
+This version fixes the issue where the file browser did not display subdirectories 
+when selecting an avatar. Additionally, this version optimizes the interface 
+display when other errors occur.
+
+---
 ## v0.5.6
 **Released on:** 2026-02-08
 

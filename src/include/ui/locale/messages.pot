@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2026-02-08 10:32+0800\n"
+"POT-Creation-Date: 2026-02-11 11:15+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -500,21 +500,132 @@ msgstr ""
 msgid "User"
 msgstr ""
 
+#: .\include\ui\controls\components\common\access_denied_content.py:66
 #: .\include\ui\controls\components\explorer\access_denied.py:64
 #: .\include\ui\controls\dialogs\explorer.py:833
 msgid "Access Denied"
 msgstr ""
 
+#: .\include\ui\controls\components\common\access_denied_content.py:74
 #: .\include\ui\controls\components\explorer\access_denied.py:72
 msgid "You don't have permission to access this directory. The reasons are as follows:"
 msgstr ""
 
+#: .\include\ui\controls\components\common\access_denied_content.py:100
+msgid "Please contact your system administrator if you believe this is an error."
+msgstr ""
+
+#: .\include\ui\controls\components\common\access_denied_content.py:105
 #: .\include\ui\controls\components\explorer\access_denied.py:97
 msgid "According to the server's protocol, you do not have permission to access the requested directory. There could be various reasons for this. If you have any questions about this situation, please contact your system administrator. This incident will be reported."
 msgstr ""
 
+#: .\include\ui\controls\components\common\access_denied_content.py:135
+#: .\include\ui\controls\components\common\error_content.py:134
 #: .\include\ui\controls\components\explorer\access_denied.py:112
 msgid "Go Back"
+msgstr ""
+
+#: .\include\ui\controls\components\common\error_content.py:142
+msgid "Retry"
+msgstr ""
+
+#: .\include\ui\controls\components\common\error_content.py:169
+msgid "Connection Error"
+msgstr ""
+
+#: .\include\ui\controls\components\common\error_content.py:170
+msgid "Could not connect to the server or an unexpected error occurred."
+msgstr ""
+
+#: .\include\ui\controls\components\common\error_content.py:174
+msgid "Not Found"
+msgstr ""
+
+#: .\include\ui\controls\components\common\error_content.py:175
+msgid "The requested directory or file could not be found."
+msgstr ""
+
+#: .\include\ui\controls\components\common\error_content.py:179
+#: .\include\ui\controls\components\common\error_content.py:184
+#: .\include\ui\controls\components\common\error_content.py:189
+msgid "Server Error"
+msgstr ""
+
+#: .\include\ui\controls\components\common\error_content.py:180
+msgid "The server encountered an internal error."
+msgstr ""
+
+#: .\include\ui\controls\components\common\error_content.py:185
+msgid "The server received an invalid response from upstream."
+msgstr ""
+
+#: .\include\ui\controls\components\common\error_content.py:190
+msgid "The server is temporarily unavailable."
+msgstr ""
+
+#: .\include\ui\controls\components\common\error_content.py:194
+msgid "Bad Request"
+msgstr ""
+
+#: .\include\ui\controls\components\common\error_content.py:195
+msgid "The request was invalid or malformed."
+msgstr ""
+
+#: .\include\ui\controls\components\common\error_content.py:199
+msgid "Unauthorized"
+msgstr ""
+
+#: .\include\ui\controls\components\common\error_content.py:200
+msgid "Your session may have expired. Please try again."
+msgstr ""
+
+#: .\include\ui\controls\components\common\error_content.py:204
+msgid "Request Timeout"
+msgstr ""
+
+#: .\include\ui\controls\components\common\error_content.py:205
+msgid "The request took too long to complete."
+msgstr ""
+
+#: .\include\ui\controls\components\common\error_content.py:209
+msgid "Error"
+msgstr ""
+
+#: .\include\ui\controls\components\common\error_content.py:210
+msgid "An error occurred while processing your request."
+msgstr ""
+
+#: .\include\ui\controls\components\common\error_content.py:232
+msgid "Check your connection and try again."
+msgstr ""
+
+#: .\include\ui\controls\components\common\error_content.py:234
+msgid "Please try again later or contact support if the problem persists."
+msgstr ""
+
+#: .\include\ui\controls\components\common\error_content.py:236
+msgid "The item may have been moved or deleted."
+msgstr ""
+
+#: .\include\ui\controls\components\common\error_content.py:238
+msgid "Please try again or contact support if needed."
+msgstr ""
+
+#: .\include\ui\controls\components\common\error_content.py:241
+msgid "A connection error or unexpected exception occurred. Please check your network connection and try again. If the problem persists, contact your system administrator."
+msgstr ""
+
+#: .\include\ui\controls\components\common\error_content.py:247
+msgid "The server is experiencing technical difficulties. This is typically a temporary issue. Please wait a moment and try again. If the problem persists, contact your system administrator."
+msgstr ""
+
+#: .\include\ui\controls\components\common\error_content.py:253
+msgid "The requested resource could not be found on the server. It may have been moved, renamed, or deleted. Please verify the path and try again."
+msgstr ""
+
+#: .\include\ui\controls\components\common\error_content.py:259
+msgid "An unexpected error occurred. Please try again. If the problem persists, contact your system administrator for assistance."
 msgstr ""
 
 #: .\include\ui\controls\components\explorer\bar.py:39
@@ -575,7 +686,7 @@ msgstr ""
 #: .\include\ui\controls\dialogs\explorer.py:367
 #: .\include\ui\controls\dialogs\explorer.py:607
 #: .\include\ui\controls\dialogs\explorer.py:715
-#: .\include\ui\controls\dialogs\file_browser.py:140
+#: .\include\ui\controls\dialogs\file_browser.py:147
 #: .\include\ui\controls\dialogs\password_confirm.py:61
 #: .\include\ui\controls\dialogs\twofa_setup.py:90
 #: .\include\ui\controls\dialogs\twofa_verify.py:80
@@ -947,7 +1058,7 @@ msgstr ""
 
 #: .\include\ui\controls\dialogs\admin\accounts.py:140
 #: .\include\ui\controls\dialogs\password_confirm.py:46
-#: .\include\ui\controls\views\login.py:194
+#: .\include\ui\controls\views\login.py:196
 msgid "Password"
 msgstr ""
 
@@ -957,7 +1068,7 @@ msgstr ""
 
 #: .\include\ui\controls\dialogs\admin\accounts.py:152
 #: .\include\ui\controls\views\admin\audit.py:37
-#: .\include\ui\controls\views\login.py:201
+#: .\include\ui\controls\views\login.py:203
 msgid "Username"
 msgstr ""
 
@@ -1249,7 +1360,7 @@ msgstr ""
 msgid "Request name must be specified"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\document_selector.py:62
+#: .\include\ui\controls\dialogs\document_selector.py:63
 msgid "Select Image Document"
 msgstr ""
 
@@ -1378,7 +1489,7 @@ msgid "Select Target Directory"
 msgstr ""
 
 #: .\include\ui\controls\dialogs\explorer.py:769
-#: .\include\ui\controls\dialogs\file_browser.py:126
+#: .\include\ui\controls\dialogs\file_browser.py:133
 msgid "Select Here"
 msgstr ""
 
@@ -1390,48 +1501,44 @@ msgstr ""
 msgid "Reason: "
 msgstr ""
 
-#: .\include\ui\controls\dialogs\file_browser.py:103
+#: .\include\ui\controls\dialogs\file_browser.py:110
 msgid "Browse Files and Directories"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\file_browser.py:110
-#: .\include\ui\controls\dialogs\file_browser.py:269
+#: .\include\ui\controls\dialogs\file_browser.py:117
+#: .\include\ui\controls\dialogs\file_browser.py:360
 msgid "Current location: {path}"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\file_browser.py:133
+#: .\include\ui\controls\dialogs\file_browser.py:140
 msgid "Go to Root"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\file_browser.py:224
-msgid "Failed to load directory: {message}"
-msgstr ""
-
-#: .\include\ui\controls\dialogs\file_browser.py:267
-msgid "(current directory)"
-msgstr ""
-
-#: .\include\ui\controls\dialogs\file_browser.py:285
-msgid ".. (Parent Directory)"
+#: .\include\ui\controls\dialogs\file_browser.py:319
+msgid "Unknown error"
 msgstr ""
 
 #: .\include\ui\controls\dialogs\file_browser.py:358
-msgid "Error loading directory: {error}"
+msgid "(current directory)"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\file_browser.py:368
+#: .\include\ui\controls\dialogs\file_browser.py:380
+msgid ".. (Parent Directory)"
+msgstr ""
+
+#: .\include\ui\controls\dialogs\file_browser.py:461
 msgid "No matching files found in this directory"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\file_browser.py:369
+#: .\include\ui\controls\dialogs\file_browser.py:462
 msgid "No files found in this directory"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\file_browser.py:371
+#: .\include\ui\controls\dialogs\file_browser.py:464
 msgid "No subdirectories found in this directory"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\file_browser.py:373
+#: .\include\ui\controls\dialogs\file_browser.py:466
 msgid "This directory is empty"
 msgstr ""
 
@@ -1444,7 +1551,7 @@ msgid "Confirm"
 msgstr ""
 
 #: .\include\ui\controls\dialogs\password_confirm.py:120
-#: .\include\ui\controls\views\login.py:294
+#: .\include\ui\controls\views\login.py:296
 msgid "Password cannot be empty"
 msgstr ""
 
@@ -1866,21 +1973,21 @@ msgstr ""
 msgid "File Management"
 msgstr ""
 
-#: .\include\ui\controls\views\login.py:141
-#: .\include\ui\controls\views\login.py:162
+#: .\include\ui\controls\views\login.py:143
+#: .\include\ui\controls\views\login.py:164
 msgid "Loading user data"
 msgstr ""
 
-#: .\include\ui\controls\views\login.py:213
-#: .\include\ui\controls\views\login.py:224
+#: .\include\ui\controls\views\login.py:215
+#: .\include\ui\controls\views\login.py:226
 msgid "Login"
 msgstr ""
 
-#: .\include\ui\controls\views\login.py:218
+#: .\include\ui\controls\views\login.py:220
 msgid "Disconnect"
 msgstr ""
 
-#: .\include\ui\controls\views\login.py:292
+#: .\include\ui\controls\views\login.py:294
 msgid "Username cannot be empty"
 msgstr ""
 

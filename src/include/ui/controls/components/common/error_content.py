@@ -166,48 +166,48 @@ class ErrorContent(ft.Column):
     _ERROR_METADATA = {
         0: {
             "icon": ft.Icons.ERROR,
-            "title": "Connection Error",
-            "description": "Could not connect to the server or an unexpected error occurred.",
+            "title": _("Connection Error"),
+            "description": _("Could not connect to the server or an unexpected error occurred."),
         },
         404: {
             "icon": ft.Icons.SEARCH_OFF,
-            "title": "Not Found",
-            "description": "The requested directory or file could not be found.",
+            "title": _("Not Found"),
+            "description": _("The requested directory or file could not be found."),
         },
         500: {
             "icon": ft.Icons.ERROR_OUTLINE,
-            "title": "Server Error",
-            "description": "The server encountered an internal error.",
+            "title": _("Server Error"),
+            "description": _("The server encountered an internal error."),
         },
         502: {
             "icon": ft.Icons.ERROR_OUTLINE,
-            "title": "Server Error",
-            "description": "The server received an invalid response from upstream.",
+            "title": _("Server Error"),
+            "description": _("The server received an invalid response from upstream."),
         },
         503: {
             "icon": ft.Icons.ERROR_OUTLINE,
-            "title": "Server Error",
-            "description": "The server is temporarily unavailable.",
+            "title": _("Server Error"),
+            "description": _("The server is temporarily unavailable."),
         },
         400: {
             "icon": ft.Icons.WARNING,
-            "title": "Bad Request",
-            "description": "The request was invalid or malformed.",
+            "title": _("Bad Request"),
+            "description": _("The request was invalid or malformed."),
         },
         401: {
             "icon": ft.Icons.LOCK_CLOCK,
-            "title": "Unauthorized",
-            "description": "Your session may have expired. Please try again.",
+            "title": _("Unauthorized"),
+            "description": _("Your session may have expired. Please try again."),
         },
         408: {
             "icon": ft.Icons.TIMER_OFF,
-            "title": "Request Timeout",
-            "description": "The request took too long to complete.",
+            "title": _("Request Timeout"),
+            "description": _("The request took too long to complete."),
         },
         "default": {
             "icon": ft.Icons.ERROR,
-            "title": "Error",
-            "description": "An error occurred while processing your request.",
+            "title": _("Error"),
+            "description": _("An error occurred while processing your request."),
         },
     }
 
@@ -218,12 +218,12 @@ class ErrorContent(ft.Column):
     def _get_icon_and_title(self, error_code: int) -> tuple[ft.IconData, str]:
         """Get appropriate icon and title for error code."""
         meta = self._get_error_metadata(error_code)
-        return meta["icon"], _(meta["title"])
+        return meta["icon"], meta["title"]
 
     def _get_description(self, error_code: int) -> str:
         """Get user-friendly description for error code."""
         meta = self._get_error_metadata(error_code)
-        return _(meta["description"])
+        return meta["description"]
 
     def _get_additional_info(self, error_code: int, compact_mode: bool) -> str:
         """Get additional information text based on error code and mode."""
