@@ -12,6 +12,7 @@ from include.controllers.dialogs.management import (
 )
 from include.controllers.dialogs.passwd import PasswdDialogController
 from include.ui.controls.dialogs.base import AlertDialog
+from include.util.passwd import generate_random_password
 
 if TYPE_CHECKING:
     from include.ui.controls.views.admin.account import ManageAccountsView
@@ -63,6 +64,12 @@ class PasswdUserDialog(AlertDialog):
             on_submit=self.request_passwd_user,
             expand=True,
         )
+        self.dicing_button = ft.IconButton(
+            ft.Icons.CASINO_OUTLINED,
+            on_click=self.dicing_button_click,
+            tooltip=_("Generate a random password"),
+        )
+
         self.tip_text = ft.Text(tip, text_align=ft.TextAlign.CENTER, visible=bool(tip))
         self.bypass_requirements_checkbox = ft.Checkbox(
             label=_("Bypass password requirements"),
@@ -85,7 +92,11 @@ class PasswdUserDialog(AlertDialog):
         self.content = ft.Column(
             controls=[
                 self.old_passwd_field,
-                self.new_passwd_field,
+                ft.Row(
+                    [self.new_passwd_field, self.dicing_button],
+                    expand=True,
+                    expand_loose=True,
+                ),
                 self.tip_text,
                 ft.Column(
                     [
@@ -110,6 +121,15 @@ class PasswdUserDialog(AlertDialog):
 
     async def cancel_button_click(self, event: ft.Event[ft.TextButton]):
         self.close()
+
+    async def dicing_button_click(self, event: ft.Event[ft.IconButton]):
+        self.new_passwd_field.value = generate_random_password()
+        await self.new_passwd_field.focus()
+        self.new_passwd_field.selection = ft.TextSelection(
+            0, len(self.new_passwd_field.value)
+        )
+        self.new_passwd_field.password = False  # will permanently show the password
+        self.update()
 
     async def request_passwd_user(
         self, event: ft.Event[ft.TextButton] | ft.Event[ft.TextField]

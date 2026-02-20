@@ -8,6 +8,8 @@ if TYPE_CHECKING:
     from include.ui.controls.dialogs.admin.accounts import PasswdUserDialog
 
 from include.util.locale import get_translation
+import secrets
+import string
 
 t = get_translation()
 _ = t.gettext
