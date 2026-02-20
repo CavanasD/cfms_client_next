@@ -9,9 +9,11 @@ from websockets.asyncio.client import ClientConnection
 
 from include.classes.shared import AppShared
 from include.classes.datacls import DownloadTask, DownloadTaskStatus
+from include.classes.exceptions.config import CorruptedEncryptedConfigError
 from include.classes.services.base import BaseService
 from include.constants import FLET_APP_STORAGE_DATA
 from include.util.connect import get_connection
+from include.util.kdf import encrypt_config, decrypt_config, is_encrypted_config
 from include.util.transfer import receive_file_from_server
 
 __all__ = ["DownloadManagerService"]
@@ -443,6 +445,32 @@ class DownloadManagerService(BaseService):
             # Fall back to legacy shared file path when no user is logged in
             return TASKS_PERSISTENCE_FILE_LEGACY
 
+    @staticmethod
+    def _write_tasks_file(path: str, data: dict, dek: "bytes | None") -> None:
+        """Serialise *data* to *path*, encrypting with *dek* when provided.
+
+        When *dek* is ``None``, plaintext is written only if the existing file
+        is not already encrypted.  If an encrypted file exists but no DEK is
+        available, the file is left unchanged to prevent data loss and a
+        security downgrade.
+        """
+        plaintext = json.dumps(data, separators=(",", ":")).encode("utf-8")
+        if dek is not None:
+            raw = encrypt_config(plaintext, dek)
+            with open(path, "wb") as f:
+                f.write(raw)
+        else:
+            # Do not overwrite an existing encrypted file when no DEK is available.
+            if os.path.exists(path):
+                try:
+                    with open(path, "rb") as existing_file:
+                        if is_encrypted_config(existing_file.read()):
+                            return
+                except OSError:
+                    return
+            with open(path, "wb") as f:
+                f.write(plaintext)
+
     async def _save_tasks(self):
         """Save tasks to disk for persistence."""
         if not self.enable_persistence:
@@ -482,8 +510,7 @@ class DownloadManagerService(BaseService):
             # Ensure directory exists
             os.makedirs(os.path.dirname(persistence_file), exist_ok=True)
 
-            with open(persistence_file, "w") as f:
-                json.dump(tasks_to_save, f, indent=2)
+            self._write_tasks_file(persistence_file, tasks_to_save, self.app_shared.dek)
 
             self.logger.debug(
                 f"Saved {len(tasks_to_save)} tasks to disk (file: {os.path.basename(persistence_file)})"
@@ -504,8 +531,28 @@ class DownloadManagerService(BaseService):
             return
 
         try:
-            with open(persistence_file, "r") as f:
-                tasks_data = json.load(f)
+            with open(persistence_file, "rb") as f:
+                raw = f.read()
+
+            dek = self.app_shared.dek
+            if is_encrypted_config(raw):
+                if dek is None:
+                    self.logger.warning(
+                        "Task file is encrypted but DEK is not available; skipping load"
+                    )
+                    return
+                try:
+                    plaintext = decrypt_config(raw, dek)
+                    tasks_data = json.loads(plaintext.decode("utf-8"))
+                except (ValueError, json.JSONDecodeError):
+                    # DEK present but decryption failed — file was encrypted with
+                    # a different (old) DEK, e.g. after a server reset.
+                    raise CorruptedEncryptedConfigError(persistence_file)
+            else:
+                tasks_data = json.loads(raw.decode("utf-8"))
+                # Migrate plain-JSON file to encrypted format when DEK is available
+                if dek is not None:
+                    self._write_tasks_file(persistence_file, tasks_data, dek)
 
             for task_id, task_dict in tasks_data.items():
                 # Convert status string back to enum
@@ -549,6 +596,8 @@ class DownloadManagerService(BaseService):
                 f"Loaded {len(self.tasks)} tasks from disk (file: {os.path.basename(persistence_file)})"
             )
 
+        except CorruptedEncryptedConfigError:
+            raise
         except Exception as e:
             self.logger.error(f"Failed to load tasks: {e}", exc_info=True)
 
