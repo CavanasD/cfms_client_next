@@ -35,6 +35,9 @@ env:
   # Disables progress bars when using UV
   UV_NO_PROGRESS: 1
 
+  # APP name, used for naming the release artifact for mobile builds
+  APP_NAME: "cfms-client-next"
+
 jobs:
   # build-linux:
   #   runs-on: ubuntu-latest
@@ -75,7 +78,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Setup Python ${{ env.PYTHON_VERSION }}
       uses: actions/setup-python@v5
@@ -175,7 +178,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Setup Python ${{ env.PYTHON_VERSION }}
       uses: actions/setup-python@v5
@@ -230,8 +233,8 @@ jobs:
       if: github.ref_type == 'tag'
       with:
         files: |
-          build/apk/app-release.apk
-          build/apk/app-release.apk.sha1
+          build/apk/${{ env.APP_NAME }}.apk
+          build/apk/${{ env.APP_NAME }}.apk.sha1
         # overwrite_files: true
         # generate_release_notes: true
         prerelease: ${{ steps.release_type.outputs.prerelease == 'true' }}
