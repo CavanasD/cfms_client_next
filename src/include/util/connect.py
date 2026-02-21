@@ -6,7 +6,7 @@ from typing import Literal
 
 from websockets.asyncio.client import ClientConnection, connect
 
-from include.constants import INTEGRATED_CA_CERT
+from include.constants import ROOT_PATH
 
 
 async def get_connection(
@@ -40,7 +40,7 @@ async def get_connection(
 
     if not disable_ssl_enforcement:
         # Use integrated CA certificate for verification
-        ssl_context.load_verify_locations(cadata=INTEGRATED_CA_CERT)
+        ssl_context.load_verify_locations(capath=f"{ROOT_PATH}/include/ca/")
         ssl_context.check_hostname = True
         ssl_context.verify_mode = ssl.CERT_REQUIRED
     else:

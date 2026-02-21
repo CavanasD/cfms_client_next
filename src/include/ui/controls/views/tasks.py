@@ -506,7 +506,7 @@ class TasksView(ft.Container):
                         controls=[
                             ft.Text(
                                 value=_("Download Tasks"),
-                                size=20,
+                                size=24,
                                 weight=ft.FontWeight.BOLD,
                             ),
                             ft.Row(

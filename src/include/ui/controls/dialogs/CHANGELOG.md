@@ -3,6 +3,20 @@
 This document contains the release history and changelog for CFMS Client NEXT.
 
 ---
+## v0.6.1
+**Released on:** 2026-02-21
+
+**Title:** Independent Certificate Store Support
+
+This version corrects the inconsistency in the titles "File Management" and 
+"Download Tasks" and enables clients to obtain trusted certificates from a 
+separate code repository, improving scalability and maintainability.
+
+### TODO
+- Further decouple the certificate store from the main code repository, 
+allowing clients to dynamically update the certificate store.
+
+---
 ## v0.6.0
 **Released on:** 2026-02-20
 
