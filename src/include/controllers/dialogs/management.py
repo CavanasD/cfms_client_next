@@ -12,6 +12,8 @@ if TYPE_CHECKING:
         RenameUserNicknameDialog,
         EditUserGroupDialog,
         ViewUserInfoDialog,
+        BlockUserDialog,
+        ListUserBlocksDialog,
     )
 
 from include.util.locale import get_translation
@@ -235,3 +237,102 @@ class ViewUserInfoDialogController(Controller["ViewUserInfoDialog"]):
             self.control.info_listview.visible = True
 
         self.control.update()
+
+
+class BlockUserDialogController(Controller["BlockUserDialog"]):
+    def __init__(self, control: "BlockUserDialog"):
+        super().__init__(control)
+
+    async def action_block_user(self):
+        # Get block types from SegmentedButton
+        block_types = list(self.control.block_types_button.selected)
+        if not block_types:
+            self.control.send_error(_("Please select at least one block type."))
+            self.control.enable_interactions()
+            return
+
+        # Build target dict
+        target_type = self.control.target_type_radio.value
+        target: dict = {"type": target_type}
+        if target_type != "all":
+            if not self.control.target_id:
+                self.control.send_error(_("Please select a target."))
+                self.control.enable_interactions()
+                return
+            target["id"] = self.control.target_id
+
+        data: dict = {
+            "username": self.control.username,
+            "block_types": block_types,
+            "target": target,
+        }
+
+        # Add not_after if expiry is enabled
+        if self.control.expires_enabled_checkbox.value:
+            date_val = self.control.date_picker.value
+            time_val = self.control.time_picker.value
+            if date_val is None or time_val is None:
+                self.control.send_error(
+                    _("Please set a valid expiry date and time.")
+                )
+                self.control.enable_interactions()
+                return
+            data["not_after"] = datetime.combine(date_val, time_val).timestamp()
+
+        response = await do_request(
+            action="block_user",
+            data=data,
+            username=self.app_shared.username,
+            token=self.app_shared.token,
+        )
+        if (code := response["code"]) != 200:
+            self.control.send_error(
+                _("Failed to block user: ({code}) {message}").format(
+                    code=code, message=response["message"]
+                )
+            )
+            self.control.enable_interactions()
+        else:
+            self.control.close()
+
+
+class ListUserBlocksDialogController(Controller["ListUserBlocksDialog"]):
+    def __init__(self, control: "ListUserBlocksDialog"):
+        super().__init__(control)
+
+    async def action_refresh_blocks(self):
+        self.control.disable_interactions()
+
+        response = await do_request(
+            action="list_user_blocks",
+            data={"username": self.control.username},
+            username=self.app_shared.username,
+            token=self.app_shared.token,
+        )
+        if (code := response["code"]) != 200:
+            self.control.send_error(
+                _("Failed to fetch user blocks: ({code}) {message}").format(
+                    code=code, message=response["message"]
+                )
+            )
+            self.control.enable_interactions()
+            return
+
+        blocks: list[dict] = response["data"].get("blocks", [])
+        self.control.build_block_list(blocks)
+        self.control.enable_interactions()
+
+    async def action_revoke_block(self, block_id: str):
+        response = await do_request(
+            action="unblock_user",
+            data={"block_id": block_id},
+            username=self.app_shared.username,
+            token=self.app_shared.token,
+        )
+        if (code := response["code"]) != 200:
+            self.control.send_error(
+                _("Failed to revoke block: ({code}) {message}").format(
+                    code=code, message=response["message"]
+                )
+            )
+        await self.action_refresh_blocks()
