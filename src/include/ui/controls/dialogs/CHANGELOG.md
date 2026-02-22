@@ -3,6 +3,17 @@
 This document contains the release history and changelog for CFMS Client NEXT.
 
 ---
+## v0.6.2
+**Released on:** 2026-02-22
+
+**Title:** Patch release
+
+This release introduces feature fixes from the previous release to address the 
+issue of missing CA certificate stores, and temporarily removes the logic for 
+deleting old version files on the Windows platform to prevent unexpected file 
+deletions under certain circumstances.
+
+---
 ## v0.6.1
 **Released on:** 2026-02-21
 
