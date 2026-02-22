@@ -11,12 +11,20 @@ from include.util.locale import get_translation
 t = get_translation()
 _ = t.gettext
 
+INITIAL_VIEW_INDEX = 0
+
 
 class ManagementNavigationBar(ft.NavigationBar):
-    def __init__(self, parent_view: "ManageModel", views: list[ft.Control] = []):
+    def __init__(
+        self,
+        parent_view: "ManageModel",
+        views: list[ft.Control] = [],
+        initial_selected_index: int = 0,
+    ):
         self.parent_view = parent_view
 
-        self.last_selected_index = 0  # Setting default to initially selected page works better
+        # Setting default to initially selected page works better
+        self.last_selected_index = initial_selected_index
         self.views = views
 
         nav_destinations = [
@@ -35,16 +43,18 @@ class ManagementNavigationBar(ft.NavigationBar):
 
         super().__init__(
             nav_destinations,
-            selected_index=0,
+            selected_index=initial_selected_index,
             on_change=self.on_change_item,
         )
 
     async def on_change_item(self, e: ft.Event[ft.NavigationBar]):
-        def show_view(index):
-            for i, view in enumerate(self.views):
-                view.visible = i == index
 
-        show_view(e.control.selected_index)
+        await self.parent_view.pageview.go_to_page(
+            e.control.selected_index,
+            animation_curve=ft.AnimationCurve.FAST_OUT_SLOWIN,
+            animation_duration=ft.Duration(milliseconds=400),
+        )
+
         self.last_selected_index = self.selected_index
 
 
@@ -67,12 +77,21 @@ class ManageModel(Model):
             leading=ft.IconButton(icon=ft.Icons.ARROW_BACK, on_click=self._go_back),
         )
 
-        self.controls = [
+        self.stored_views = [
             ManageAccountsView(self),
-            ManageGroupsView(self, visible=False),
-            AuditLogView(self, visible=False),
+            ManageGroupsView(self),
+            AuditLogView(self),
         ]
-        self.navigation_bar = ManagementNavigationBar(self, self.controls)
+        self.pageview = ft.PageView(
+            self.stored_views,
+            expand=True,
+            selected_index=INITIAL_VIEW_INDEX,
+        )
+
+        self.controls = [self.pageview]
+        self.navigation_bar = ManagementNavigationBar(
+            self, self.stored_views, initial_selected_index=INITIAL_VIEW_INDEX
+        )
 
         # self.floating_action_button = ft.FloatingActionButton(
         #     icon=ft.Icons.LOCK, on_click=apply_lockdown
