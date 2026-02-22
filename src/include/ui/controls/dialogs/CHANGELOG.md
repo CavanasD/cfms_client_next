@@ -6,11 +6,15 @@ This document contains the release history and changelog for CFMS Client NEXT.
 ## v0.6.3
 **Released on:** 2026-02-22
 
-**Title:** PageView
+**Title:** Introducing PageView
 
 This version adds more dynamic switching animations to the client's main 
 interface by using the new `ft.PageView` control, and hopes to solve the lag 
 issue to some extent.
+
+### Fixed
+- Filenames will no longer exceed the task card's boundaries; instead, 
+ellipses will be used to represent the excess parts.
 
 ---
 ## v0.6.2

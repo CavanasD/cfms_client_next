@@ -178,6 +178,8 @@ class TaskTile(ft.Card):
                                                 size=14,
                                                 weight=ft.FontWeight.BOLD,
                                                 overflow=ft.TextOverflow.ELLIPSIS,
+                                                expand=True,
+                                                expand_loose=True,
                                             ),
                                             self.priority_badge,
                                             self.file_missing_badge,
