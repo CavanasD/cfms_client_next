@@ -117,7 +117,7 @@ class UpgradeDialog(AlertDialog):
             _update_script = f"""@echo off
 timeout /t 2 /nobreak >nul
 taskkill /f /im cfms_client_next.exe >nul 2>&1
-rmdir /s /q "{RUNTIME_PATH}"
+rem rmdir /s /q "{RUNTIME_PATH}"
 xcopy "{FLET_APP_STORAGE_TEMP}\\update\\build\\windows" "{RUNTIME_PATH}" /I /Y /S
 rmdir /s /q "{FLET_APP_STORAGE_TEMP}\\update"
 exit
