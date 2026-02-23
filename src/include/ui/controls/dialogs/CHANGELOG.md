@@ -3,6 +3,22 @@
 This document contains the release history and changelog for CFMS Client NEXT.
 
 ---
+## v0.6.4
+**Released on:** 2026-02-23
+
+**Title:** UI Optimization and New Management Functions
+
+## Added
+- Added the ability to block and unblock users to the management interface
+- Added an entry point that allows users to modify access rules for the root directory
+
+## Improved
+- A new code editor will now be used when editing the source code of access rules
+
+## Fixed
+- Resolved the issue of PageView being unavailable in the build version
+
+---
 ## v0.6.3
 **Released on:** 2026-02-22
 
