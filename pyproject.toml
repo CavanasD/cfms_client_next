@@ -23,6 +23,7 @@ dependencies = [
   "pyotp",
   "pillow",
   "qrcode",
+  "flet-code-editor>=0.80.6.dev7651",
 ]
 
 [tool.flet]
@@ -37,6 +38,7 @@ path = "src"
 
 [tool.flet.flutter.pubspec.dependency_overrides]
 webview_flutter_android = "4.10.1"
+flet = { git = { url = "https://github.com/flet-dev/flet.git", ref = "main", path = "packages/flet" } }
 
 [tool.flet.android]
 min_sdk_version = 24
