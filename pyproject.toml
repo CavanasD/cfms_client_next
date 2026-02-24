@@ -1,6 +1,6 @@
 [project]
 name = "cfms-client-next"
-version = "0.6.4"
+version = "0.6.5"
 description = "The next generation of CFMS client based on Flet framework"
 readme = "README.md"
 requires-python = ">=3.14"
@@ -37,7 +37,6 @@ copyright = "Copyright (C) 2025 by Creeper Team"
 path = "src"
 
 [tool.flet.flutter.pubspec.dependency_overrides]
-webview_flutter_android = "4.10.1"
 flet = { git = { url = "https://github.com/flet-dev/flet.git", ref = "main", path = "packages/flet" } }
 
 [tool.flet.android]

@@ -3,6 +3,21 @@
 This document contains the release history and changelog for CFMS Client NEXT.
 
 ---
+## v0.6.5
+**Released on:** 2026-02-24
+
+**Title:** Patch release
+
+This release fixes several issues that prevented the application from building 
+successfully and ensures that the application build uses Python 3.14.3. 
+Additionally, it removes an outdated temporary patch for `webview_flutter_android`.
+
+## Added
+- (Debugging) An environment variable display has been added to the debug page to 
+help troubleshoot the issue raised at [#5692](https://github.com/flet-dev/flet/issues/5692)
+of the upstream repository.
+
+---
 ## v0.6.4
 **Released on:** 2026-02-23
 

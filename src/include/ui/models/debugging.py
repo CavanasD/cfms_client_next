@@ -4,6 +4,7 @@ import flet.version
 from flet_model import Model, Router, route
 from include.ui.util.route import get_parent_route
 from include.constants import (
+    FLET_ASSETS_DIR,
     ROOT_PATH,
     CONSTANT_FILE_ABSPATH,
     LOCALE_PATH,
@@ -58,6 +59,7 @@ class DebuggingViewModel(Model):
             ft.Text(f"RUNTIME_PATH: {RUNTIME_PATH if RUNTIME_PATH else '(Not Set)'}"),
             ft.Text(f"FLET_APP_STORAGE_TEMP: {FLET_APP_STORAGE_TEMP}"),
             ft.Text(f"FLET_APP_STORAGE_DATA: {FLET_APP_STORAGE_DATA}"),
+            ft.Text(f"FLET_ASSETS_DIR: {FLET_ASSETS_DIR if FLET_ASSETS_DIR else '(Not Set)'}"),
         ]
 
     async def back_button_click(self, event: ft.Event[ft.IconButton]):

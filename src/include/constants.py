@@ -24,6 +24,7 @@ LOCALE_PATH = f"{ROOT_PATH}/include/ui/locale"
 RUNTIME_PATH = os.environ.get("PYTHONHOME", "")
 FLET_APP_STORAGE_TEMP = os.environ.get("FLET_APP_STORAGE_TEMP", ".")
 FLET_APP_STORAGE_DATA = os.environ.get("FLET_APP_STORAGE_DATA", ".")
+FLET_ASSETS_DIR = os.environ.get("FLET_ASSETS_DIR", None)
 USER_PREFERENCES_PATH = f"{FLET_APP_STORAGE_DATA}/user_preferences"
 
 # Application Info
@@ -32,8 +33,8 @@ GITHUB_REPO = "Creeper19472/cfms_client_next"
 
 # Version Information
 CHANNEL = ChannelType.STABLE
-BUILD_VERSION = "v0.6.4"
-MODIFIED = "20260223"
+BUILD_VERSION = "v0.6.5"
+MODIFIED = "20260224"
 
 # Default update channel for user preferences
 DEFAULT_UPDATE_CHANNEL = ChannelType.STABLE
