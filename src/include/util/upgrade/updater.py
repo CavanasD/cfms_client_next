@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Optional
 from enum import Enum
 import re
 import requests
@@ -91,7 +91,7 @@ def get_latest_release(
 ) -> Optional[GithubRelease]:
     session = requests.Session()
     timeout = 5
-    releases: list[dict] = []
+    releases: list[dict[str, Any]] = []
 
     # Try the "latest" endpoint for stable/default, then the full list
     try:
@@ -99,17 +99,18 @@ def get_latest_release(
             resp = session.get(f"https://api.github.com/repos/{GITHUB_REPO}/releases/latest", timeout=timeout)
             if resp.ok:
                 releases.append(resp.json())
-        resp = session.get(f"https://api.github.com/repos/{GITHUB_REPO}/releases", timeout=timeout)
-        if resp.ok:
-            releases.extend(resp.json())
+        else:
+            resp = session.get(f"https://api.github.com/repos/{GITHUB_REPO}/releases", timeout=timeout)
+            if resp.ok:
+                releases.extend(resp.json())
     except requests.exceptions.RequestException:
         raise  # let caller handle connectivity/timeouts
 
     if not releases:
         return None
 
-    def parsed_channel_of(release: dict) -> ChannelType:
-        return parse_channel_from_body(release.get("body", ""), release.get("prerelease", False))
+    def parsed_channel_of(release: dict[str, Any]) -> ChannelType:
+        return parse_channel_from_body(release.get("body") or "", release.get("prerelease", False))
 
     def matches_channel(parsed: ChannelType, requested: Optional[ChannelType]) -> bool:
         if requested is None or parsed == requested:
@@ -135,7 +136,7 @@ def get_latest_release(
         return (0, tag)
 
     # Filter releases by channel preference
-    candidates = []
+    candidates: list[dict[str, Any]] = []
     for r in releases:
         parsed = parsed_channel_of(r)
         if matches_channel(parsed, channel):
@@ -157,16 +158,16 @@ def get_latest_release(
                 digest_obj = None
         assets.append(
             GithubAsset(
-                name=asset.get("name", ""),
+                name=asset.get("name") or "",
                 digest=digest_obj,
-                download_link=asset.get("browser_download_url", ""),
+                download_link=asset.get("browser_download_url") or "",
             )
         )
 
     return GithubRelease(
-        version=latest_release.get("tag_name", ""),
-        info=latest_release.get("body", ""),
-        release_link=latest_release.get("html_url", ""),
+        version=latest_release.get("tag_name") or "",
+        info=latest_release.get("body") or "",
+        release_link=latest_release.get("html_url") or "",
         assets=assets,
         channel=parsed_channel_of(latest_release),
     )
