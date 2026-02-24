@@ -3,6 +3,15 @@
 This document contains the release history and changelog for CFMS Client NEXT.
 
 ---
+## v0.6.6
+**Released on:** 2026-02-24
+
+**Title:** Patch release
+
+This version corrects the updater's detection logic to address an issue where 
+an exception was thrown when the API returned `null`.
+
+---
 ## v0.6.5
 **Released on:** 2026-02-24
 
