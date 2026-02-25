@@ -33,8 +33,8 @@ GITHUB_REPO = "Creeper19472/cfms_client_next"
 
 # Version Information
 CHANNEL = ChannelType.STABLE
-BUILD_VERSION = "v0.6.6"
-MODIFIED = "20260224"
+BUILD_VERSION = "v0.6.7"
+MODIFIED = "20260225"
 
 # Default update channel for user preferences
 DEFAULT_UPDATE_CHANNEL = ChannelType.STABLE

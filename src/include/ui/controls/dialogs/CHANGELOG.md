@@ -3,6 +3,15 @@
 This document contains the release history and changelog for CFMS Client NEXT.
 
 ---
+## v0.6.7
+**Released on:** 2026-02-25
+
+**Title:** Add `pillow` Support for Mobile Devices
+
+This version allows users to configure two-step verification on mobile devices 
+by introducing the `pillow` build.
+
+---
 ## v0.6.6
 **Released on:** 2026-02-24
 

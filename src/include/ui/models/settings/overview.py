@@ -51,18 +51,13 @@ class SettingsModel(Model):
                 subtitle=ft.Text(_("Configure update channel preferences")),
                 on_click=self.configure_updates_listtile_click,
             ),
-        ]
-
-        # Disabled for mobile devices - see issue #24
-        if AppShared().is_mobile is False:
-            self.listtiles.append(
-                ft.ListTile(
-                    leading=ft.Icon(ft.Icons.LOCK),
-                    title=ft.Text(_("Two-Factor Authentication")),
-                    subtitle=ft.Text(_("Manage two-factor authentication settings")),
-                    on_click=self.configure_twofa_listtile_click,
-                )
+            ft.ListTile(
+                leading=ft.Icon(ft.Icons.LOCK),
+                title=ft.Text(_("Two-Factor Authentication")),
+                subtitle=ft.Text(_("Manage two-factor authentication settings")),
+                on_click=self.configure_twofa_listtile_click,
             )
+        ]
 
         self.listview = ft.ListView(
             expand=True,
