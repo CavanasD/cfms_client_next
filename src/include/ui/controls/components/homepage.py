@@ -34,10 +34,12 @@ class HomeNavigationBar(ft.NavigationBar):
         self.views = views
         self._is_click_navigating = False
 
+        self._tasks_destination_icon = ft.Icon(ft.Icons.ARROW_CIRCLE_DOWN)
+
         nav_destinations = [
             ft.NavigationBarDestination(icon=ft.Icons.FOLDER, label=_("Files")),
             ft.NavigationBarDestination(
-                icon=ft.Icons.ARROW_CIRCLE_DOWN, label=_("Tasks")
+                icon=self._tasks_destination_icon, label=_("Tasks")
             ),
             ft.NavigationBarDestination(icon=ft.Icons.HOME, label=_("Home")),
             ft.NavigationBarDestination(icon=ft.Icons.MORE_HORIZ, label=_("More")),
@@ -53,6 +55,38 @@ class HomeNavigationBar(ft.NavigationBar):
             ref=ref,
             visible=visible,
         )
+
+    def did_mount(self):
+        download_service = self._get_download_service()
+        if download_service:
+            download_service.add_active_count_callback(self._on_task_count_changed)
+            self._set_tasks_badge(download_service.active_task_count)
+
+    def will_unmount(self):
+        download_service = self._get_download_service()
+        if download_service:
+            download_service.remove_active_count_callback(self._on_task_count_changed)
+
+    def _get_download_service(self):
+        from include.classes.services.download import DownloadManagerService
+
+        if self.app_shared.service_manager:
+            service = self.app_shared.service_manager.get_service("download_manager")
+            if isinstance(service, DownloadManagerService):
+                return service
+        return None
+
+    def _on_task_count_changed(self, count: int):
+        self._set_tasks_badge(count)
+        self.update()
+
+    def _set_tasks_badge(self, count: int):
+        if count <= 0:
+            self._tasks_destination_icon.badge = None
+        elif count > 99:
+            self._tasks_destination_icon.badge = ft.Badge(label="99+")
+        else:
+            self._tasks_destination_icon.badge = ft.Badge(label=str(count))
 
     async def on_change_item(self, e: ft.Event[ft.NavigationBar]):
         if e.control.selected_index == 4:
