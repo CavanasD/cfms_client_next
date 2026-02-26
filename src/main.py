@@ -126,7 +126,7 @@ async def main(page: ft.Page):
 
     # Disable browser context menu in web mode
     if page.web:
-        await page.browser_context_menu.disable()
+        await ft.BrowserContextMenu().disable()
 
     def on_keyboard(e: ft.KeyboardEvent):
         """

@@ -36,6 +36,7 @@ class DebuggingViewModel(Model):
                 on_click=self.back_button_click,
             ),
         )
+        self.scroll = ft.ScrollMode.AUTO
 
         self.controls = [
             ft.Text(_("General Information"), size=16, weight=ft.FontWeight.BOLD),
