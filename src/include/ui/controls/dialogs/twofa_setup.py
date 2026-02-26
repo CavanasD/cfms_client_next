@@ -75,6 +75,7 @@ class TwoFactorSetupDialog(AlertDialog):
             hint_text=_("6-digit code"),
             max_length=6,
             keyboard_type=ft.KeyboardType.NUMBER,
+            input_filter=ft.InputFilter(r"^[0-9]*$"),
             on_submit=self._on_verify_click,
             expand=True,
             expand_loose=True,

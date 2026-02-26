@@ -3,6 +3,17 @@
 This document contains the release history and changelog for CFMS Client NEXT.
 
 ---
+## v0.6.9
+**Released on:** 2026-02-26
+
+**Title:** Bug Fixes
+
+## Fixed
+- The verification code text field for two-step verification now only accepts numbers.
+- The issue of the multi-select toolbar button overflowing on mobile devices has been 
+resolved.
+
+---
 ## v0.6.8
 **Released on:** 2026-02-26
 

@@ -32,6 +32,8 @@ class SelectionToolbar(ft.Row):
             visible=visible,
             ref=ref,
             spacing=10,
+            tight=True,
+            scroll=ft.ScrollMode.HIDDEN,
         )
         self.page: ft.Page
         self.parent_view = parent_view

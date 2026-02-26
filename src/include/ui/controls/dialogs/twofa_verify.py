@@ -49,6 +49,7 @@ class TwoFactorVerifyDialog(AlertDialog):
             hint_text=_("Enter 6-digit code"),
             max_length=6,
             keyboard_type=ft.KeyboardType.NUMBER,
+            input_filter=ft.InputFilter(r"^[0-9]*$"),
             autofocus=True,
             on_submit=self._on_verify_click,
             expand=True,

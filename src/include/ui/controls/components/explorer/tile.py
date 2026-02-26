@@ -86,7 +86,7 @@ class FileTile(ft.ListTile):
     
     async def on_checkbox_change(self, event: ft.Event[ft.Checkbox]):
         """Handle checkbox state change."""
-        self.is_selected = event.control.value
+        self.is_selected = bool(event.control.value)
         if self.on_selection_changed:
             self.on_selection_changed(self.file_id, self.is_selected)
     
@@ -198,7 +198,7 @@ class DirectoryTile(ft.ListTile):
     
     async def on_checkbox_change(self, event: ft.Event[ft.Checkbox]):
         """Handle checkbox state change."""
-        self.is_selected = event.control.value
+        self.is_selected = bool(event.control.value)
         if self.on_selection_changed:
             self.on_selection_changed(self.directory_id, self.is_selected)
     
