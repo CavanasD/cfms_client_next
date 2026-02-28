@@ -3,6 +3,21 @@
 This document contains the release history and changelog for CFMS Client NEXT.
 
 ---
+## v0.7.0
+**Released on:** 2026-02-28
+
+**Title:** Midway through a Long Journey
+
+This version features minor tweaks to the internal implementation of some 
+functions and modifies a few less common translations. Additionally, this version 
+uses a redesigned app icon, aiming to deliver a fresh visual experience.
+
+Starting with this release, for the foreseeable future, clients may only receive 
+updates that optimize and fix existing features. We are still monitoring the 
+status of long-standing issues that currently lack solutions. We will push out 
+fixes as soon as they become available.
+
+---
 ## v0.6.9
 **Released on:** 2026-02-26
 

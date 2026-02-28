@@ -90,7 +90,7 @@ class AboutModel(Model):
                         text_align=ft.TextAlign.LEFT,
                     ),
                     ft.Text(
-                        _("Copyright (C) 2025 Creeper Team"),
+                        _("Copyright (C) 2025-2026 Creeper Team"),
                         size=16,
                         text_align=ft.TextAlign.LEFT,
                     ),
@@ -317,7 +317,7 @@ class AboutModel(Model):
                 )
                 self.suc_unavailable_text.visible = True
 
-        if os.environ.get("FLET_APP_CONSOLE"):
+        if AppShared().is_production:
             await _impl_check_for_updates()
         else:
             await asyncio.sleep(1)

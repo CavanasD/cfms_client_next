@@ -7,6 +7,7 @@ from .classes.version import ChannelType
 
 __all__ = [
     "RUNTIME_PATH",
+    "FLET_APP_CONSOLE",
     "FLET_APP_STORAGE_TEMP",
     "FLET_APP_STORAGE_DATA",
     "APP_VERSION",
@@ -22,6 +23,7 @@ CONSTANT_FILE_ABSPATH = os.path.abspath(__file__)
 ROOT_PATH = Path(CONSTANT_FILE_ABSPATH).resolve().parent.parent
 LOCALE_PATH = f"{ROOT_PATH}/include/ui/locale"
 RUNTIME_PATH = os.environ.get("PYTHONHOME", "")
+FLET_APP_CONSOLE = os.environ.get("FLET_APP_CONSOLE", "")
 FLET_APP_STORAGE_TEMP = os.environ.get("FLET_APP_STORAGE_TEMP", ".")
 FLET_APP_STORAGE_DATA = os.environ.get("FLET_APP_STORAGE_DATA", ".")
 FLET_ASSETS_DIR = os.environ.get("FLET_ASSETS_DIR", None)
@@ -33,8 +35,8 @@ GITHUB_REPO = "Creeper19472/cfms_client_next"
 
 # Version Information
 CHANNEL = ChannelType.STABLE
-BUILD_VERSION = "v0.6.9"
-MODIFIED = "20260226"
+BUILD_VERSION = "v0.7.0"
+MODIFIED = "20260228"
 
 # Default update channel for user preferences
 DEFAULT_UPDATE_CHANNEL = ChannelType.STABLE

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2026-02-23 20:50+0800\n"
+"POT-Creation-Date: 2026-02-28 11:31+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,11 +43,11 @@ msgstr ""
 msgid "(Protocol version {server_protocol_version}), please update the client."
 msgstr ""
 
-#: .\include\controllers\connect.py:97
+#: .\include\controllers\connect.py:98
 msgid "Authorization failed, you will not be able to download files normally."
 msgstr ""
 
-#: .\include\controllers\connect.py:101
+#: .\include\controllers\connect.py:102
 msgid "Please allow the app to access your files in settings."
 msgstr ""
 
@@ -657,24 +657,24 @@ msgstr ""
 msgid "An unexpected error occurred. Please try again. If the problem persists, contact your system administrator for assistance."
 msgstr ""
 
-#: .\include\ui\controls\components\explorer\bar.py:40
-#: .\include\ui\controls\components\explorer\bar.py:98
+#: .\include\ui\controls\components\explorer\bar.py:43
+#: .\include\ui\controls\components\explorer\bar.py:101
 msgid "0 items selected"
 msgstr ""
 
-#: .\include\ui\controls\components\explorer\bar.py:47
+#: .\include\ui\controls\components\explorer\bar.py:50
 msgid "Select All"
 msgstr ""
 
-#: .\include\ui\controls\components\explorer\bar.py:53
+#: .\include\ui\controls\components\explorer\bar.py:56
 msgid "Clear"
 msgstr ""
 
-#: .\include\ui\controls\components\explorer\bar.py:59
+#: .\include\ui\controls\components\explorer\bar.py:62
 msgid "Download"
 msgstr ""
 
-#: .\include\ui\controls\components\explorer\bar.py:65
+#: .\include\ui\controls\components\explorer\bar.py:68
 #: .\include\ui\controls\components\visualmgr\editor.py:608
 #: .\include\ui\controls\contextmenus\explorer.py:76
 #: .\include\ui\controls\contextmenus\explorer.py:212
@@ -683,7 +683,7 @@ msgstr ""
 msgid "Move"
 msgstr ""
 
-#: .\include\ui\controls\components\explorer\bar.py:71
+#: .\include\ui\controls\components\explorer\bar.py:74
 #: .\include\ui\controls\contextmenus\explorer.py:64
 #: .\include\ui\controls\contextmenus\explorer.py:200
 #: .\include\ui\controls\contextmenus\group.py:50
@@ -693,7 +693,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: .\include\ui\controls\components\explorer\bar.py:77
+#: .\include\ui\controls\components\explorer\bar.py:80
 #: .\include\ui\controls\components\rulemanager.py:111
 #: .\include\ui\controls\dialogs\admin\accounts.py:93
 #: .\include\ui\controls\dialogs\admin\accounts.py:186
@@ -719,63 +719,63 @@ msgstr ""
 #: .\include\ui\controls\dialogs\explorer.py:715
 #: .\include\ui\controls\dialogs\file_browser.py:147
 #: .\include\ui\controls\dialogs\password_confirm.py:61
-#: .\include\ui\controls\dialogs\twofa_setup.py:90
-#: .\include\ui\controls\dialogs\twofa_verify.py:80
+#: .\include\ui\controls\dialogs\twofa_setup.py:91
+#: .\include\ui\controls\dialogs\twofa_verify.py:81
 #: .\include\ui\controls\dialogs\upgrade.py:41
 #: .\include\ui\controls\views\tasks.py:108
 msgid "Cancel"
 msgstr ""
 
-#: .\include\ui\controls\components\explorer\bar.py:100
+#: .\include\ui\controls\components\explorer\bar.py:103
 msgid "1 item selected"
 msgstr ""
 
-#: .\include\ui\controls\components\explorer\bar.py:102
+#: .\include\ui\controls\components\explorer\bar.py:105
 msgid "{count} items selected"
 msgstr ""
 
-#: .\include\ui\controls\components\explorer\bar.py:149
+#: .\include\ui\controls\components\explorer\bar.py:152
 msgid "Select items"
 msgstr ""
 
-#: .\include\ui\controls\components\explorer\bar.py:155
+#: .\include\ui\controls\components\explorer\bar.py:158
 msgid "Set root directory permissions"
 msgstr ""
 
-#: .\include\ui\controls\components\explorer\bar.py:181
+#: .\include\ui\controls\components\explorer\bar.py:184
 #: .\include\ui\controls\dialogs\authorize.py:74
 #: .\include\ui\controls\dialogs\search.py:131
 #: .\include\ui\controls\dialogs\search.py:207
 msgid "Search"
 msgstr ""
 
-#: .\include\ui\controls\components\explorer\bar.py:288
+#: .\include\ui\controls\components\explorer\bar.py:293
 msgid "Sort by:"
 msgstr ""
 
-#: .\include\ui\controls\components\explorer\bar.py:291
+#: .\include\ui\controls\components\explorer\bar.py:296
 #: .\include\ui\controls\dialogs\search.py:156
 msgid "Name"
 msgstr ""
 
-#: .\include\ui\controls\components\explorer\bar.py:292
+#: .\include\ui\controls\components\explorer\bar.py:297
 msgid "Created at"
 msgstr ""
 
-#: .\include\ui\controls\components\explorer\bar.py:293
+#: .\include\ui\controls\components\explorer\bar.py:298
 msgid "Last Modified"
 msgstr ""
 
-#: .\include\ui\controls\components\explorer\bar.py:294
+#: .\include\ui\controls\components\explorer\bar.py:299
 #: .\include\ui\controls\dialogs\search.py:159
 msgid "Size"
 msgstr ""
 
-#: .\include\ui\controls\components\explorer\bar.py:295
+#: .\include\ui\controls\components\explorer\bar.py:300
 msgid "Type"
 msgstr ""
 
-#: .\include\ui\controls\components\explorer\bar.py:304
+#: .\include\ui\controls\components\explorer\bar.py:309
 msgid "Toggle Sort Order"
 msgstr ""
 
@@ -798,73 +798,69 @@ msgstr ""
 msgid "Created at: {created_at}"
 msgstr ""
 
-#: .\include\ui\controls\components\homepage.py:39
+#: .\include\ui\controls\components\homepage.py:40
 msgid "Files"
 msgstr ""
 
-#: .\include\ui\controls\components\homepage.py:41
+#: .\include\ui\controls\components\homepage.py:42
 msgid "Tasks"
 msgstr ""
 
-#: .\include\ui\controls\components\homepage.py:43
+#: .\include\ui\controls\components\homepage.py:44
 msgid "Home"
 msgstr ""
 
-#: .\include\ui\controls\components\homepage.py:44
+#: .\include\ui\controls\components\homepage.py:45
 msgid "More"
 msgstr ""
 
-#: .\include\ui\controls\components\homepage.py:46
+#: .\include\ui\controls\components\homepage.py:47
 #: .\include\ui\controls\components\visualmgr\editor.py:613
 #: .\include\ui\controls\dialogs\authorize.py:128
 msgid "Manage"
 msgstr ""
 
-#: .\include\ui\controls\components\homepage.py:100
+#: .\include\ui\controls\components\homepage.py:132
 msgid "Welcome to Confidential Document Management System (CFMS)"
 msgstr ""
 
-#: .\include\ui\controls\components\homepage.py:105
+#: .\include\ui\controls\components\homepage.py:137
 msgid "The sunset glow and the lone wild duck fly together, autumn water shares the same color with the vast sky."
 msgstr ""
 
-#: .\include\ui\controls\components\homepage.py:141
+#: .\include\ui\controls\components\homepage.py:173
 msgid "ID: {id} (No longer exists)"
 msgstr ""
 
-#: .\include\ui\controls\components\homepage.py:217
+#: .\include\ui\controls\components\homepage.py:249
 msgid "This document no longer exists on the server."
 msgstr ""
 
-#: .\include\ui\controls\components\homepage.py:240
+#: .\include\ui\controls\components\homepage.py:272
 msgid "Failed to download document: ({code}) {message}"
 msgstr ""
 
-#: .\include\ui\controls\components\homepage.py:248
+#: .\include\ui\controls\components\homepage.py:280
 msgid "Failed to download document: {error}"
 msgstr ""
 
-#: .\include\ui\controls\components\homepage.py:298
+#: .\include\ui\controls\components\homepage.py:330
 msgid "You have not favorited any documents or folders yet."
 msgstr ""
 
-#: .\include\ui\controls\components\homepage.py:318
+#: .\include\ui\controls\components\homepage.py:350
 msgid "Favorites"
 msgstr ""
 
-#: .\include\ui\controls\components\rulemanager.py:35
+#: .\include\ui\controls\components\rulemanager.py:36
 msgid "Inherit rules from parent object"
 msgstr ""
 
-#: .\include\ui\controls\components\rulemanager.py:43
-msgid "Rule Content"
-msgstr ""
-
-#: .\include\ui\controls\components\rulemanager.py:51
+#: .\include\ui\controls\components\rulemanager.py:50
 msgid "For rule format documentation, please refer to [CFMS Server Documentation](https://cfms-server-doc.readthedocs.io/zh-cn/latest/access_control.html)."
 msgstr ""
 
-#: .\include\ui\controls\components\rulemanager.py:59
+#: .\include\ui\controls\components\rulemanager.py:58
 #: .\include\ui\controls\dialogs\admin\accounts.py:90
 #: .\include\ui\controls\dialogs\admin\accounts.py:306
 #: .\include\ui\controls\dialogs\admin\groups.py:127
@@ -875,20 +871,20 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: .\include\ui\controls\components\rulemanager.py:62
+#: .\include\ui\controls\components\rulemanager.py:61
 msgid "Rule Manager"
 msgstr ""
 
-#: .\include\ui\controls\components\rulemanager.py:71
+#: .\include\ui\controls\components\rulemanager.py:70
 msgid "Visualization"
 msgstr ""
 
-#: .\include\ui\controls\components\rulemanager.py:74
+#: .\include\ui\controls\components\rulemanager.py:73
 msgid "Source Code"
 msgstr ""
 
 #: .\include\ui\controls\components\rulemanager.py:137
-#: .\include\ui\controls\components\rulemanager.py:193
+#: .\include\ui\controls\components\rulemanager.py:197
 msgid "The submitted rule is not valid JSON"
 msgstr ""
 
@@ -918,7 +914,7 @@ msgid "Match Mode"
 msgstr ""
 
 #: .\include\ui\controls\components\visualmgr\editor.py:102
-#: .\include\ui\models\manage.py:36
+#: .\include\ui\models\manage.py:39
 msgid "Groups"
 msgstr ""
 
@@ -1120,7 +1116,7 @@ msgid "Nickname"
 msgstr ""
 
 #: .\include\ui\controls\dialogs\admin\accounts.py:176
-#: .\include\ui\controls\views\admin\audit.py:37
+#: .\include\ui\controls\views\admin\audit.py:35
 #: .\include\ui\controls\views\login.py:203
 msgid "Username"
 msgstr ""
@@ -1191,7 +1187,7 @@ msgid "Block Types"
 msgstr ""
 
 #: .\include\ui\controls\dialogs\admin\accounts.py:540
-#: .\include\ui\controls\views\admin\audit.py:39
+#: .\include\ui\controls\views\admin\audit.py:37
 msgid "Target"
 msgstr ""
 
@@ -1522,7 +1518,7 @@ msgid "Request Data"
 msgstr ""
 
 #: .\include\ui\controls\dialogs\dev.py:27
-#: .\include\ui\controls\views\admin\audit.py:47
+#: .\include\ui\controls\views\admin\audit.py:45
 msgid "Result"
 msgstr ""
 
@@ -1848,24 +1844,24 @@ msgstr ""
 msgid "6-digit code"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\twofa_setup.py:85
+#: .\include\ui\controls\dialogs\twofa_setup.py:86
 msgid "Verify and Enable"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\twofa_setup.py:100
+#: .\include\ui\controls\dialogs\twofa_setup.py:101
 msgid "Scan this QR code with your authenticator app (e.g., Google Authenticator, Authy, Microsoft Authenticator)"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\twofa_setup.py:112
+#: .\include\ui\controls\dialogs\twofa_setup.py:113
 msgid "Or enter this key manually:"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\twofa_setup.py:183
-#: .\include\ui\controls\dialogs\twofa_verify.py:186
+#: .\include\ui\controls\dialogs\twofa_setup.py:184
+#: .\include\ui\controls\dialogs\twofa_verify.py:187
 msgid "Please enter a 6-digit code"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\twofa_setup.py:196
+#: .\include\ui\controls\dialogs\twofa_setup.py:197
 msgid "Invalid code. Please try again."
 msgstr ""
 
@@ -1886,7 +1882,7 @@ msgid "Use recovery code instead"
 msgstr ""
 
 #: .\include\ui\controls\dialogs\twofa_verify.py:38
-#: .\include\ui\models\settings\overview.py:61
+#: .\include\ui\models\settings\overview.py:56
 #: .\include\ui\models\settings\twofa.py:33
 msgid "Two-Factor Authentication"
 msgstr ""
@@ -1899,27 +1895,27 @@ msgstr ""
 msgid "Enter 6-digit code"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\twofa_verify.py:61
+#: .\include\ui\controls\dialogs\twofa_verify.py:62
 msgid "Recovery Code"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\twofa_verify.py:62
+#: .\include\ui\controls\dialogs\twofa_verify.py:63
 msgid "Enter recovery code"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\twofa_verify.py:75
+#: .\include\ui\controls\dialogs\twofa_verify.py:76
 msgid "Verify"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\twofa_verify.py:179
+#: .\include\ui\controls\dialogs\twofa_verify.py:180
 msgid "Please enter a recovery code"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\twofa_verify.py:204
+#: .\include\ui\controls\dialogs\twofa_verify.py:205
 msgid "Invalid recovery code"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\twofa_verify.py:207
+#: .\include\ui\controls\dialogs\twofa_verify.py:208
 msgid "Invalid verification code"
 msgstr ""
 
@@ -1985,7 +1981,7 @@ msgid "View Access Entries for {display_name}"
 msgstr ""
 
 #: .\include\ui\controls\dialogs\view_access_entries.py:62
-#: .\include\ui\controls\views\admin\audit.py:31
+#: .\include\ui\controls\views\admin\audit.py:29
 msgid "ID"
 msgstr ""
 
@@ -2072,35 +2068,35 @@ msgstr ""
 msgid "Load failed: ({code}) {message}"
 msgstr ""
 
-#: .\include\ui\controls\views\admin\audit.py:36
+#: .\include\ui\controls\views\admin\audit.py:34
 msgid "Action"
 msgstr ""
 
-#: .\include\ui\controls\views\admin\audit.py:43
+#: .\include\ui\controls\views\admin\audit.py:41
 msgid "Data"
 msgstr ""
 
-#: .\include\ui\controls\views\admin\audit.py:50
+#: .\include\ui\controls\views\admin\audit.py:48
 msgid "Remote Address"
 msgstr ""
 
-#: .\include\ui\controls\views\admin\audit.py:53
+#: .\include\ui\controls\views\admin\audit.py:51
 msgid "Time"
 msgstr ""
 
-#: .\include\ui\controls\views\admin\audit.py:126
+#: .\include\ui\controls\views\admin\audit.py:124
 msgid "Audit Logs"
 msgstr ""
 
-#: .\include\ui\controls\views\admin\audit.py:219
+#: .\include\ui\controls\views\admin\audit.py:217
 msgid "Load failed: ({code}) {errmsg}"
 msgstr ""
 
-#: .\include\ui\controls\views\admin\audit.py:232
+#: .\include\ui\controls\views\admin\audit.py:230
 msgid "{view_start} - {view_end} of {total} items"
 msgstr ""
 
-#: .\include\ui\controls\views\admin\audit.py:254
+#: .\include\ui\controls\views\admin\audit.py:252
 msgid "Load failed: {errstr}"
 msgstr ""
 
@@ -2125,7 +2121,7 @@ msgstr ""
 msgid "Invalid server address"
 msgstr ""
 
-#: .\include\ui\controls\views\explorer.py:220
+#: .\include\ui\controls\views\explorer.py:221
 msgid "File Management"
 msgstr ""
 
@@ -2295,7 +2291,7 @@ msgid "Version: {BUILD_VERSION}"
 msgstr ""
 
 #: .\include\ui\models\about.py:93
-msgid "Copyright (C) 2025 Creeper Team"
+msgid "Copyright (C) 2025-2026 Creeper Team"
 msgstr ""
 
 #: .\include\ui\models\about.py:98
@@ -2366,27 +2362,27 @@ msgstr ""
 msgid "Connection Settings"
 msgstr ""
 
-#: .\include\ui\models\debugging.py:32
+#: .\include\ui\models\debugging.py:34
 msgid "Debugging"
 msgstr ""
 
-#: .\include\ui\models\debugging.py:40
+#: .\include\ui\models\debugging.py:43
 msgid "General Information"
 msgstr ""
 
-#: .\include\ui\models\debugging.py:54
+#: .\include\ui\models\debugging.py:57
 msgid "Environment Variables"
 msgstr ""
 
-#: .\include\ui\models\manage.py:32
+#: .\include\ui\models\manage.py:35
 msgid "Accounts"
 msgstr ""
 
-#: .\include\ui\models\manage.py:41
+#: .\include\ui\models\manage.py:44
 msgid "Logs"
 msgstr ""
 
-#: .\include\ui\models\manage.py:76
+#: .\include\ui\models\manage.py:82
 msgid "Management"
 msgstr ""
 
@@ -2456,7 +2452,7 @@ msgstr ""
 msgid "Configure update channel preferences"
 msgstr ""
 
-#: .\include\ui\models\settings\overview.py:62
+#: .\include\ui\models\settings\overview.py:57
 msgid "Manage two-factor authentication settings"
 msgstr ""
 

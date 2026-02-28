@@ -9,6 +9,7 @@ from include.constants import (
     CONSTANT_FILE_ABSPATH,
     LOCALE_PATH,
     RUNTIME_PATH,
+    FLET_APP_CONSOLE,
     FLET_APP_STORAGE_TEMP,
     FLET_APP_STORAGE_DATA,
 )
@@ -57,10 +58,11 @@ class DebuggingViewModel(Model):
             ft.Text(f"CONSTANT_FILE_ABSPATH: {CONSTANT_FILE_ABSPATH}"),
             ft.Text(f"ROOT_PATH: {ROOT_PATH}"),
             ft.Text(f"LOCALE_PATH: {LOCALE_PATH}"),
-            ft.Text(f"RUNTIME_PATH: {RUNTIME_PATH if RUNTIME_PATH else '(Not Set)'}"),
+            ft.Text(f"RUNTIME_PATH: {RUNTIME_PATH or '(Not Set)'}"),
+            ft.Text(f"FLET_APP_CONSOLE: {FLET_APP_CONSOLE or '(Not Set)'}"),
             ft.Text(f"FLET_APP_STORAGE_TEMP: {FLET_APP_STORAGE_TEMP}"),
             ft.Text(f"FLET_APP_STORAGE_DATA: {FLET_APP_STORAGE_DATA}"),
-            ft.Text(f"FLET_ASSETS_DIR: {FLET_ASSETS_DIR if FLET_ASSETS_DIR else '(Not Set)'}"),
+            ft.Text(f"FLET_ASSETS_DIR: {FLET_ASSETS_DIR or '(Not Set)'}"),
         ]
 
     async def back_button_click(self, event: ft.Event[ft.IconButton]):
