@@ -11,6 +11,18 @@ t = get_translation()
 _ = t.gettext
 
 
+def _notify_favorites_changed(app_shared: AppShared) -> None:
+    """Notify the FavoritesValidationService that the favorites list has changed."""
+    if app_shared.service_manager:
+        from include.classes.services.favorites_validation import (
+            FavoritesValidationService,
+        )
+
+        service = app_shared.service_manager.get_service("favorites_validation")
+        if isinstance(service, FavoritesValidationService):
+            service.notify_favorites_changed()
+
+
 class FileTile(ft.ListTile):
     def __init__(
         self,
@@ -51,7 +63,10 @@ class FileTile(ft.ListTile):
 
         subtitle_text = ""
         if show_id:
-            subtitle_text += _("ID: {file_id}\n").format(file_id=file_id)
+            subtitle_text += _("ID: {file_id}").format(file_id=file_id)
+
+        if show_id and (last_modified is not None or size is not None):
+            subtitle_text += "\n"  # Add extra newline for spacing if ID is shown
 
         if last_modified is not None:
             subtitle_text += _("Last modified: {last_modified}\n").format(
@@ -119,6 +134,9 @@ class FileTile(ft.ListTile):
             self.app_shared.user_perference,
         )
 
+        # Notify listeners that favorites have changed
+        _notify_favorites_changed(self.app_shared)
+
         self.update_state()
 
     def post_init(self):
@@ -171,7 +189,10 @@ class DirectoryTile(ft.ListTile):
 
         subtitle_text = ""
         if show_id:
-            subtitle_text += _("ID: {dir_id}\n").format(dir_id=self.directory_id)
+            subtitle_text += _("ID: {dir_id}").format(dir_id=self.directory_id)
+
+        if show_id and created_at is not None:
+            subtitle_text += "\n"  # Add extra newline for spacing if ID is shown
 
         if created_at is not None:
             subtitle_text += _("Created at: {created_at}").format(
@@ -232,6 +253,9 @@ class DirectoryTile(ft.ListTile):
             self.app_shared.get_not_none_attribute("username"),
             self.app_shared.user_perference,
         )
+
+        # Notify listeners that favorites have changed
+        _notify_favorites_changed(self.app_shared)
 
         self.update_state()
 
