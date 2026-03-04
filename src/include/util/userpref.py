@@ -1,5 +1,6 @@
 import os
 import json
+from dataclasses import asdict
 from typing import Optional
 from include.classes.shared import AppShared
 from include.classes.preferences import UserPreference
@@ -17,7 +18,7 @@ def load_user_preference(username: str) -> UserPreference:
     pref_path = get_user_preference_path(username)
 
     if not os.path.exists(pref_path):
-        return UserPreference(favourites={"files": {}, "directories": {}})
+        return UserPreference()
 
     dek = AppShared().dek
 
@@ -26,7 +27,7 @@ def load_user_preference(username: str) -> UserPreference:
 
     if is_encrypted_config(raw):
         if dek is None:
-            return UserPreference(favourites={"files": {}, "directories": {}})
+            return UserPreference()
         try:
             plaintext = decrypt_config(raw, dek)
             data: dict = json.loads(plaintext.decode("utf-8"))
@@ -38,25 +39,25 @@ def load_user_preference(username: str) -> UserPreference:
         try:
             data = json.loads(raw.decode("utf-8"))
         except (json.JSONDecodeError, UnicodeDecodeError):
-            return UserPreference(favourites={"files": {}, "directories": {}})
+            return UserPreference()
         # Migrate plain-JSON file to encrypted format when DEK is available
         if dek is not None:
             _write_pref_file(pref_path, data, dek)
 
-    return UserPreference(
-        theme=data.get("theme", "light"),
-        favourites=_normalize_favourites(data.get("favourites")),
-    )
+    # Normalize favourites to ensure proper structure
+    data["favourites"] = _normalize_favourites(data.get("favourites"))
+    # Create UserPreference instance using all fields from data
+    # This automatically handles all dataclass fields
+    return UserPreference(**data)
 
 
 def save_user_preference(username: str, preferences: UserPreference) -> None:
     pref_path = get_user_preference_path(username)
     os.makedirs(os.path.dirname(pref_path), exist_ok=True)
 
-    data = {
-        "theme": preferences.theme,
-        "favourites": preferences.favourites,
-    }
+    # Automatically convert all dataclass fields to dict
+    # New fields added to UserPreference will be automatically saved
+    data = asdict(preferences)
     _write_pref_file(pref_path, data, AppShared().dek)
 
 
