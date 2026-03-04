@@ -3,6 +3,24 @@
 This document contains the release history and changelog for CFMS Client NEXT.
 
 ---
+## v0.8.0
+**Released on:** 2026-03-04
+
+**Title:** Feature Drops & Fixes
+
+This version introduces a new settings interface that allows users to configure 
+how downloaded files are saved to external locations.
+
+## Fixed
+- Fixed a regression bug so that UI updates triggered by updates to the "Favorites" 
+list can be performed promptly.
+
+## Improved
+- Some Chinese translations have been slightly adjusted.
+- Modified the implementation related to user configuration to enable the saving 
+of global and user configurations to be synchronized.
+
+---
 ## v0.7.0
 **Released on:** 2026-02-28
 
