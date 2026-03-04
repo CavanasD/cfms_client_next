@@ -43,7 +43,7 @@ message = "Initializing..."
 
 [tool.flet.flutter.pubspec.dependency_overrides]
 flet = { git = { url = "https://github.com/flet-dev/flet.git", ref = "main", path = "packages/flet" } }
-serious_python = { git = { url = "https://github.com/cfms-dev/serious-python.git", ref = "main", path = "packages/serious_python" } }
+serious_python = { git = { url = "https://github.com/cfms-dev/serious-python.git", ref = "main", path = "src/serious_python" } }
 
 [tool.flet.android]
 min_sdk_version = 24
