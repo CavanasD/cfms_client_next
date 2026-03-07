@@ -1,13 +1,13 @@
 from typing import TYPE_CHECKING, Union, cast
 
 import flet as ft
+from flet_material_symbols import Symbols
 
 from include.classes.shared import AppShared
 from include.classes.services.favorites_validation import FavoritesValidationService
 from include.ui.controls.components.explorer.tile import DirectoryTile, FileTile
 from include.ui.util.notifications import send_error
 from include.ui.util.path import get_document
-
 
 if TYPE_CHECKING:
     from include.ui.models.home import HomeModel
@@ -34,17 +34,19 @@ class HomeNavigationBar(ft.NavigationBar):
         self.views = views
         self._is_click_navigating = False
 
-        self._tasks_destination_icon = ft.Icon(ft.Icons.ARROW_CIRCLE_DOWN)
+        self._tasks_destination_icon = ft.Icon(Symbols.ARROW_CIRCLE_DOWN)
 
         nav_destinations = [
-            ft.NavigationBarDestination(icon=ft.Icons.FOLDER, label=_("Files")),
+            ft.NavigationBarDestination(icon=Symbols.FOLDER, label=_("Files")),
             ft.NavigationBarDestination(
                 icon=self._tasks_destination_icon, label=_("Tasks")
             ),
-            ft.NavigationBarDestination(icon=ft.Icons.HOME, label=_("Home")),
-            ft.NavigationBarDestination(icon=ft.Icons.MORE_HORIZ, label=_("More")),
+            ft.NavigationBarDestination(icon=Symbols.HOME, label=_("Home")),
+            ft.NavigationBarDestination(icon=Symbols.MORE_HORIZ, label=_("More")),
             ft.NavigationBarDestination(
-                icon=ft.Icons.CLOUD_CIRCLE, label=_("Manage"), visible=False
+                icon=ft.Icon(Symbols.CLOUD_CIRCLE, fill=1),
+                label=_("Manage"),
+                visible=False,
             ),
         ]
 
@@ -68,13 +70,14 @@ class HomeNavigationBar(ft.NavigationBar):
             download_service.remove_active_count_callback(self._on_task_count_changed)
 
     def _get_download_service(self):
+        if not self.app_shared.service_manager:
+            return None
+
         from include.classes.services.download import DownloadManagerService
 
-        if self.app_shared.service_manager:
-            service = self.app_shared.service_manager.get_service("download_manager")
-            if isinstance(service, DownloadManagerService):
-                return service
-        return None
+        return self.app_shared.service_manager.get_service(
+            "download_manager", DownloadManagerService
+        )
 
     def _on_task_count_changed(self, count: int):
         self._set_tasks_badge(count)
@@ -127,7 +130,7 @@ class WelcomeInfoCard(ft.Card):
             content=ft.Column(
                 [
                     ft.ListTile(
-                        leading=ft.Icon(ft.Icons.ACCESS_TIME_FILLED),
+                        leading=ft.Icon(Symbols.GUARDIAN),
                         title=ft.Text(
                             _(
                                 "Welcome to Confidential Document Management System (CFMS)"
@@ -197,11 +200,9 @@ class HomeFavoritesContainer(ft.Container):
     def _get_favorites_validation_service(self):
         """Return the FavoritesValidationService instance, or None if unavailable."""
         if self.app_shared.service_manager:
-            service = self.app_shared.service_manager.get_service(
-                "favorites_validation"
+            return self.app_shared.service_manager.get_service(
+                "favorites_validation", FavoritesValidationService
             )
-            if isinstance(service, FavoritesValidationService):
-                return service
         return None
 
     def did_mount(self):

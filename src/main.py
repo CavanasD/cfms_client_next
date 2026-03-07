@@ -7,32 +7,41 @@ and sets up the UI components and page settings.
 
 import os
 import warnings
+import logging
 
 import flet as ft
 import flet_permission_handler as fph
 
-from include.constants import RUNTIME_PATH
+from include.constants import LOGFILE_PATH, RUNTIME_PATH, ROOT_PATH
 from include.classes.shared import AppShared
 from include.classes.services.manager import ServiceManager
 from include.classes.services.autoupdate import AutoUpdateService
+from include.classes.services.ca_update import (
+    CACertUpdateService,
+    DEFAULT_INTERVAL as _CA_CHECK_INTERVAL,
+)
 from include.classes.services.download import DownloadManagerService
 from include.classes.services.token_refresh import TokenRefreshService
 from include.classes.services.favorites_validation import FavoritesValidationService
 from include.util.locale import set_translation
+from include.util.ca_update import manifest_exists
 
-# Window configuration constants
 DEFAULT_WINDOW_WIDTH = 1366
 DEFAULT_WINDOW_HEIGHT = 768
 
-import logging
+# There's a reason why the following steps are used to set up logging.
+#
+# `serious_python` configures a StreamHandler before any user code execution to enable
+# console output forwarding on Android, causing :meth:`logging.basicConfig()` to fail.
 
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="[%(asctime)s %(levelname)s] | %(name)s | %(message)s",
-    filename="cfms_client.log",
-    filemode="w",
-    # datefmt="%Y-%m-%d %H:%M:%S",
-)
+_formatter = logging.Formatter("[%(asctime)s %(levelname)s] | %(name)s | %(message)s")
+
+_file_handler = logging.FileHandler(LOGFILE_PATH, encoding="utf-8")
+_file_handler.setFormatter(_formatter)
+
+_root_logger = logging.getLogger()
+_root_logger.addHandler(_file_handler)
+_root_logger.setLevel(logging.DEBUG)
 
 
 async def main(page: ft.Page):
@@ -75,20 +84,16 @@ async def main(page: ft.Page):
     # is set before any UI components are loaded
     from include.ui.controls.dialogs.dev import DevRequestDialog
     from include.ui.models.connect import ConnectToServerModel
+    from include.ui.models.init import AppInitModel
     from include.ui.models.login import LoginModel
     from include.ui.models.about import AboutModel
-    from include.ui.models.settings.overview import SettingsModel
-    from include.ui.models.settings.connection import ConnectionSettingsModel
-    from include.ui.models.settings.safety import SafetySettingsModel
-    from include.ui.models.settings.language import LanguageSettingsModel
     from include.ui.models.home import HomeModel
     from include.ui.models.manage import ManageModel
     from include.ui.models.debugging import DebuggingViewModel
-    from include.ui.models.settings.twofa import TwoFactorSettingsModel
-    from include.ui.models.settings.updates import UpdatesSettingsModel
-    from include.ui.models.settings.storage import StorageSettingsModel
+    import include.ui.models.settings
 
-    # Configure page settings
+    # Page settings
+
     page.title = "CFMS Client"
     page.theme_mode = ft.ThemeMode.DARK
     page.window.width = DEFAULT_WINDOW_WIDTH
@@ -118,6 +123,12 @@ async def main(page: ft.Page):
             )
         ),
         font_family="Source Han Serif SC Regular",
+        icon_theme=ft.IconTheme(
+            weight=400,
+            fill=0,
+            grade=0,
+            optical_size=24,
+        ),
     )
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
@@ -212,6 +223,15 @@ async def main(page: ft.Page):
     )
     service_manager.register(favorites_validation_service)
 
+    # Register CA certificate update service
+    # Checks at most once every 90 days; the schedule is enforced inside execute()
+    ca_cert_update_service = CACertUpdateService(
+        page=page,
+        enabled=True,
+        interval=_CA_CHECK_INTERVAL,
+    )
+    service_manager.register(ca_cert_update_service)
+
     # Start all registered services
     await service_manager.start_all()
 
@@ -223,8 +243,14 @@ async def main(page: ft.Page):
 
     page.on_close = on_page_close
 
-    # Navigate to initial screen
-    await page.push_route("/connect")
+    # Navigate to initial screen.
+    # On first launch the CA cert manifest doesn't exist yet – show the
+    # initialisation wizard.  On subsequent launches go straight to connect.
+    _ca_dir = ROOT_PATH / "include" / "ca"
+    if not manifest_exists(_ca_dir):
+        await page.push_route("/init")
+    else:
+        await page.push_route("/connect")
 
 
 if __name__ == "__main__":

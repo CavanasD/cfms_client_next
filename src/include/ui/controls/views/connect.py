@@ -2,6 +2,7 @@ import re
 
 import flet as ft
 
+from include.classes.services.ca_update import CACertUpdateService
 from include.classes.shared import AppShared
 from include.constants import DEFAULT_WINDOW_TITLE
 from include.controllers.connect import ConnectFormController
@@ -135,5 +136,22 @@ class ConnectForm(ft.Container):
             self.remote_address_textfield.error = _("Invalid server address")
             self.enable_interactions()
             return  # Exit the function if the pattern is invalid
+
+        # Check if the CA certificate store is being updated to prevent
+        # a dirty read while certificates are being written to disk.
+        if self.app_shared.service_manager is not None:
+            ca_service = self.app_shared.service_manager.get_service(
+                "ca_cert_update", CACertUpdateService
+            )
+            if ca_service is not None and ca_service.is_updating:
+                send_error(
+                    self.page,
+                    _(
+                        "CA certificate store is being updated. "
+                        "Please wait a moment and try again."
+                    ),
+                )
+                self.enable_interactions()
+                return
 
         self.page.run_task(self.controller.action_connect, server_address)
