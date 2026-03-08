@@ -13,6 +13,10 @@ from websockets.asyncio.client import ClientConnection
 from include.classes.shared import AppShared
 from include.classes.response import Response
 from include.util.connect import get_connection
+from include.util.locale import get_translation
+
+t = get_translation()
+_ = t.gettext
 
 
 # Store locks per-connection without attaching them to the connection object
@@ -169,6 +173,9 @@ async def _request(
     Returns:
         Dictionary response from server
     """
+
+    t1 = time.perf_counter()
+
     request = {
         "action": action,
         "data": data,
@@ -186,4 +193,13 @@ async def _request(
         response = await conn.recv()
 
     loaded_response: dict[str, Any] = json.loads(response)
+
+    t2 = time.perf_counter()
+
+    _monitor_ref = AppShared().monitor_ref
+    if _monitor_ref is not None and _monitor_ref.current is not None:
+        _monitor_ref.current.update_status(
+            _("Request '{}' completed in {:.3f} seconds").format(action, t2 - t1)
+        )
+        
     return loaded_response
