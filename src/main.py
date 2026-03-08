@@ -37,7 +37,7 @@ DEFAULT_WINDOW_HEIGHT = 768
 
 _formatter = logging.Formatter("[%(asctime)s %(levelname)s] | %(name)s | %(message)s")
 
-_file_handler = logging.FileHandler(LOGFILE_PATH, encoding="utf-8")
+_file_handler = logging.FileHandler(LOGFILE_PATH, mode="w", encoding="utf-8")
 _file_handler.setFormatter(_formatter)
 
 _root_logger = logging.getLogger()
