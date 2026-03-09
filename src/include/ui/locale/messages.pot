@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2026-03-09 12:46+0800\n"
+"POT-Creation-Date: 2026-03-09 19:08+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1623,7 +1623,7 @@ msgstr ""
 #: .\include\ui\controls\dialogs\explorer.py:164
 #: .\include\ui\controls\dialogs\explorer.py:603
 #: .\include\ui\controls\dialogs\explorer.py:882
-#: .\include\ui\controls\dialogs\whatsnew.py:86
+#: .\include\ui\controls\dialogs\whatsnew.py:88
 msgid "OK"
 msgstr ""
 
@@ -2120,18 +2120,18 @@ msgid ""
 msgstr ""
 
 #: .\include\ui\controls\dialogs\whatsnew.py:75
-msgid "Only the 50 most recent changelogs are displayed."
+msgid "Only the {count} most recent changelogs are displayed."
 msgstr ""
 
-#: .\include\ui\controls\dialogs\whatsnew.py:107
+#: .\include\ui\controls\dialogs\whatsnew.py:109
 msgid "What's new in {newest_version}"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\whatsnew.py:117
+#: .\include\ui\controls\dialogs\whatsnew.py:119
 msgid "View history"
 msgstr ""
 
-#: .\include\ui\controls\dialogs\whatsnew.py:118
+#: .\include\ui\controls\dialogs\whatsnew.py:120
 msgid "Got it!"
 msgstr ""
 

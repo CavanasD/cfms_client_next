@@ -92,10 +92,11 @@ class DisclaimerModel(Model):
         self.reject_button = ft.Button(
             _("Reject and Quit"),
             on_click=self.reject_disclaimer,
+            visible=not AppShared().is_mobile,
         )
 
         self.controls = [
-            self.leading,
+            ft.SafeArea(self.leading),
             self.title,
             self.disclaimer_intro,
             ft.Divider(),

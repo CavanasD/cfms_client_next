@@ -3,6 +3,20 @@
 This document contains the release history and changelog for CFMS Client NEXT.
 
 ---
+## v0.10.1
+**Released on:** 2026-03-09
+
+**Title:** Patch release
+
+## Fixed
+- Limited the maximum number of changelog entries displayed to 25 and fixed 
+an indexing error.
+- Fixed the "Reject and Quit" button not working on mobile devices; the 
+button is now hidden on mobile.
+- Fixed the disclaimer screen appearing too close to the notification bar 
+on mobile devices.
+
+---
 ## v0.10.0
 **Released on:** 2026-03-09
 

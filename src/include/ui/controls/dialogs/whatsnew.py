@@ -72,7 +72,9 @@ class ChangelogHistoryDialog(AlertDialog):
                     ),
                     *self.entry_columns,
                     ft.Text(
-                        _("Only the 50 most recent changelogs are displayed."),
+                        _(
+                            "Only the {count} most recent changelogs are displayed."
+                        ).format(count=len(self.entry_columns)),
                         size=14,
                         color=ft.Colors.GREY,
                         text_align=ft.TextAlign.CENTER,
