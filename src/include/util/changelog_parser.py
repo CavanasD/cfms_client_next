@@ -332,4 +332,4 @@ def get_changelogs_from_file() -> List[ChangelogEntry]:
     current_dir = Path(__file__).parent.parent / "ui" / "controls" / "dialogs"
     changelog_path = current_dir / "CHANGELOG.md"
 
-    return parse_changelog(changelog_path)
+    return parse_changelog(changelog_path)[:51]  # Limit to 50 entries for performance

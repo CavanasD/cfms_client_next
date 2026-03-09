@@ -58,6 +58,11 @@ class ConnectToServerModel(Model):
 
         self.controls = [ConnectForm(), version_container]
 
+    def did_mount(self) -> None:
+        super().did_mount()
+        if AppShared().preferences["license"]["disclaimer_accepted"] is not True:
+            self.page.run_task(self.page.push_route, self.page.route + "/disclaimer")
+
     def will_unmount(self) -> None:
         """Clear the button reference when leaving the connect page."""
         super().will_unmount()

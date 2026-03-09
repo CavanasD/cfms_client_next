@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cfms-client-next 0.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-08 13:00+0800\n"
+"POT-Creation-Date: 2026-03-09 12:46+0800\n"
 "PO-Revision-Date: 2025-10-18 14:19\n"
 "Last-Translator: Auto Generated\n"
 "Language-Team: Chinese (Simplified)\n"
@@ -1682,7 +1682,7 @@ msgstr "批量上传"
 #: .\include\ui\controls\dialogs\explorer.py:164
 #: .\include\ui\controls\dialogs\explorer.py:603
 #: .\include\ui\controls\dialogs\explorer.py:882
-#: .\include\ui\controls\dialogs\whatsnew.py:79
+#: .\include\ui\controls\dialogs\whatsnew.py:86
 msgid "OK"
 msgstr "确定"
 
@@ -2182,15 +2182,19 @@ msgstr "更新日志"
 msgid "Last updated on {last_updated}\n"
 msgstr "最后更新于 {last_updated}\n"
 
-#: .\include\ui\controls\dialogs\whatsnew.py:100
+#: .\include\ui\controls\dialogs\whatsnew.py:75
+msgid "Only the 50 most recent changelogs are displayed."
+msgstr "仅展示最近的 50 条更新日志。"
+
+#: .\include\ui\controls\dialogs\whatsnew.py:107
 msgid "What's new in {newest_version}"
 msgstr "{newest_version} 的新功能"
 
-#: .\include\ui\controls\dialogs\whatsnew.py:110
+#: .\include\ui\controls\dialogs\whatsnew.py:117
 msgid "View history"
 msgstr "查看历史"
 
-#: .\include\ui\controls\dialogs\whatsnew.py:111
+#: .\include\ui\controls\dialogs\whatsnew.py:118
 msgid "Got it!"
 msgstr "知道了！"
 
@@ -2546,28 +2550,28 @@ msgstr "否"
 msgid "Logfile not found."
 msgstr "未找到日志文件。"
 
-#: .\include\ui\models\init.py:61
+#: .\include\ui\models\init.py:62
 msgid "Compile CA certificate manifest"
 msgstr "编制 CA 证书清单"
 
-#: .\include\ui\models\init.py:84
+#: .\include\ui\models\init.py:85
 msgid "Preparing..."
 msgstr "准备中..."
 
-#: .\include\ui\models\init.py:126
+#: .\include\ui\models\init.py:127
 msgid "Initializing"
 msgstr "正在初始化"
 
-#: .\include\ui\models\init.py:202
+#: .\include\ui\models\init.py:203
 msgid "Setup complete."
 msgstr "设置完成。"
 
-#: .\include\ui\models\init.py:238
+#: .\include\ui\models\init.py:239
 msgid ""
 "CA certificate manifest is ready. Would you like to check for updates now?"
 msgstr "CA 证书清单准备就绪。您是否希望现在检查更新？"
 
-#: .\include\ui\models\init.py:243
+#: .\include\ui\models\init.py:244
 msgid "Update Now"
 msgstr "现在更新"
 
@@ -2578,6 +2582,93 @@ msgstr "账户"
 #: .\include\ui\models\manage.py:83
 msgid "Management"
 msgstr "管理"
+
+#: .\include\ui\models\misc\disclaimer.py:17
+msgid ""
+"Welcome to the Confidential File Management System (CFMS). This system is "
+"designed for the online distribution of confidential documents, aiming to "
+"help system administrators quickly build a user-friendly application "
+"ecosystem that closely meets their needs.\n"
+"\n"
+"Please note that while this system is designed to minimize unauthorized "
+"access, it **CANNOT** prevent information leaks caused by authorized users. "
+"Files will be decrypted locally on the client's device and will remain "
+"decrypted regardless of whether they are being accessed. Improper "
+"configuration could allow other applications installed on the same device to "
+"gain access to these files, potentially causing significant information "
+"leaks. **Preventing such issues is your responsibility.**\n"
+"\n"
+"For the reasons stated above, please exercise extreme caution before "
+"connecting to and logging into the target server to ensure information "
+"security and confidentiality.\n"
+"\n"
+"Please:\n"
+"\n"
+"- **DO NOT** launch this application in public places.\n"
+"\n"
+"- **DO NOT** launch this application and connect to the server in the "
+"presence of others who are unaware of the confidential information you are "
+"accessing.\n"
+"\n"
+"- Unless otherwise permitted, **DO NOT** distribute confidential information "
+"obtained from this application in any other non-confidential manner.\n"
+"\n"
+"- **DO NOT** launch this application on unprotected devices (devices without "
+"any measures in place to prevent unauthorized access) and use it to obtain "
+"any confidential information.\n"
+"\n"
+"- **DO NOT** disclose the existence and purpose of this application to "
+"anyone who is unaware of the confidential information you wish to access.\n"
+"\n"
+"- Regularly check the application's security settings to ensure all security-"
+"related configurations are up-to-date. Also, strive to update to the latest "
+"stable version promptly, as these may contain fixes for security "
+"vulnerabilities."
+msgstr ""
+"欢迎使用 Confidential File Management System（CFMS）。此系统被设计用于保密文"
+"档的联机分发，旨在帮助系统管理员快速构建贴近于需求且操作相对便利的一套应用体"
+"系。\n"
+"\n"
+"请注意此系统虽在流程上被设计为尽可能避免未经授权的访问，但它无法预防由被授权"
+"用户造成的信息泄露。文件将在客户端所在的设备本地被解密，且无论正被访问与否都"
+"将保持已解密的状态——若不当配置，任何同样安装在设备上的其他应用都有可能取得对"
+"这些文件的访问，并造成危害不可估量的信息泄露。如何防范这种问题是用户（您）的"
+"责任。\n"
+"\n"
+"基于上述的原因，为了确保信息安全与保密性不受侵害，请您在决定连接与登录到目标"
+"服务器前万分小心。\n"
+"\n"
+"- 请勿在公共场合启动本应用。\n"
+"- 请勿在有对您要访问的保密信息并不知情的他人在场时启动本应用，以至连接到服务"
+"器。\n"
+"- 除非另有许可，请勿将自本应用取得的保密信息以其他非保密方式分发。\n"
+"- 请勿在未受保护（未采取任何措施以阻止他人在未经授权的情况下访问设备）的设备"
+"上启动本应用，并利用本应用取得任何保密信息。\n"
+"- 请勿向任何对您要访问的保密信息并不知情的他人透露此应用的存在和用途。\n"
+"- 请定期检查应用的安全设置，确保与安全性相关的各项配置保持最新。亦请尽力及时"
+"更新到最新的稳定版本，因为它们可能含有对安全漏洞的修复。"
+
+#: .\include\ui\models\misc\disclaimer.py:71
+msgid "Disclaimer"
+msgstr "免责声明"
+
+#: .\include\ui\models\misc\disclaimer.py:73
+msgid "Please read and accept the disclaimer before using the application."
+msgstr "请在使用本应用程序前阅读并接受免责声明。"
+
+#: .\include\ui\models\misc\disclaimer.py:81
+msgid ""
+"You are solely responsible for any unintended disclosure of confidential "
+"information resulting from improper use of this application."
+msgstr "如有因不当使用本应用，致使保密信息发生意料之外的泄露的，后果自负。"
+
+#: .\include\ui\models\misc\disclaimer.py:89
+msgid "Accept"
+msgstr "接受"
+
+#: .\include\ui\models\misc\disclaimer.py:93
+msgid "Reject and Quit"
+msgstr "拒绝并退出"
 
 #: .\include\ui\models\settings\connection.py:26
 msgid "Change application proxy settings"
@@ -2897,6 +2988,6 @@ msgstr "获取下载任务ID失败"
 msgid "Failed to list directory: ({code}) {message}"
 msgstr "列出目录失败：({code}) {message}"
 
-#: .\include\util\requests.py:201
+#: .\include\util\requests.py:202
 msgid "Request '{}' completed in {:.3f} seconds"
 msgstr "请求 '{}' 完成，用时 {:.3f} 秒"

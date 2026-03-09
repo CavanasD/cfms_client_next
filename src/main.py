@@ -91,6 +91,7 @@ async def main(page: ft.Page):
     from include.ui.models.home import HomeModel
     from include.ui.models.manage import ManageModel
     from include.ui.models.debugging import DebuggingViewModel
+    from include.ui.models.misc import DisclaimerModel
     import include.ui.models.settings
 
     # Page settings
@@ -160,6 +161,9 @@ async def main(page: ft.Page):
             page.update()
         elif e.key == "Q" and e.ctrl:
             page.show_dialog(DevRequestDialog())
+        elif e.key == "D" and e.ctrl:
+            monitor.visible = not monitor.visible
+            page.update()
 
     # Register event handlers
     page.on_keyboard_event = on_keyboard

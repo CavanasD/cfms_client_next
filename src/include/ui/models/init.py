@@ -49,6 +49,7 @@ class AppInitModel(Model):
     horizontal_alignment = ft.CrossAxisAlignment.CENTER
     padding = 40
     spacing = 0
+    can_pop = False
 
     def __init__(self, page: ft.Page, router: Router) -> None:
         super().__init__(page, router)

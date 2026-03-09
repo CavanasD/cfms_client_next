@@ -11,7 +11,8 @@ from flet_permission_handler import PermissionHandler
 from websockets.asyncio.client import ClientConnection
 
 from include.classes.preferences import UserPreference
-from include.constants import FLET_APP_STORAGE_DATA, DEFAULT_UPDATE_CHANNEL
+from include.constants import DEFAULT_UPDATE_CHANNEL, GLOBAL_PREFERENCES_PATH
+from include.util.merging import merge_with_template
 
 if TYPE_CHECKING:
     from include.classes.services.manager import ServiceManager
@@ -19,9 +20,19 @@ if TYPE_CHECKING:
     from include.ui.controls.components.common.monitor import MonitorStack
     import flet as ft
 
-PREFERENCES_PATH = f"{FLET_APP_STORAGE_DATA}/preferences.yaml"
-
 __all__ = ["AppShared"]
+
+GLOBAL_PREFERENCE_TEMPLATE = {
+    "settings": {
+        "language": "zh_CN",
+        "proxy_settings": None,
+        "custom_proxy": "",
+        "enable_conn_history_logging": False,
+        "force_ipv4": False,
+        "update_channel": DEFAULT_UPDATE_CHANNEL.value,  # Channel for checking updates
+    },
+    "license": {"disclaimer_accepted": False},
+}
 
 
 class AppShared:
@@ -107,15 +118,20 @@ class AppShared:
         # In-memory Data Encryption Key for user config encryption (never persisted)
         self.dek: Optional[bytes] = None
 
-        # Control refs 
+        # Control refs
         self.monitor_ref: Optional["ft.Ref[MonitorStack]"] = None
 
         # Load preferences
-        if not os.path.exists(PREFERENCES_PATH):
+        if not os.path.exists(GLOBAL_PREFERENCES_PATH):
             self._init_preferences()
 
-        with open(PREFERENCES_PATH, "r", encoding="utf-8") as file:
+        with open(GLOBAL_PREFERENCES_PATH, "r", encoding="utf-8") as file:
             self.preferences = yaml.safe_load(file)
+
+        # Merge with template to ensure all keys are present
+        self.preferences = merge_with_template(
+            self.preferences, GLOBAL_PREFERENCE_TEMPLATE
+        )
 
         self._initialized = True
 
@@ -151,27 +167,17 @@ class AppShared:
 
     def _init_preferences(self) -> None:
         """Initialize preferences file with default values."""
-        default_preferences = {
-            "settings": {
-                "language": "zh_CN",
-                "proxy_settings": None,
-                "custom_proxy": "",
-                "enable_conn_history_logging": False,
-                "force_ipv4": False,
-                "update_channel": DEFAULT_UPDATE_CHANNEL.value,  # Channel for checking updates
-            }
-        }
-
-        with open(PREFERENCES_PATH, "w", encoding="utf-8") as f:
-            yaml.safe_dump(default_preferences, f)
+        with open(GLOBAL_PREFERENCES_PATH, "w", encoding="utf-8") as f:
+            yaml.safe_dump(GLOBAL_PREFERENCE_TEMPLATE, f)
 
     def dump_preferences(self) -> None:
         """Save current preferences to disk and user preferences if logged in."""
         # Save application-level preferences
-        with open(PREFERENCES_PATH, "w", encoding="utf-8") as f:
+        with open(GLOBAL_PREFERENCES_PATH, "w", encoding="utf-8") as f:
             yaml.safe_dump(self.preferences, f)
-        
+
         # Save user-specific preferences if user is logged in
         if self.username is not None and self.user_perference is not None:
             from include.util.userpref import save_user_preference
+
             save_user_preference(self.username, self.user_perference)

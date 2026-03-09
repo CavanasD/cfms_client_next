@@ -3,7 +3,7 @@ import flet as ft
 
 if TYPE_CHECKING:
     from include.classes.changelog import ChangelogEntry
-    
+
 from include.ui.controls.dialogs.base import AlertDialog
 from include.util.changelog_parser import get_changelogs_from_file
 from include.util.locale import get_translation
@@ -71,7 +71,14 @@ class ChangelogHistoryDialog(AlertDialog):
                         )
                     ),
                     *self.entry_columns,
-                ]
+                    ft.Text(
+                        _("Only the 50 most recent changelogs are displayed."),
+                        size=14,
+                        color=ft.Colors.GREY,
+                        text_align=ft.TextAlign.CENTER,
+                        align=ft.Alignment.CENTER,
+                    ),
+                ],
             ),
             width=720,
         )

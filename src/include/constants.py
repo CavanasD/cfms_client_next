@@ -31,6 +31,7 @@ FLET_APP_STORAGE_DATA = os.environ.get("FLET_APP_STORAGE_DATA", ".")
 FLET_ASSETS_DIR = os.environ.get("FLET_ASSETS_DIR", None)
 LOGFILE_PATH = Path(FLET_APP_STORAGE_TEMP) / "cfms_client.log"
 USER_PREFERENCES_PATH = f"{FLET_APP_STORAGE_DATA}/user_preferences"
+GLOBAL_PREFERENCES_PATH = f"{FLET_APP_STORAGE_DATA}/preferences.yaml"
 
 # Application Info
 DEFAULT_WINDOW_TITLE = "CFMS Client"
@@ -43,8 +44,8 @@ CA_CERT_API_URL = f"https://api.github.com/repos/{CA_CERT_REPO}/contents/"
 
 # Version Information
 CHANNEL = ChannelType.STABLE
-BUILD_VERSION = "v0.9.1"
-MODIFIED = "20260308"
+BUILD_VERSION = "v0.10.0"
+MODIFIED = "20260309"
 
 # Default update channel for user preferences
 DEFAULT_UPDATE_CHANNEL = ChannelType.STABLE

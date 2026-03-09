@@ -3,6 +3,23 @@
 This document contains the release history and changelog for CFMS Client NEXT.
 
 ---
+## v0.10.0
+**Released on:** 2026-03-09
+
+**Title:** Minor release
+
+This version introduces a disclaimer interface, which will be displayed when 
+the application is first launched.
+
+## Added
+- Introduced a disclaimer interface.
+- Now the display of the debug timer can be toggled via Ctrl+D.
+
+## Fixed
+- The maximum number of changelog entries displayed is limited to avoid p
+erformance issues.
+
+---
 ## v0.9.1
 **Released on:** 2026-03-08
 
