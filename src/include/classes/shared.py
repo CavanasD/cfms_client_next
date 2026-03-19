@@ -7,7 +7,6 @@ from typing import Any, Optional, TYPE_CHECKING
 
 import yaml
 
-from flet_permission_handler import PermissionHandler
 from websockets.asyncio.client import ClientConnection
 
 from include.classes.preferences import UserPreference
@@ -56,7 +55,6 @@ class AppShared:
         user_2fa_enabled (bool): Whether the user has 2FA enabled.
         pending_2fa_verification (bool): Whether 2FA verification is pending for login.
         conn (Optional[ClientConnection]): The client connection object.
-        ph_service (Optional[PermissionHandler]): The permission handler service.
         service_manager (Optional["ServiceManager"]): The service manager instance.
         floating_upgrade_button (Optional["FloatingUpgradeButton"]): Reference to the upgrade button.
         user_perference (Optional[UserPreference]): The user's preferences.
@@ -108,7 +106,6 @@ class AppShared:
 
         # Connection and services
         self.conn: Optional[ClientConnection] = None
-        self.ph_service: Optional[PermissionHandler] = None
         self.service_manager: Optional["ServiceManager"] = None
         self.floating_upgrade_button: Optional["FloatingUpgradeButton"] = None
 

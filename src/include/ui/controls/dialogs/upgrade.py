@@ -5,6 +5,7 @@ import os
 from flet_open_file import OpenFile
 from flet_permission_handler import Permission, PermissionHandler, PermissionStatus
 import flet as ft
+import flet_permission_handler as fph
 import requests
 
 from include.classes.shared import AppShared
@@ -14,6 +15,7 @@ from include.ui.util.notifications import send_error
 from include.util.locale import get_translation
 from include.util.transfer import calculate_sha256
 from include.util.upgrade.updater import AssetDigest, AssetDigestType
+
 t = get_translation()
 _ = t.gettext
 
@@ -145,9 +147,7 @@ exit
 
     async def _handle_other_platforms_update(self):
         assert isinstance(self.page, ft.Page)
-        app_shared = AppShared()
-        # ph: PermissionHandler = app_shared.get_not_none_attribute("ph_service")
-        import flet_permission_handler as fph
+
         ph = fph.PermissionHandler()
 
         async def _async_request():
@@ -165,11 +165,7 @@ exit
             return True
 
         if await _async_request():
-            # we don't add the service to page.services, hence it will be automatically cleaned up after use
-            self.open_file_service = OpenFile()
-            await self.open_file_service.open(
-                f"{FLET_APP_STORAGE_TEMP}/{self.save_filename}"
-            )
+            await OpenFile().open(f"{FLET_APP_STORAGE_TEMP}/{self.save_filename}")
 
     async def _download_update(self):
         """Download Update File"""

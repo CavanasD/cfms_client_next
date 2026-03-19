@@ -86,7 +86,6 @@ pending_2fa_verification: bool         # Whether 2FA verification is pending
 #### Services and Connections
 ```python
 conn: Optional[ClientConnection]       # Active WebSocket connection
-ph_service: Optional[PermissionHandler] # Mobile permissions service
 service_manager: Optional[ServiceManager]  # Background services manager
 floating_upgrade_button: Optional[FloatingUpgradeButton]  # Upgrade button reference
 ```

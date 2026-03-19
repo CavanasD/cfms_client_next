@@ -84,7 +84,6 @@ class ConnectFormController(Controller["ConnectForm"]):
         # temp fix
         ph_service = fph.PermissionHandler()
 
-        assert self.app_shared.ph_service
         assert self.control.page.platform
         if (
             not self.control.page.web and

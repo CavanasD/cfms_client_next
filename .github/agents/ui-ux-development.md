@@ -366,9 +366,9 @@ Translation files are in `include/ui/locale/`:
 
 ### Permissions (`flet_permission_handler`)
 ```python
-from flet_permission_handler import PermissionHandler
+import flet_permission_handler as fph
 
-ph_service = PermissionHandler(page)
+fph.PermissionHandler().request(fph.Permission.MANAGE_EXTERNAL_STORAGE)
 # Request permissions as needed
 ```
 

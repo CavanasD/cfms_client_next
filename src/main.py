@@ -132,6 +132,9 @@ async def main(page: ft.Page):
             grade=0,
             optical_size=24,
         ),
+        dialog_theme=ft.DialogTheme(
+            shape=ft.RoundedRectangleBorder(radius=10),
+        ),
     )
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
@@ -180,12 +183,6 @@ async def main(page: ft.Page):
     # a development environment running from source.
     app_shared.is_production = bool(RUNTIME_PATH)
     page.window.resizable = not app_shared.is_production
-
-    # Register Flet services
-    ph_service = fph.PermissionHandler()
-    page.services.append(ph_service)
-
-    app_shared.ph_service = ph_service
 
     # Initialize service manager and register services
     service_manager = ServiceManager()
