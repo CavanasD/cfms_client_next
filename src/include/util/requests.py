@@ -1,6 +1,5 @@
 """Utilities for making requests to the server over WebSocket."""
 
-import asyncio
 import json
 import time
 import uuid
@@ -8,8 +7,8 @@ import weakref
 from typing import Any, Optional
 
 from websockets import ConnectionClosed
-from websockets.asyncio.client import ClientConnection
 
+from include.classes.frame import AsyncMultiplexConnection
 from include.classes.shared import AppShared
 from include.classes.response import Response
 from include.util.connect import get_connection
@@ -17,10 +16,6 @@ from include.util.locale import get_translation
 
 t = get_translation()
 _ = t.gettext
-
-
-# Store locks per-connection without attaching them to the connection object
-_conn_locks = weakref.WeakKeyDictionary()
 
 
 async def do_request(
@@ -129,27 +124,8 @@ async def do_request_2(
     )
 
 
-def _get_conn_lock(conn: ClientConnection) -> asyncio.Lock:
-    """
-    Get or create a lock for a specific connection.
-
-    Uses weak references to avoid keeping connections alive.
-
-    Args:
-        conn: WebSocket connection
-
-    Returns:
-        Lock associated with the connection
-    """
-    lock = _conn_locks.get(conn)
-    if lock is None:
-        lock = asyncio.Lock()
-        _conn_locks[conn] = lock
-    return lock
-
-
 async def _request(
-    conn: ClientConnection,
+    client: AsyncMultiplexConnection,
     action: str,
     data: dict[str, Any] = {},
     message: str = "",
@@ -160,7 +136,7 @@ async def _request(
     Internal function to send a request and receive response.
 
     Serializes the request to JSON, sends it through the connection,
-    and waits for the response. Uses a lock to ensure thread-safety.
+    and waits for the response.
 
     Args:
         conn: Active WebSocket connection
@@ -185,14 +161,14 @@ async def _request(
         "nonce": str(uuid.uuid4()),
     }
 
+    stream = client.create_stream()
+
     request_json = json.dumps(request, ensure_ascii=False)
 
-    lock = _get_conn_lock(conn)
-    async with lock:
-        await conn.send(request_json)
-        response = await conn.recv()
+    await stream.send(request_json)
+    response = await stream.recv()
 
-    loaded_response: dict[str, Any] = json.loads(response)
+    loaded_response: dict[str, Any] = json.loads(response.data)
 
     t2 = time.perf_counter()
 
@@ -201,5 +177,5 @@ async def _request(
         _monitor_ref.current.update_status(
             _("Request '{}' completed in {:.3f} seconds").format(action, t2 - t1)
         )
-        
+
     return loaded_response
