@@ -48,9 +48,9 @@ class LockdownSwitchButton(ft.FloatingActionButton):
 
             if response.code != 200:
                 has_error = True
-            send_error(
-                self.page, _("Failed to toggle lockdown mode: ") + response.message
-            )
+                send_error(
+                    self.page, _("Failed to toggle lockdown mode: ") + response.message
+                )
         except Exception as e:
             has_error = True
             send_error(
