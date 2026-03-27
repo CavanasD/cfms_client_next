@@ -28,6 +28,10 @@ class ConnectFormController(Controller["ConnectForm"]):
             if ss_service is not None:
                 ss_service.connection = None
 
+        if LockdownBanner() in self.control.page.overlay:
+            self.control.page.overlay.remove(LockdownBanner())
+            self.control.page.update()
+
         if self.app_shared.conn:
             await self.app_shared.conn.close()
 

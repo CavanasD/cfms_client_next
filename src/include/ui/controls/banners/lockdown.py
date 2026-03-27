@@ -9,7 +9,7 @@ t = get_translation()
 _ = t.gettext
 
 
-class LockdownBanner(ft.Container):
+class LockdownBanner(ft.SafeArea):
     _instance = None
     _task: Optional[Future[None]] = None
 
@@ -25,8 +25,8 @@ class LockdownBanner(ft.Container):
             return
         self._initialized = True
         self.page: ft.Page
-        super().__init__(
-            content=ft.Row(
+        self.container = ft.Container(
+            ft.Row(
                 [
                     ft.Icon(Symbols.WARNING, color=ft.Colors.WHITE, fill=1),
                     ft.Text(_("System Lockdown"), color=ft.Colors.WHITE),
@@ -39,6 +39,7 @@ class LockdownBanner(ft.Container):
             visible=visible,
             ref=ref,
         )
+        super().__init__(content=self.container)
 
     def did_mount(self):
         self._stop_task()
@@ -57,9 +58,9 @@ class LockdownBanner(ft.Container):
     async def _update_banner(self):
         try:
             while self._running:
-                self.bgcolor = (
+                self.container.bgcolor = (
                     ft.Colors.TRANSPARENT
-                    if self.bgcolor == ft.Colors.RED
+                    if self.container.bgcolor == ft.Colors.RED
                     else ft.Colors.RED
                 )
                 self.update()

@@ -3,6 +3,18 @@
 This document contains the release history and changelog for CFMS Client NEXT.
 
 ---
+## v0.14.2
+**Released on:** 2026-03-27
+
+**Title:** Bugfix
+
+## Fixed
+- The lockdown banner that appeared during the previous connection will now 
+be cleared when the connection is canceled.
+- The implementation of LockdownBanner has been adjusted, which is expected 
+to improve its display on mobile devices.
+
+---
 ## v0.14.1
 **Released on:** 2026-03-25
 
