@@ -11,11 +11,16 @@ from include.classes.misc.guard import LoginGuard
 from include.classes.request_handler import RequestHandler
 from include.conf_loader import global_config
 from include.database.handler import Session
-from include.database.models.classic import User
+from include.database.models.classic import User, UserGroup
 from include.database.models.keyring import UserKey
 from include.util.address import get_client_ip
 from include.util.audit import log_audit
-from include.util.pwd import check_passwd_requirements
+from include.util.pwd import (
+    InvaildPasswordLengthError,
+    MissingComponentsError,
+    check_passwd_requirements,
+)
+from include.util.user import create_user
 
 
 class RequestLoginHandler(RequestHandler):
@@ -170,3 +175,64 @@ class RequestRefreshTokenHandler(RequestHandler):
 
         # Send the response back to the client
         handler.conclude_request(**response)
+
+
+class RequestRegisterHandler(RequestHandler):
+    """Handles public user registration requests."""
+
+    data_schema = {
+        "type": "object",
+        "properties": {
+            "username": {"type": "string", "minLength": 1, "maxLength": 64},
+            "password": {"type": "string", "minLength": 1},
+            "nickname": {"anyOf": [{"type": "string"}, {"type": "null"}]},
+        },
+        "required": ["username", "password"],
+        "additionalProperties": False,
+    }
+
+    def handle(self, handler: ConnectionHandler):
+        username: str = handler.data["username"]
+        password: str = handler.data["password"]
+        nickname: Optional[str] = handler.data.get("nickname")
+
+        cfg = global_config["security"]
+
+        try:
+            check_passwd_requirements(
+                password,
+                cfg["passwd_min_length"],
+                cfg["passwd_max_length"],
+                cfg["passwd_must_contain"],
+            )
+        except InvaildPasswordLengthError as exc:
+            handler.conclude_request(400, {}, str(exc))
+            return 1, username
+        except MissingComponentsError as exc:
+            handler.conclude_request(400, {}, str(exc))
+            return 1, username
+
+        with Session() as session:
+            if session.get(User, username):
+                handler.conclude_request(400, {}, "Username already exists")
+                return 1, username
+
+            default_group = session.get(UserGroup, "user")
+            if not default_group:
+                handler.conclude_request(
+                    500,
+                    {},
+                    "Registration is temporarily unavailable: default group not found",
+                )
+                return 1, username
+
+        create_user(
+            username=username,
+            password=password,
+            nickname=nickname,
+            permissions=[],
+            groups=[{"group_name": "user", "start_time": 0, "end_time": None}],
+        )
+
+        handler.conclude_request(200, {}, "User registered successfully")
+        return 0, username

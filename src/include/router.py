@@ -16,7 +16,11 @@ from include.classes.request_handler import RequestHandler
 from include.constants import NONCE_MIN_LENGTH
 from include.database.handler import Session
 from include.database.models.classic import User
-from include.handlers.auth import RequestLoginHandler, RequestRefreshTokenHandler
+from include.handlers.auth import (
+    RequestLoginHandler,
+    RequestRefreshTokenHandler,
+    RequestRegisterHandler,
+)
 from include.handlers.directory import (
     RequestCreateDirectoryHandler,
     RequestDeleteDirectoryHandler,
@@ -111,6 +115,7 @@ available_functions: dict[str, type[RequestHandler]] = {
     # 认证类
     "login": RequestLoginHandler,
     "refresh_token": RequestRefreshTokenHandler,
+    "register": RequestRegisterHandler,
     # 两步验证类
     "setup_2fa": RequestSetup2FAHandler,
     "cancel_2fa_setup": RequestCancel2FASetupHandler,  # especially for cancelling setup
@@ -191,6 +196,7 @@ available_functions: dict[str, type[RequestHandler]] = {
 whitelisted_functions = [
     "server_info",
     "login",
+    "register",
     "refresh_token",
     "validate_2fa",
     "upload_file",
